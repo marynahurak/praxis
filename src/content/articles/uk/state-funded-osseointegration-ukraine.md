@@ -5,6 +5,7 @@ category: news
 section: lower-limb
 pubDate: 2026-11-02
 tags: []
+draft: true
 telegram: "https://t.me/prosthetics_ukraine/520"
 ---
 7 вересня [уряд постановою № 1095](https://www.kmu.gov.ua/npas/deiaki-pytannia-realizatsii-eksperymentalnoho-proektu-shchodo-oplaty-posluh-poviazanykh-s1095070926) запустив дворічний експериментальний проєкт, у межах якого держава оплачує остеоінтеграцію (osseointegration, OI). Перша рецензована українська когорта вийшла [3 жовтня в International Orthopaedics](https://link.springer.com/article/10.1007/s00264-026-07054-0). Тобто рішення про фінансування випередило публікацію власних даних майже на місяць. Сам по собі такий порядок не проблема: міжнародна доказова база накопичується з 1990-х. Мене тривожить інше.

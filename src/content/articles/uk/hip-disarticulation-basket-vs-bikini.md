@@ -5,6 +5,7 @@ category: discussion
 section: lower-limb
 pubDate: 2026-09-24
 tags: []
+draft: true
 telegram: "https://t.me/prosthetics_ukraine/492"
 ---
 Екзартикуляція стегна - це <10% усіх ампутацій нижніх кінцівок, але 100% виклик для протезиста. Історично ринок ділиться на два табори: класична тотальна «Корзина» (Canadian socket) та сучасний мінімалістичний каркас «Бікіні» (Bikini socket).

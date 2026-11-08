@@ -5,6 +5,7 @@ category: discussion
 section: lower-limb
 pubDate: 2026-10-15
 tags: []
+draft: true
 telegram: "https://t.me/prosthetics_ukraine/504"
 ---
 > Вибір полімерної матриці для формування композитної приймальної гільзи часто нагадує релігійну суперечку між техніками. Проте дослідження 2022 року в Scientific Reports (Nature) переводить цей "холівар" у площину суворого матеріалознавства.

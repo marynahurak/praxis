@@ -5,6 +5,7 @@ category: discussion
 section: upper-limb
 pubDate: 2026-08-30
 tags: []
+draft: true
 telegram: "https://t.me/prosthetics_ukraine/457"
 ---
 👤 **Анамнез.** Пацієнт Д., 28 років, правша, архітектор в ІТ-компанії. Високоенергетична травма правої верхньої кінцівки з травматичною ампутацією medium transhumeral, ~50% довжини humerus.

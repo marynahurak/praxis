@@ -5,6 +5,7 @@ category: research
 section: upper-limb
 pubDate: 2026-09-14
 tags: []
+draft: true
 telegram: "https://t.me/prosthetics_ukraine/475"
 ---
 > Коли пацієнт з ампутацією верхньої кінцівки хоче повернутися до активної їзди на велосипеді (особливо MTB чи шосе), МДРК стикається з серйозним біомеханічним викликом.
