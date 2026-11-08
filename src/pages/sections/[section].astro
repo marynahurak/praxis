@@ -1,0 +1,11 @@
+---
+import Section from '../../views/Section.astro';
+import { SECTION_KEYS, type SectionKey } from '../../config';
+
+export function getStaticPaths() {
+  return SECTION_KEYS.map((section) => ({ params: { section } }));
+}
+const section = Astro.params.section as SectionKey;
+---
+
+<Section lang="uk" section={section} />

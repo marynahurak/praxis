@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import { t, type Lang } from '../config';
+import { localePath, url } from '../utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = t[lang];
+const other = lang === 'uk' ? 'en' : 'uk';
+---
+
+<Base lang={lang} title={s.search.title} description={s.search.lead} altLangHref={localePath(other, 'search/')}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href={url('pagefind/pagefind-ui.css')} />
+  </Fragment>
+  <div class="container page">
+    <h1>{s.search.title}</h1>
+    <p class="lead-muted">{s.search.lead}</p>
+    <div id="search" class="search-root"></div>
+    <p id="search-fallback" class="lead-muted" hidden>{s.search.fallback}</p>
+  </div>
+  <script is:inline src={url('pagefind/pagefind-ui.js')}></script>
+  <script is:inline>
+    (function () {
+      function init() {
+        if (!window.PagefindUI) {
+          document.getElementById('search-fallback').hidden = false;
+          return;
+        }
+        var ui = new window.PagefindUI({ element: '#search', showSubResults: true, showImages: false, resetStyles: false });
+        var q = new URLSearchParams(window.location.search).get('q');
+        if (q) ui.triggerSearch(q);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+      else init();
+    })();
+  </script>
+</Base>
+
+<style>
+  .page {
+    padding-block: 56px 88px;
+    max-width: 880px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  #search {
+    margin-top: 32px;
+  }
+</style>

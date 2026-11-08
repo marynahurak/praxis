@@ -1,0 +1,370 @@
+---
+import Base from '../layouts/Base.astro';
+import EvidenceHierarchy from '../components/EvidenceHierarchy.astro';
+import ConfidenceBadge from '../components/ConfidenceBadge.astro';
+import { CONFIDENCE, CONFIDENCE_KEYS, SITE, type Lang } from '../config';
+import { localePath } from '../utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const author = SITE.author[lang];
+const other = lang === 'uk' ? 'en' : 'uk';
+
+const c = {
+  uk: {
+    title: 'Про Praxis',
+    lead: 'Praxis — незалежна некомерційна освітня платформа та професійна спільнота. Вона з’єднує світові доказові дослідження з щоденною клінічною реальністю в Україні, зокрема з роботою з пацієнтами після складної бойової політравми.',
+    audienceTitle: 'Для кого',
+    audience: 'Для протезистів-ортезистів, фізичних терапевтів, лікарів фізичної та реабілітаційної медицини (ФРМ), біомедичних і реабілітаційних інженерів, магістрантів та аспірантів. Ми не пояснюємо базових понять, а одразу працюємо з біомеханікою, методологією досліджень і клінічними рішеннями.',
+    policyTitle: 'Редакційна політика',
+    policy: [
+      ['Синтез, а не переказ', 'Кожен матеріал — оригінальний аналіз через клінічну оптику. Без дослівних перекладів статей і без переказу анотацій.'],
+      ['Жодних вигаданих даних', 'Ми не наводимо результатів, вибірок, p-значень чи DOI, яких немає в першоджерелі. Якщо доказів мало або вони суперечливі, ми прямо про це пишемо.'],
+      ['Аудит методології', 'Кожне дослідження розбираємо критично: розмір вибірки, спосіб валідації моделей, ефект Хоторна в лабораторії ходи, обмеження опитувальників (PROMs).'],
+      ['Незалежність від виробників', 'Praxis не публікує рекламу і не має спонсорів. Компоненти оцінюються за кінематикою, кінетикою, масою, ступенями свободи та незалежними клінічними результатами — не за брошурами.'],
+      ['Двомовна термінологія', 'Під час першої згадки кожен технічний термін подається українською з англійським відповідником, щоб текст можна було звірити з першоджерелом.'],
+    ],
+    evidenceTitle: 'Як ми оцінюємо докази',
+    evidenceText: 'Кожне твердження прив’язане до рівня в ієрархії доказів. Механістичні міркування допустимі, але завжди позначені як такі.',
+    confidenceTitle: 'Позначки впевненості',
+    structureTitle: 'Структура статті',
+    structure: [
+      'Гачок — біомеханічний парадокс, несподіваний результат дослідження або клінічна дилема.',
+      'Методологія та механіка — дизайн дослідження, фізика, властивості матеріалів.',
+      'Критичний аудит — ключові результати з точними показниками та обмеженнями.',
+      'Інсайт для МДРК — практичні висновки для мультидисциплінарної реабілітаційної команди.',
+      'Питання до спільноти — для обговорення в Telegram.',
+      'Джерела — повні бібліографічні посилання.',
+    ],
+    authorTitle: 'Авторка',
+    authorText: 'засновниця та редакторка Praxis.',
+    licenseTitle: 'Ліцензія та цитування',
+    license: [
+      'Тексти статей поширюються за ліцензією Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0): їх можна поширювати й адаптувати з обов’язковим посиланням на авторку та Praxis, але не в комерційних цілях.',
+      'Код сайту відкритий за ліцензією MIT.',
+      'Ілюстрації та таблиці третіх сторін зберігають ліцензії своїх правовласників.',
+    ],
+    citeTitle: 'Як цитувати статтю',
+    citeExample: `${author.short} Назва статті. Praxis. Рік. Доступно за посиланням: URL`,
+    disclaimerTitle: 'Застереження',
+    disclaimer: [
+      'Матеріали Praxis мають освітній характер і не замінюють індивідуальної клінічної консультації чи рішення лікуючої команди.',
+      'Клінічні фото й кейси публікуються лише за письмовою згодою пацієнтів і в знеособленому вигляді.',
+    ],
+    contactTitle: 'Контакти',
+    contact: 'Пропозиції тем, виправлення й запитання — через Telegram-спільноту Praxis.',
+    repo: 'Вихідний код сайту',
+  },
+  en: {
+    title: 'About Praxis',
+    lead: 'Praxis is an independent, non-commercial educational platform and professional community. It bridges global evidence-based research and everyday clinical reality in Ukraine, including the care of patients with complex combat-related polytrauma.',
+    audienceTitle: 'Who it is for',
+    audience: 'Prosthetists-orthotists, physical therapists, physical and rehabilitation medicine (PM&R) physicians, biomedical and rehabilitation engineers, and master’s and PhD students. We skip the basics and go straight to biomechanics, research methodology and clinical decision-making.',
+    policyTitle: 'Editorial policy',
+    policy: [
+      ['Synthesis, not summary', 'Every piece is an original analysis through a clinical lens. No literal translations of papers and no paraphrased abstracts.'],
+      ['No invented data', 'We never report results, sample sizes, p-values or DOIs that are not in the primary source. When evidence is sparse or contradictory, we say so explicitly.'],
+      ['Methodological audit', 'Every study is appraised critically: sample size, model validation strategy, the Hawthorne effect in the gait lab, the limits of patient-reported outcome measures (PROMs).'],
+      ['Independent of manufacturers', 'Praxis carries no advertising and has no sponsors. Components are judged by kinematics, kinetics, mass, degrees of freedom and independent clinical outcomes — not by brochures.'],
+      ['Bilingual terminology', 'Every technical term is given in Ukrainian with its English equivalent on first use, so that the text can be checked against the primary source.'],
+    ],
+    evidenceTitle: 'How we grade evidence',
+    evidenceText: 'Every claim is anchored to a level of the evidence hierarchy. Mechanistic reasoning is allowed, but always labelled as such.',
+    confidenceTitle: 'Confidence labels',
+    structureTitle: 'How an article is structured',
+    structure: [
+      'The hook — a biomechanical paradox, a counterintuitive finding or a clinical dilemma.',
+      'Methodology and mechanics — study design, physics, material properties.',
+      'Critical audit — key findings with exact metrics and limitations.',
+      'Clinical takeaway for the MDT — practical conclusions for the multidisciplinary rehabilitation team.',
+      'Question for the community — for discussion on Telegram.',
+      'References — full bibliographic citations.',
+    ],
+    authorTitle: 'Author',
+    authorText: 'founder and editor of Praxis.',
+    licenseTitle: 'Licence and citation',
+    license: [
+      'Article texts are licensed under Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0): you may share and adapt them with attribution to the author and Praxis, but not for commercial purposes.',
+      'The site source code is open under the MIT licence.',
+      'Third-party figures and tables keep the licences of their rights holders.',
+    ],
+    citeTitle: 'How to cite an article',
+    citeExample: `${author.short} Article title. Praxis. Year. Available from: URL`,
+    disclaimerTitle: 'Disclaimer',
+    disclaimer: [
+      'Praxis content is educational and does not replace individual clinical advice or the decisions of the treating team.',
+      'Clinical photographs and cases are published only with written patient consent and in de-identified form.',
+    ],
+    contactTitle: 'Contact',
+    contact: 'Topic suggestions, corrections and questions are welcome in the Praxis Telegram community.',
+    repo: 'Site source code',
+  },
+}[lang];
+---
+
+<Base lang={lang} title={c.title} description={c.lead} altLangHref={localePath(other, 'about/')}>
+  <div class="container page">
+    <header class="intro">
+      <p class="eyebrow">Praxis</p>
+      <h1>{c.title}</h1>
+      <p class="lead">{c.lead}</p>
+    </header>
+
+    <div class="grid">
+      <div class="col-main">
+        <section aria-labelledby="audience">
+          <h2 id="audience">{c.audienceTitle}</h2>
+          <p>{c.audience}</p>
+        </section>
+
+        <section id="policy" aria-labelledby="policy-h">
+          <h2 id="policy-h">{c.policyTitle}</h2>
+          <ol class="numbered">
+            {
+              c.policy.map(([title, text], i) => (
+                <li>
+                  <span class="mono n">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <section id="evidence" aria-labelledby="evidence-h">
+          <h2 id="evidence-h">{c.evidenceTitle}</h2>
+          <p>{c.evidenceText}</p>
+          <h3 class="sub">{c.confidenceTitle}</h3>
+          <ul class="conf">
+            {
+              CONFIDENCE_KEYS.map((k) => (
+                <li>
+                  <ConfidenceBadge level={k} />
+                  <span>{CONFIDENCE[k][lang]}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <section aria-labelledby="structure-h">
+          <h2 id="structure-h">{c.structureTitle}</h2>
+          <ol class="plain">
+            {c.structure.map((item) => <li>{item}</li>)}
+          </ol>
+        </section>
+
+        <section aria-labelledby="author-h">
+          <h2 id="author-h">{c.authorTitle}</h2>
+          <div class="author">
+            <span class="avatar mono" aria-hidden="true">{author.initials}</span>
+            <p><strong>{author.name}</strong> — {author.role.toLowerCase()}, {c.authorText}</p>
+          </div>
+        </section>
+
+        <section id="license" aria-labelledby="license-h">
+          <h2 id="license-h">{c.licenseTitle}</h2>
+          {c.license.map((p) => <p>{p}</p>)}
+          <p>
+            <a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license noopener">CC BY-NC 4.0</a>{' · '}<a href={`${SITE.repoUrl}/blob/main/LICENSE`} rel="noopener">MIT</a>
+          </p>
+          <h3 class="sub">{c.citeTitle}</h3>
+          <p class="cite mono">{c.citeExample}</p>
+        </section>
+
+        <section aria-labelledby="disclaimer-h">
+          <h2 id="disclaimer-h">{c.disclaimerTitle}</h2>
+          {c.disclaimer.map((p) => <p>{p}</p>)}
+        </section>
+
+        <section aria-labelledby="contact-h">
+          <h2 id="contact-h">{c.contactTitle}</h2>
+          <p>{c.contact}</p>
+          <p class="links">
+            {SITE.telegramUrl && <a class="btn btn-primary" href={SITE.telegramUrl} target="_blank" rel="noopener">Telegram</a>}
+            <a class="btn btn-secondary" href={SITE.repoUrl} rel="noopener">{c.repo}</a>
+          </p>
+        </section>
+      </div>
+
+      <div class="col-side">
+        <EvidenceHierarchy lang={lang} id="about-evidence" />
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-block: 56px 88px;
+  }
+  .intro {
+    max-width: 820px;
+  }
+  .intro .eyebrow {
+    margin-bottom: 16px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(34px, 4vw, 52px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .lead {
+    margin: 22px 0 0;
+    font-size: 20px;
+    line-height: 1.6;
+    color: var(--text-2);
+  }
+  .grid {
+    margin-top: 48px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 40px 56px;
+  }
+  .col-main {
+    flex: 999 1 560px;
+    min-width: 0;
+    max-width: 760px;
+  }
+  .col-side {
+    flex: 1 1 320px;
+    min-width: 0;
+  }
+  @media (min-width: 1000px) {
+    .col-side {
+      position: sticky;
+      top: 24px;
+    }
+  }
+  section + section {
+    margin-top: 52px;
+  }
+  section {
+    scroll-margin-top: 24px;
+  }
+  h2 {
+    margin: 0 0 14px;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+  .sub {
+    margin: 24px 0 12px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .col-main p {
+    margin: 0 0 12px;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+  .numbered {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .numbered li {
+    display: flex;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .numbered .n {
+    color: var(--accent);
+    font-size: 14px;
+    padding-top: 2px;
+  }
+  .numbered h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .col-main .numbered p {
+    margin: 6px 0 0;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-2);
+  }
+  .conf {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .conf li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+  .plain {
+    margin: 0;
+    padding-left: 1.3em;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+  .plain li + li {
+    margin-top: 6px;
+  }
+  .plain li::marker {
+    font-family: var(--font-mono);
+    color: var(--accent);
+  }
+  .author {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .col-main .author p {
+    margin: 0;
+  }
+  .avatar {
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--on-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .col-main .cite {
+    padding: 16px 18px;
+    border-radius: 10px;
+    background: var(--chip);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+</style>

@@ -1,0 +1,596 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import ConfidenceBadge from '../components/ConfidenceBadge.astro';
+import Icon from '../components/Icon.astro';
+import { CATEGORIES, CONFIDENCE, CONFIDENCE_KEYS, EVIDENCE_LEVELS, SECTIONS, SITE, t, type Lang } from '../config';
+import { articleUrl, formatDate, getAllArticles, getArticles, langOf, localePath, readingTime, slugOf, type Article } from '../utils';
+
+interface Props {
+  entry: Article;
+  lang: Lang;
+}
+const { entry, lang } = Astro.props;
+const d = entry.data;
+const s = t[lang];
+const a = s.article;
+const author = SITE.author[lang];
+const { Content, headings } = await render(entry);
+const toc = headings.filter((h) => h.depth === 2);
+const minutes = readingTime(entry.body);
+const sec = SECTIONS[d.section];
+
+const other: Lang = lang === 'uk' ? 'en' : 'uk';
+const counterpart = (await getAllArticles()).find((x) => langOf(x) === other && slugOf(x) === slugOf(entry));
+const altHref = counterpart ? articleUrl(counterpart) : localePath(other);
+
+const sameLang = await getArticles(lang);
+const related = [
+  ...sameLang.filter((x) => x.id !== entry.id && x.data.section === d.section),
+  ...sameLang.filter((x) => x.id !== entry.id && x.data.section !== d.section),
+].slice(0, 3);
+
+const discussUrl = d.telegram || SITE.telegramUrl;
+const pageUrl = new URL(articleUrl(entry), Astro.site).href;
+const year = d.pubDate.getUTCFullYear();
+const levelLabel = d.evidenceLevel ? `${d.evidenceLevel} — ${EVIDENCE_LEVELS[d.evidenceLevel - 1][lang]}` : undefined;
+const citation = `${author.short} ${d.title}. Praxis. ${year}. ${a.available}: ${pageUrl}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: d.title,
+  description: d.description,
+  inLanguage: lang === 'uk' ? 'uk-UA' : 'en',
+  datePublished: d.pubDate.toISOString(),
+  dateModified: (d.updatedDate ?? d.pubDate).toISOString(),
+  author: { '@type': 'Person', name: author.name },
+  publisher: { '@type': 'Organization', name: SITE.name },
+  license: 'https://creativecommons.org/licenses/by-nc/4.0/',
+  keywords: d.tags.join(', '),
+  url: pageUrl,
+};
+---
+
+<Base lang={lang} title={d.title} description={d.description} altLangHref={altHref} ogType="article">
+  <Fragment slot="head">
+    <meta property="article:published_time" content={d.pubDate.toISOString()} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <article>
+    <div class="container top">
+      <nav aria-label={a.crumbs} class="crumbs">
+        <a href={localePath(lang)}>{a.home}</a>
+        <span aria-hidden="true">/</span>
+        <a href={localePath(lang, `sections/${d.section}/`)}>{sec[lang].title}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{CATEGORIES[d.category][lang]}</span>
+      </nav>
+
+      <header class="head" data-pagefind-body>
+        <p class="eyebrow">{CATEGORIES[d.category][lang]}</p>
+        <h1 data-pagefind-meta="title">{d.title}</h1>
+        <div class="byline" data-pagefind-ignore>
+          <div class="author">
+            <span class="avatar mono" aria-hidden="true">{author.initials}</span>
+            <span class="who">
+              <span class="name">{author.name}</span>
+              <span>{author.role}</span>
+            </span>
+          </div>
+          <span class="mono date">
+            <time datetime={d.pubDate.toISOString()}>{formatDate(d.pubDate, lang)}</time>
+            {d.updatedDate && <> ({a.updated} <time datetime={d.updatedDate.toISOString()}>{formatDate(d.updatedDate, lang)}</time>)</>}
+            {' · '}{minutes} {a.minRead}
+          </span>
+          {counterpart && <a class="text-link" href={altHref} hreflang={other} lang={other}>{a.other}</a>}
+        </div>
+      </header>
+    </div>
+
+    <div class="container layout">
+      <div class="main">
+        {d.demo && <p class="demo" role="note">{a.demo}</p>}
+
+        <section class="card audit" aria-labelledby="audit-title" data-pagefind-ignore>
+          <h2 id="audit-title" class="eyebrow eyebrow--muted">{a.audit}</h2>
+          <dl>
+            {
+              d.studyType && (
+                <div>
+                  <dt>{a.type}</dt>
+                  <dd>{d.studyType}</dd>
+                </div>
+              )
+            }
+            {
+              levelLabel && (
+                <div>
+                  <dt>{a.level}</dt>
+                  <dd>{levelLabel}</dd>
+                </div>
+              )
+            }
+            <div>
+              <dt>{a.confidence}</dt>
+              <dd class="badge-dd">
+                <ConfidenceBadge level={d.confidence} />
+                <span class="conf-note">{CONFIDENCE[d.confidence][lang]}</span>
+              </dd>
+            </div>
+            {
+              d.limitations && (
+                <div>
+                  <dt>{a.limitations}</dt>
+                  <dd class="regular">{d.limitations}</dd>
+                </div>
+              )
+            }
+            {
+              d.terms.length > 0 && (
+                <div class="wide">
+                  <dt>{a.terms}</dt>
+                  <dd>{d.terms.map((term) => (lang === 'uk' ? `${term.uk} (${term.en})` : `${term.en} (${term.uk})`)).join(' · ')}</dd>
+                </div>
+              )
+            }
+          </dl>
+        </section>
+
+        <div class="prose" data-pagefind-body>
+          <Content />
+        </div>
+
+        {
+          d.question && (
+            <section class="question" aria-labelledby="q-title">
+              <h2 id="q-title" class="eyebrow">{a.question}</h2>
+              <p>{d.question}</p>
+              {discussUrl && (
+                <a class="btn btn-primary" href={discussUrl} target="_blank" rel="noopener">
+                  <Icon name="telegram" size={16} />
+                  {a.discussBtn}
+                </a>
+              )}
+            </section>
+          )
+        }
+
+        <section id="sources" class="sources" aria-labelledby="src-title">
+          <h2 id="src-title">{a.sources}</h2>
+          {
+            d.references.length ? (
+              <ol>
+                {d.references.map((r) => (
+                  <li>
+                    {r.text}
+                    {r.doi && (
+                      <>
+                        {' '}
+                        <a href={`https://doi.org/${r.doi}`} rel="noopener">
+                          doi:{r.doi}
+                        </a>
+                      </>
+                    )}
+                    {r.url && !r.doi && (
+                      <>
+                        {' '}
+                        <a href={r.url} rel="noopener">
+                          {r.url}
+                        </a>
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p class="pending">{a.sourcesPending}</p>
+            )
+          }
+          {d.references.length > 0 && <p class="note">{a.sourcesNote}</p>}
+          <div class="cite">
+            <h3>{a.cite}</h3>
+            <p class="mono">{citation}</p>
+          </div>
+        </section>
+      </div>
+
+      <aside class="side" data-pagefind-ignore>
+        {
+          toc.length > 0 && (
+            <nav class="card box" aria-labelledby="toc-title">
+              <h2 id="toc-title" class="eyebrow eyebrow--muted">{a.toc}</h2>
+              <ul class="toc">
+                {toc.map((h) => (
+                  <li>
+                    <a href={`#${h.slug}`}>{h.text}</a>
+                  </li>
+                ))}
+                {d.question && (
+                  <li>
+                    <a href="#q-title">{a.question}</a>
+                  </li>
+                )}
+                <li>
+                  <a href="#sources">{a.sources}</a>
+                </li>
+              </ul>
+            </nav>
+          )
+        }
+        {
+          d.terms.length > 0 && (
+            <section class="card box" aria-labelledby="terms-title">
+              <h2 id="terms-title" class="eyebrow eyebrow--muted">{a.termsTitle}</h2>
+              <dl class="terms">
+                {d.terms.map((term) => (
+                  <div>
+                    <dt>{lang === 'uk' ? term.uk : term.en}</dt>
+                    <dd class="mono">{lang === 'uk' ? term.en : term.uk}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )
+        }
+        <section class="card box" aria-labelledby="levels-title">
+          <h2 id="levels-title" class="eyebrow eyebrow--muted">{a.levels}</h2>
+          <ul class="levels">
+            {
+              CONFIDENCE_KEYS.map((k) => (
+                <li>
+                  <ConfidenceBadge level={k} />
+                  <span>{CONFIDENCE[k][lang]}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+        {
+          discussUrl && (
+            <section class="box discuss" aria-labelledby="side-tg">
+              <h2 id="side-tg">{a.discussTitle}</h2>
+              <p>{a.discussText}</p>
+              <a class="text-link" href={discussUrl} target="_blank" rel="noopener">
+                {a.discussLink}
+              </a>
+            </section>
+          )
+        }
+      </aside>
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="container related" aria-labelledby="rel-title">
+        <h2 id="rel-title">{a.related}</h2>
+        <ul>
+          {related.map((r) => (
+            <li>
+              <ArticleCard article={r} lang={lang} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .top {
+    padding-top: 32px;
+  }
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 10px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    color: var(--muted);
+  }
+  .crumbs [aria-current] {
+    color: var(--ink);
+  }
+  .head {
+    max-width: 880px;
+    margin-top: 20px;
+  }
+  .head .eyebrow {
+    margin-bottom: 16px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(30px, 4vw, 50px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .byline {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 24px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--on-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .who {
+    display: flex;
+    flex-direction: column;
+  }
+  .name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .date {
+    font-size: 13px;
+  }
+  .layout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 40px 56px;
+    padding-top: 40px;
+  }
+  .main {
+    flex: 999 1 560px;
+    min-width: 0;
+    max-width: 760px;
+  }
+  .side {
+    flex: 1 1 280px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  @media (min-width: 1000px) {
+    .side {
+      position: sticky;
+      top: 24px;
+    }
+  }
+  .demo {
+    margin: 0 0 24px;
+    padding: 14px 18px;
+    border: 1px dashed var(--faint);
+    border-radius: 10px;
+    background: var(--surface);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+  .audit {
+    margin-bottom: 40px;
+    padding: 24px 28px;
+  }
+  .audit dl {
+    margin: 18px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px 32px;
+  }
+  .audit .wide {
+    grid-column: 1 / -1;
+  }
+  .audit dt {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .audit dd {
+    margin: 4px 0 0;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .audit .regular,
+  .audit .wide dd {
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+  .badge-dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .conf-note {
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--text-2);
+  }
+  .question {
+    margin-top: 56px;
+    padding: 32px;
+    border-radius: 14px;
+    background: var(--ink);
+    color: var(--on-dark);
+  }
+  .question .eyebrow {
+    color: var(--on-dark-accent);
+  }
+  .question p {
+    margin: 14px 0 0;
+    font-size: 23px;
+    line-height: 1.4;
+    font-weight: 500;
+    color: #fff;
+  }
+  .question .btn {
+    margin-top: 22px;
+  }
+  .sources {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .sources h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .sources ol {
+    margin: 16px 0 0;
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-2);
+    overflow-wrap: anywhere;
+  }
+  .pending {
+    margin: 16px 0 0;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+  .note {
+    margin: 18px 0 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .cite {
+    margin-top: 24px;
+    padding: 18px 20px;
+    border-radius: 10px;
+    background: var(--chip);
+  }
+  .cite h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .cite p {
+    margin: 8px 0 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-2);
+    overflow-wrap: anywhere;
+  }
+  .box {
+    padding: 22px 24px;
+  }
+  .toc {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+  }
+  .toc a {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    font-size: 15px;
+    line-height: 1.35;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .toc a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .terms {
+    margin: 12px 0 0;
+  }
+  .terms div {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .terms div:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .terms dt {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .terms dd {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .levels {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--text-2);
+  }
+  .levels li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .discuss {
+    border-radius: var(--radius);
+    background: var(--accent-soft);
+  }
+  .discuss h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .discuss p {
+    margin: 8px 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+  .related {
+    padding-block: 72px;
+  }
+  .related h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .related ul {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+  }
+  @media (max-width: 600px) {
+    .audit,
+    .question {
+      padding: 22px;
+    }
+    .question p {
+      font-size: 20px;
+    }
+  }
+</style>

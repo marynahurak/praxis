@@ -1,0 +1,114 @@
+---
+import Logo from './Logo.astro';
+import { SECTIONS, SECTION_KEYS, SITE, t, type Lang } from '../config';
+import { localePath } from '../utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = t[lang];
+const year = new Date().getFullYear();
+const years = year > SITE.since ? `${SITE.since}–${year}` : `${SITE.since}`;
+---
+
+<footer class="site-footer">
+  <div class="container cols">
+    <div class="about">
+      <a href={localePath(lang)} class="brand" aria-label={s.homeLabel}>
+        <Logo size={28} />
+        <span>Praxis</span>
+      </a>
+      <p>{s.footer.about}</p>
+      <p class="muted">{s.footer.founder}: {SITE.author[lang].name}, {SITE.author[lang].role.toLowerCase()}.</p>
+    </div>
+    <nav aria-labelledby="f-sections" class="col">
+      <h2 id="f-sections">{s.footer.sections}</h2>
+      {SECTION_KEYS.map((k) => <a href={localePath(lang, `sections/${k}/`)}>{SECTIONS[k][lang].title}</a>)}
+    </nav>
+    <nav aria-labelledby="f-project" class="col">
+      <h2 id="f-project">{s.footer.project}</h2>
+      <a href={localePath(lang, 'about/')}>{s.footer.links.about}</a>
+      <a href={`${localePath(lang, 'about/')}#policy`}>{s.footer.links.policy}</a>
+      <a href={`${localePath(lang, 'about/')}#evidence`}>{s.footer.links.evidence}</a>
+      <a href={`${localePath(lang, 'about/')}#license`}>{s.footer.links.license}</a>
+      <a href={SITE.repoUrl} rel="noopener">{s.footer.links.code}</a>
+      {SITE.telegramUrl && <a href={SITE.telegramUrl} rel="noopener">Telegram</a>}
+    </nav>
+  </div>
+  <div class="container legal">
+    <p>{s.footer.disclaimer} {s.footer.license} © {years} Praxis</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px 48px;
+    padding-block: 48px 24px;
+  }
+  .about {
+    flex: 2 1 320px;
+    min-width: 0;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 19px;
+    font-weight: 600;
+  }
+  .about p {
+    margin: 12px 0 0;
+    max-width: 440px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-2);
+  }
+  .about .muted {
+    color: var(--muted);
+  }
+  .col {
+    flex: 1 1 180px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .col h2 {
+    margin: 0 0 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    font-size: 14px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .col a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .legal p {
+    margin: 0;
+    padding: 20px 0 40px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+</style>

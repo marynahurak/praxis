@@ -1,0 +1,106 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { CATEGORIES, CATEGORY_KEYS, t, type Lang } from '../config';
+import { getArticles, localePath } from '../utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = t[lang];
+const articles = await getArticles(lang);
+const other = lang === 'uk' ? 'en' : 'uk';
+---
+
+<Base lang={lang} title={s.library.title} description={s.library.lead} altLangHref={localePath(other, 'library/')}>
+  <div class="container page">
+    <h1 class="h-page">{s.library.title}</h1>
+    <p class="lead-muted">{s.library.lead}</p>
+
+    <div class="filters" role="group" aria-label={s.library.filterLabel}>
+      <button type="button" data-filter="all" aria-pressed="true">{s.library.all}</button>
+      {CATEGORY_KEYS.map((k) => <button type="button" data-filter={k} aria-pressed="false">{CATEGORIES[k][lang]}</button>)}
+    </div>
+
+    <ul class="list" id="library-list">
+      {
+        articles.map((a) => (
+          <li data-category={a.data.category}>
+            <ArticleCard article={a} lang={lang} headingLevel="h2" />
+          </li>
+        ))
+      }
+    </ul>
+    <p class="lead-muted" id="library-empty" hidden={articles.length > 0}>{articles.length ? s.library.none : t[lang].latest.empty}</p>
+  </div>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const items = document.querySelectorAll<HTMLLIElement>('#library-list > li');
+  const empty = document.getElementById('library-empty');
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.filter;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      let shown = 0;
+      items.forEach((li) => {
+        const show = f === 'all' || li.dataset.category === f;
+        li.hidden = !show;
+        if (show) shown++;
+      });
+      if (empty) empty.hidden = shown > 0;
+    });
+  });
+</script>
+
+<style>
+  .page {
+    padding-block: 56px 80px;
+  }
+  .h-page {
+    margin: 0;
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .filters {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .filters button {
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .filters button:hover {
+    border-color: var(--ink);
+  }
+  .filters button[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+  .list {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 20px;
+  }
+  .list li[hidden] {
+    display: none;
+  }
+</style>

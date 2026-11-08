@@ -1,0 +1,57 @@
+---
+import { CONFIDENCE, type ConfidenceKey } from '../config';
+
+interface Props {
+  level: ConfidenceKey;
+  note?: string;
+  dark?: boolean;
+}
+const { level, note, dark = false } = Astro.props;
+---
+
+<span class:list={['badge', `badge--${level}`, { 'badge--dark': dark }]}>{CONFIDENCE[level].label}{note && ` · ${note}`}</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge--high {
+    background: var(--accent);
+    color: #fff;
+  }
+  .badge--moderate {
+    border-color: var(--accent);
+    background: #fff;
+    color: var(--accent);
+  }
+  .badge--low {
+    background: var(--line-2);
+    color: var(--text-2);
+  }
+  .badge--unknown {
+    border: 1px dashed var(--faint);
+    color: var(--muted);
+  }
+  .badge--dark.badge--low,
+  .badge--dark.badge--unknown {
+    background: var(--dark-line);
+    border-color: transparent;
+    color: var(--on-dark);
+  }
+  .badge--dark.badge--moderate {
+    background: transparent;
+    border-color: var(--on-dark-accent);
+    color: var(--on-dark-accent);
+  }
+</style>

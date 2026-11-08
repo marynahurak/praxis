@@ -1,0 +1,12 @@
+---
+import ArticleView from '../../views/Article.astro';
+import { getAllArticles, langOf, slugOf, type Article } from '../../utils';
+
+export async function getStaticPaths() {
+  const all = await getAllArticles();
+  return all.filter((entry) => langOf(entry) === 'uk').map((entry) => ({ params: { slug: slugOf(entry) }, props: { entry } }));
+}
+const { entry } = Astro.props as { entry: Article };
+---
+
+<ArticleView entry={entry} lang="uk" />

@@ -1,0 +1,32 @@
+---
+interface Props {
+  name: 'search' | 'telegram' | 'arrow';
+  size?: number;
+}
+const { name, size = 18 } = Astro.props;
+---
+
+{
+  name === 'search' && (
+    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="11" cy="11" r="7" />
+      <path d="M20 20 L16.2 16.2" />
+    </svg>
+  )
+}
+{
+  name === 'telegram' && (
+    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+      <path d="M21 3 L3 10.5 L10 13 L13 21 Z" />
+      <path d="M10 13 L21 3" />
+    </svg>
+  )
+}
+{
+  name === 'arrow' && (
+    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12 H19" />
+      <path d="M13 6 L19 12 L13 18" />
+    </svg>
+  )
+}

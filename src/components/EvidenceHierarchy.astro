@@ -1,0 +1,103 @@
+---
+import ConfidenceBadge from './ConfidenceBadge.astro';
+import { CONFIDENCE_KEYS, EVIDENCE_LEVELS, t, type Lang } from '../config';
+
+interface Props {
+  lang: Lang;
+  id?: string;
+}
+const { lang, id = 'evidence-box' } = Astro.props;
+const s = t[lang];
+---
+
+<aside class="card hierarchy" aria-labelledby={`${id}-title`}>
+  <h2 id={`${id}-title`} class="eyebrow eyebrow--muted">{s.evidence.title}</h2>
+  <ol>
+    {
+      EVIDENCE_LEVELS.map((lvl, i) => (
+        <li>
+          <div class="row">
+            <span class:list={['num', { last: i === EVIDENCE_LEVELS.length - 1 }]}>{String(i + 1).padStart(2, '0')}</span>
+            <span>{lvl[lang]}</span>
+          </div>
+          <div class="track" aria-hidden="true">
+            <div class:list={['fill', { last: i === EVIDENCE_LEVELS.length - 1 }]} style={`width:${lvl.w}%`} />
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="conf">
+    <p>{s.evidence.confidenceIntro}</p>
+    <div class="badges">
+      {CONFIDENCE_KEYS.map((k) => <ConfidenceBadge level={k} />)}
+    </div>
+  </div>
+</aside>
+
+<style>
+  .hierarchy {
+    padding: 28px;
+  }
+  ol {
+    list-style: none;
+    margin: 20px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .row {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+  }
+  .num.last {
+    color: var(--muted);
+  }
+  .track {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--line-2);
+  }
+  .fill {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .fill.last {
+    background: var(--faint);
+  }
+  .conf {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line-2);
+  }
+  .conf p {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: var(--text-2);
+  }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  @media (max-width: 600px) {
+    .hierarchy {
+      padding: 22px;
+    }
+  }
+</style>

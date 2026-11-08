@@ -1,0 +1,161 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { SITE, t, type Lang } from '../config';
+import { localePath } from '../utils';
+
+interface Props {
+  lang: Lang;
+  altLangHref?: string;
+}
+const { lang, altLangHref } = Astro.props;
+const s = t[lang];
+const path = Astro.url.pathname;
+const ukHref = lang === 'uk' ? path : (altLangHref ?? localePath('uk'));
+const enHref = lang === 'en' ? path : (altLangHref ?? localePath('en'));
+const nav = [
+  { href: localePath(lang, 'library/'), label: s.nav.library },
+  { href: `${localePath(lang)}#sections`, label: s.nav.sections },
+  { href: `${localePath(lang, 'about/')}#evidence`, label: s.nav.method },
+  { href: localePath(lang, 'about/'), label: s.nav.about },
+];
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a href={localePath(lang)} class="brand" aria-label={s.homeLabel}>
+      <Logo size={32} />
+      <span>Praxis</span>
+    </a>
+    <nav aria-label={s.nav.label} class="nav">
+      {nav.map((n) => <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+    <div class="tools">
+      <div class="lang" role="group" aria-label={s.langLabel}>
+        <a href={ukHref} hreflang="uk" lang="uk" aria-current={lang === 'uk' ? 'true' : undefined}>УКР</a>
+        <a href={enHref} hreflang="en" lang="en" aria-current={lang === 'en' ? 'true' : undefined}>ENG</a>
+      </div>
+      <a class="icon-btn" href={localePath(lang, 'search/')} aria-label={s.searchLabel}>
+        <Icon name="search" />
+      </a>
+      {
+        SITE.telegramUrl && (
+          <a class="btn btn-primary btn-sm tg" href={SITE.telegramUrl} target="_blank" rel="noopener">
+            <Icon name="telegram" size={16} />
+            <span>Telegram</span>
+          </a>
+        )
+      }
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px 28px;
+    padding-block: 12px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 24px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav a:hover,
+  .nav a[aria-current='page'] {
+    color: var(--accent);
+  }
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lang {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .lang a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    min-height: 42px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-2);
+    text-decoration: none;
+  }
+  .lang a[aria-current='true'] {
+    background: var(--ink);
+    color: #fff;
+  }
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .icon-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  @media (max-width: 760px) {
+    .bar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px 12px;
+    }
+    .nav {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      gap: 0 18px;
+      font-size: 14px;
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+    .tg span {
+      display: none;
+    }
+    .tg {
+      width: 44px;
+      padding: 0;
+    }
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import { t } from '../config';
+import { localePath } from '../utils';
+
+const s = t.uk.notFound;
+const e = t.en.notFound;
+---
+
+<Base lang="uk" title={s.title} noindex>
+  <div class="container page">
+    <p class="eyebrow">404</p>
+    <h1>{s.title}</h1>
+    <p class="lead-muted">{s.text}</p>
+    <p class="actions">
+      <a class="btn btn-primary" href={localePath('uk')}>{s.home}</a>
+      <a class="btn btn-secondary" href={localePath('uk', 'search/')}>{s.search}</a>
+    </p>
+    <p class="en" lang="en">{e.title}. <a href={localePath('en')}>{e.home}</a></p>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-block: 88px 120px;
+    max-width: 760px;
+  }
+  .eyebrow {
+    margin-bottom: 16px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.1;
+    font-weight: 600;
+  }
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .en {
+    margin-top: 40px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+</style>

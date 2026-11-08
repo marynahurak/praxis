@@ -1,0 +1,143 @@
+---
+import ConfidenceBadge from './ConfidenceBadge.astro';
+import { CATEGORIES, SECTIONS, t, type Lang } from '../config';
+import { articleUrl, formatDate, readingTime, type Article } from '../utils';
+
+interface Props {
+  article: Article;
+  lang: Lang;
+  feature?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+const { article, lang, feature = false, headingLevel = 'h3' } = Astro.props;
+const d = article.data;
+const s = t[lang];
+const Heading = headingLevel;
+const label = `${CATEGORIES[d.category][lang]} · ${SECTIONS[d.section][lang].title}`;
+---
+
+<article class:list={['card-article', { feature }]}>
+  <p class="label">{label}</p>
+  <Heading class="title">
+    <a href={articleUrl(article)}>{d.title}</a>
+  </Heading>
+  <p class="desc">{d.description}</p>
+  <div class="meta">
+    <ConfidenceBadge level={d.confidence} dark={feature} />
+    <span class="date">{formatDate(d.pubDate, lang)} · {readingTime(article.body)} {s.article.minRead}</span>
+    {feature && <span class="more" aria-hidden="true">{s.latest.read}</span>}
+  </div>
+</article>
+
+<style>
+  .card-article {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px;
+    background: var(--bg);
+    border: 1px solid #e1e4e9;
+    border-radius: 14px;
+  }
+  .card-article:hover {
+    border-color: var(--faint);
+  }
+  .card-article:focus-within {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .title {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+  .title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .title a:focus-visible {
+    outline: none;
+  }
+  /* Уся картка клікабельна через посилання в заголовку */
+  .title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+  }
+  .desc {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .meta {
+    margin-top: auto;
+    padding-top: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+  }
+  .date {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .feature {
+    min-height: 360px;
+    gap: 16px;
+    padding: 36px;
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .feature:hover {
+    border-color: var(--ink);
+  }
+  .feature .label {
+    color: var(--on-dark-accent);
+  }
+  .feature .title {
+    font-size: clamp(24px, 2.4vw, 32px);
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+  }
+  .feature .title a {
+    color: #fff;
+  }
+  .feature .desc {
+    max-width: 600px;
+    font-size: 16px;
+    color: var(--on-dark-2);
+  }
+  .feature .date {
+    color: #a9b0bb;
+  }
+  .feature .more {
+    margin-left: auto;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--on-dark-accent);
+  }
+  @media (max-width: 600px) {
+    .card-article,
+    .feature {
+      padding: 22px;
+    }
+    .feature {
+      min-height: 0;
+    }
+  }
+</style>

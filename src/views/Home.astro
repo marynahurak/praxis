@@ -1,0 +1,350 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import EvidenceHierarchy from '../components/EvidenceHierarchy.astro';
+import Icon from '../components/Icon.astro';
+import { SECTIONS, SECTION_KEYS, SITE, t, type Lang } from '../config';
+import { getArticles, localePath } from '../utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = t[lang];
+const articles = await getArticles(lang);
+const featured = articles.find((a) => a.data.featured) ?? articles[0];
+const rest = articles.filter((a) => a !== featured).slice(0, 3);
+const counts = Object.fromEntries(SECTION_KEYS.map((k) => [k, articles.filter((a) => a.data.section === k).length]));
+const other = lang === 'uk' ? 'en' : 'uk';
+---
+
+<Base lang={lang}>
+  <section class="container hero">
+    <div class="hero-main">
+      <p class="eyebrow">{s.hero.eyebrow}</p>
+      <h1>{s.hero.title}</h1>
+      <p class="lead">{s.hero.lead}</p>
+      <form role="search" class="search" action={localePath(lang, 'search/')} method="get">
+        <label for="q" class="sr-only">{s.hero.searchLabel}</label>
+        <input id="q" name="q" type="search" placeholder={s.hero.searchPlaceholder} autocomplete="off" />
+        <button type="submit" class="btn btn-primary">{s.hero.searchButton}</button>
+      </form>
+      <div class="topics">
+        <span>{s.hero.topicsLabel}</span>
+        {s.hero.topics.map((topic) => <a class="chip" href={`${localePath(lang, 'search/')}?q=${encodeURIComponent(topic)}`}>{topic}</a>)}
+      </div>
+    </div>
+    <div class="hero-side">
+      <EvidenceHierarchy lang={lang} />
+    </div>
+  </section>
+
+  <section id="sections" class="container block" aria-labelledby="sec-title">
+    <h2 id="sec-title" class="h-section">{s.sections.title}</h2>
+    <p class="lead-muted">{s.sections.lead}</p>
+    <ul class="sections-grid">
+      {
+        SECTION_KEYS.map((k) => (
+          <li>
+            <a class="card section-card" href={localePath(lang, `sections/${k}/`)}>
+              <span class="mono num">{SECTIONS[k].num}</span>
+              <span class="sec-title">{SECTIONS[k][lang].title}</span>
+              <span class="sec-desc">{SECTIONS[k][lang].desc}</span>
+              <span class="mono sec-count">{s.sections.count(counts[k] ?? 0)}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="band-light" aria-labelledby="lib-title">
+    <div class="container block">
+      <h2 id="lib-title" class="h-section">{s.latest.title}</h2>
+      {
+        featured ? (
+          <ul class="latest">
+            <li class="latest-feature">
+              <ArticleCard article={featured} lang={lang} feature />
+            </li>
+            {rest.map((a) => (
+              <li>
+                <ArticleCard article={a} lang={lang} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="lead-muted">{s.latest.empty}</p>
+        )
+      }
+      <p class="all-link">
+        <a class="text-link" href={localePath(lang, 'library/')}>{s.latest.all}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="band-dark" aria-labelledby="policy-title">
+    <div class="container block">
+      <p class="eyebrow on-dark">{s.policy.eyebrow}</p>
+      <h2 id="policy-title" class="h-section">{s.policy.title}</h2>
+      <ul class="policy">
+        {
+          s.policy.items.map((item, i) => (
+            <li>
+              <span class="mono num on-dark">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="container block" aria-labelledby="tg-title">
+    <div class="card cta">
+      <div class="cta-text">
+        <h2 id="tg-title">{s.tg.title}</h2>
+        <p>{s.tg.text}</p>
+      </div>
+      <div class="cta-actions">
+        {
+          SITE.telegramUrl && (
+            <a class="btn btn-primary" href={SITE.telegramUrl} target="_blank" rel="noopener">
+              <Icon name="telegram" size={16} />
+              {s.tg.join}
+            </a>
+          )
+        }
+        <a class="btn btn-secondary" href={localePath(other)} hreflang={other} lang={other}>{s.tg.other}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 48px;
+    align-items: flex-start;
+    padding-block: 72px 64px;
+  }
+  .hero-main {
+    flex: 1 1 560px;
+    min-width: 0;
+  }
+  .hero-side {
+    flex: 1 1 340px;
+    min-width: 0;
+  }
+  .hero .eyebrow {
+    margin-bottom: 20px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(34px, 4.6vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .lead {
+    margin: 24px 0 0;
+    max-width: 620px;
+    font-size: 19px;
+    color: var(--text-2);
+  }
+  .search {
+    margin-top: 36px;
+    max-width: 640px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .search input {
+    flex: 1 1 300px;
+    min-width: 0;
+    height: 52px;
+    padding: 0 18px;
+    border: 1px solid #c4c9d1;
+    border-radius: 8px;
+    background: var(--surface);
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .search input::placeholder {
+    color: #6b7280;
+  }
+  .search .btn {
+    height: 52px;
+    padding: 0 26px;
+  }
+  .topics {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .topics > span {
+    margin-right: 4px;
+    color: var(--muted);
+  }
+  .block {
+    padding-block: 72px;
+  }
+  #sections.block {
+    padding-top: 16px;
+  }
+  .sections-grid {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .section-card {
+    height: 100%;
+    min-height: 230px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .section-card:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .num {
+    font-size: 13px;
+    color: var(--accent);
+  }
+  .sec-title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .sec-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .sec-count {
+    margin-top: auto;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .band-light {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+  }
+  .latest {
+    list-style: none;
+    margin: 36px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .latest-feature {
+    grid-column: span 2;
+  }
+  .all-link {
+    margin: 28px 0 0;
+  }
+  @media (max-width: 960px) {
+    .latest {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 640px) {
+    .latest {
+      grid-template-columns: 1fr;
+    }
+    .latest-feature {
+      grid-column: auto;
+    }
+  }
+  .band-dark {
+    background: var(--ink);
+    color: var(--on-dark);
+  }
+  .band-dark .h-section {
+    margin-top: 14px;
+    color: #fff;
+  }
+  .on-dark {
+    color: var(--on-dark-accent);
+  }
+  .policy {
+    list-style: none;
+    margin: 40px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px 40px;
+  }
+  .policy li {
+    padding-top: 20px;
+    border-top: 1px solid var(--dark-line);
+  }
+  .policy h3 {
+    margin: 10px 0 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .policy p {
+    margin: 10px 0 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--on-dark-2);
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px 40px;
+    padding: 40px;
+    border-radius: 16px;
+  }
+  .cta-text {
+    flex: 1 1 460px;
+    min-width: 0;
+  }
+  .cta h2 {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+  .cta p {
+    margin: 12px 0 0;
+    max-width: 620px;
+    color: var(--text-2);
+  }
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .hero {
+      padding-block: 40px 40px;
+      gap: 36px;
+    }
+    .block {
+      padding-block: 48px;
+    }
+    .cta {
+      padding: 24px;
+    }
+  }
+</style>
