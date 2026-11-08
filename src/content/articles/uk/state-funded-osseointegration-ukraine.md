@@ -5,8 +5,8 @@ category: news
 section: lower-limb
 pubDate: 2026-11-02
 confidence: moderate
-studyType: "Критичний огляд ретроспективної когорти (Bondarenko et al., 2026) та умов державного пілоту"
-limitations: "Аналіз дослідження ґрунтується на анотації: повний текст статті авторці недоступний. Умови пілоту — за офіційним роз'ясненням МОЗ, а не за повним текстом Порядку."
+studyType: "Критичний огляд ретроспективної когорти (Bondarenko et al., 2026) та умов державного пілоту (постанова КМУ № 1095)"
+limitations: "Аналіз дослідження ґрунтується на анотації: повний текст статті авторці недоступний. Умови пілоту звірено з текстом постанови КМУ № 1095 і затвердженого нею Порядку."
 tags: ["остеоінтеграція", "OPRA", "пряма кісткова фіксація", "бойова травма"]
 terms:
   - { uk: "остеоінтеграція", en: "osseointegration, OI" }
@@ -29,14 +29,13 @@ references:
   - text: "Forsberg JA, Rivera JA, Anderson AB, Souza JM, Potter BK. Does transhumeral osseointegration after amputation improve patient-reported outcomes and prosthesis use? Clin Orthop Relat Res. 2025;483(8):1502–1510."
   - text: "Milchem H, et al. Meta-analytic evaluation of complications and longevity of bone-anchored prostheses in lower extremity amputees: does design matter? Musculoskelet Surg. 2026."
     doi: "10.1007/s12306-026-00946-9"
-  - text: "Кабінет Міністрів України. Постанова № 1095 від 7 вересня 2026 р. щодо експериментального проєкту з оплати послуг, пов'язаних з остеоінтеграцією."
+  - text: "Кабінет Міністрів України. Постанова від 7 вересня 2026 р. № 1095 «Деякі питання реалізації експериментального проекту щодо оплати послуг, пов'язаних із застосуванням методу остеоінтегративного протезування, за рахунок коштів державного бюджету» (разом із Порядком реалізації експериментального проекту)."
     url: "https://www.kmu.gov.ua/npas/deiaki-pytannia-realizatsii-eksperymentalnoho-proektu-shchodo-oplaty-posluh-poviazanykh-s1095070926"
   - text: "Міністерство охорони здоров'я України. Пацієнти зі складними ампутаціями зможуть отримати остеоінтегративне протезування коштом держави: рішення уряду."
     url: "https://moz.gov.ua/uk/paciyenti-zi-skladnimi-amputaciyami-zmozhut-otrimati-osteointegrativne-protezuvannya-koshtom-derzhavi-rishennya-uryadu"
   - text: "Integrum AB. New clinical study shows high implant survival with the OPRA Implant System in war-injured veterans in Ukraine [press release]. 2026 Oct 14."
     url: "https://www.placera.se/pressmeddelanden/integrum-new-clinical-study-shows-high-implant-survival-with-the-opra-implant-system-in-war-injured-veterans-in-ukraine-20261014"
 telegram: "https://t.me/prosthetics_ukraine/520"
-draft: true
 ---
 
 7 вересня уряд [постановою № 1095](https://www.kmu.gov.ua/npas/deiaki-pytannia-realizatsii-eksperymentalnoho-proektu-shchodo-oplaty-posluh-poviazanykh-s1095070926) запустив дворічний експериментальний проєкт, у межах якого держава оплачує остеоінтеграцію (osseointegration, OI). Перша рецензована українська когорта вийшла [3 жовтня в International Orthopaedics](https://doi.org/10.1007/s00264-026-07054-0). Тобто рішення про фінансування випередило публікацію власних даних майже на місяць. Сам по собі такий порядок не проблема: міжнародна доказова база накопичується з 1990-х. Мене тривожить інше.
@@ -59,12 +58,12 @@ draft: true
 
 - **Для кого:** [пацієнти з короткими або деформованими залишковими кінцівками стегна чи плеча, які не можуть користуватися гільзою через постійний біль, рубці, дерматити чи виразки](https://moz.gov.ua/uk/paciyenti-zi-skladnimi-amputaciyami-zmozhut-otrimati-osteointegrativne-protezuvannya-koshtom-derzhavi-rishennya-uryadu).
 - **Хто платить:** [НСЗУ оплачує операцію та стаціонарну реабілітацію за пакетами Програми медичних гарантій і доплачує 1,2 млн грн за систему прямої кісткової фіксації. Фонд соціального захисту осіб з інвалідністю забезпечує зовнішній протез, комплектувальні, підбір, виготовлення, примірку й обслуговування](https://moz.gov.ua/uk/paciyenti-zi-skladnimi-amputaciyami-zmozhut-otrimati-osteointegrativne-protezuvannya-koshtom-derzhavi-rishennya-uryadu).
-- **Маршрут пацієнта** ([за роз'ясненням МОЗ](https://moz.gov.ua/uk/paciyenti-zi-skladnimi-amputaciyami-zmozhut-otrimati-osteointegrativne-protezuvannya-koshtom-derzhavi-rishennya-uryadu)):
+- **Маршрут пацієнта** ([за Порядком, затвердженим постановою № 1095](https://www.kmu.gov.ua/npas/deiaki-pytannia-realizatsii-eksperymentalnoho-proektu-shchodo-oplaty-posluh-poviazanykh-s1095070926)):
   1. Консультаційні висновки двох протезних підприємств щодо можливості неінвазивного протезування.
   2. Рішення комісії закладу.
-  3. Погодження кандидатури з фахівцями МОЗ.
+  3. Погодження кандидатури кожного пацієнта з МОЗ.
   4. Письмова згода пацієнта. Перед нею заклад має пояснити ризики, альтернативи і право відмовитися.
-- **Нагляд:** [контрольні огляди через 6 тижнів, 3, 6 і 12 місяців. На 3-, 6- і 12-му місяцях оцінюють функцію, якість життя та психічний стан, а через рік проводять денситометрію](https://moz.gov.ua/uk/paciyenti-zi-skladnimi-amputaciyami-zmozhut-otrimati-osteointegrativne-protezuvannya-koshtom-derzhavi-rishennya-uryadu).
+- **Нагляд:** [контрольні огляди через 6 тижнів, 3, 6 і 12 місяців після виписки. На 3-, 6- і 12-му місяцях оцінюють функціональні можливості (це робить МДРК закладу) і якість життя та проводять скринінг психічного стану, а через 12 місяців — денситометрію](https://www.kmu.gov.ua/npas/deiaki-pytannia-realizatsii-eksperymentalnoho-proektu-shchodo-oplaty-posluh-poviazanykh-s1095070926).
 - **Хто оперує:** [за даними МОЗ, у переліку шість закладів](https://medicine.rayon.in.ua/news/1111686-riziki-osteointegraciyi-u-protez-hub-zaklikaiut-moz-pereglianuti-spisok-likaren):
   - КНП «Київська міська клінічна лікарня № 12»;
   - ЛНМУ ім. Данила Галицького;
@@ -73,7 +72,7 @@ draft: true
   - Університетська лікарня ХНМУ;
   - Черкаська обласна лікарня.
 
-У публічному роз'ясненні МОЗ я не знайшла ні вимог до підготовки протезиста-ортезиста, ні конкретних інструментів оцінювання. Є лише загальні формулювання на кшталт «функціональні можливості» та «якість життя». Обсяг пілоту офіційно не озвучено. Цифру «25 пацієнтів у 2026 році» наводить лише [прес-реліз виробника імплантів](https://www.placera.se/pressmeddelanden/integrum-new-clinical-study-shows-high-implant-survival-with-the-opra-implant-system-in-war-injured-veterans-in-ukraine-20261014).
+Ні [Порядок](https://www.kmu.gov.ua/npas/deiaki-pytannia-realizatsii-eksperymentalnoho-proektu-shchodo-oplaty-posluh-poviazanykh-s1095070926), ні публічне роз'яснення МОЗ не визначають вимог до підготовки протезиста-ортезиста чи конкретних інструментів оцінювання. Є лише загальні формулювання на кшталт «функціональні можливості» та «якість життя», а інші умови Порядок відсилає до наказу МОЗ № 873 від 26 травня 2025 р. Обсяг пілоту — [25 пацієнтів у 2026 році](https://www.kmu.gov.ua/npas/deiaki-pytannia-realizatsii-eksperymentalnoho-proektu-shchodo-oplaty-posluh-poviazanykh-s1095070926): за орієнтовної вартості системи 1,2 млн грн це 30 млн грн.
 
 ### Дизайн дослідження
 
