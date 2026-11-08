@@ -34,13 +34,13 @@
 | `category` | `news`, `research`, `biomechanics` або `discussion` |
 | `section` | `upper-limb`, `lower-limb`, `orthotics`, `gait` або `textbooks` |
 | `pubDate` | Дата у форматі `2026-12-01` |
-| `confidence` | `high`, `moderate`, `low` або `unknown` |
+| `confidence` | `high`, `moderate`, `low` або `unknown` (необов’язково; без нього позначка не показується) |
 | `evidenceLevel` | Рівень ієрархії доказів Praxis від 1 до 6 |
 | `studyType`, `limitations` | Тип матеріалу та обмеження для блоку «Аудит доказів» |
 | `terms` | Терміни UA/EN для бокової панелі |
 | `question` | Питання до спільноти |
 | `references` | Джерела: `text` — бібліографічний опис, `doi` — DOI без `https://doi.org/` |
-| `telegram` | Посилання на пост з обговоренням |
+| `telegram` | Посилання на пост з обговоренням, напр. `https://t.me/prosthetics_ukraine/491` |
 | `featured` | `true` — велика картка на головній |
 | `draft` | `true` — стаття не публікується на сайті |
 

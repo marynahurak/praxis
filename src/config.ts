@@ -101,7 +101,7 @@ export const t = {
       topicsLabel: 'Часті теми:',
       topics: ['Міоелектричне керування', 'Підвіс куксоприймача', 'Остеоінтеграція', 'Аналіз ходи'],
     },
-    evidence: { title: 'Ієрархія доказів Praxis', confidenceIntro: 'Кожна стаття має позначку впевненості:' },
+    evidence: { title: 'Ієрархія доказів Praxis', confidenceIntro: 'Позначки впевненості, якими редакція маркує статті:' },
     sections: {
       title: 'Розділи бази знань',
       lead: 'Та сама структура, що й гілки в Telegram: кожен пост стає постійною статтею з пошуком, тегами й посиланнями на джерела.',
@@ -190,7 +190,7 @@ export const t = {
       topicsLabel: 'Popular topics:',
       topics: ['Myoelectric control', 'Socket suspension', 'Osseointegration', 'Gait analysis'],
     },
-    evidence: { title: 'The Praxis evidence hierarchy', confidenceIntro: 'Every article carries a confidence label:' },
+    evidence: { title: 'The Praxis evidence hierarchy', confidenceIntro: 'Confidence labels used by the editors:' },
     sections: {
       title: 'Knowledge base sections',
       lead: 'The same structure as the Telegram topics: every post becomes a permanent, searchable article with tags and sources.',

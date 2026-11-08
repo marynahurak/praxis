@@ -34,6 +34,7 @@ const related = [
 const discussUrl = d.telegram || SITE.telegramUrl;
 const pageUrl = new URL(articleUrl(entry), Astro.site).href;
 const year = d.pubDate.getUTCFullYear();
+const hasAudit = Boolean(d.studyType || d.evidenceLevel || d.confidence || d.limitations || d.terms.length);
 const levelLabel = d.evidenceLevel ? `${d.evidenceLevel} — ${EVIDENCE_LEVELS[d.evidenceLevel - 1][lang]}` : undefined;
 const citation = `${author.short} ${d.title}. Praxis. ${year}. ${a.available}: ${pageUrl}`;
 
@@ -94,6 +95,7 @@ const jsonLd = {
       <div class="main">
         {d.demo && <p class="demo" role="note">{a.demo}</p>}
 
+        {hasAudit && (
         <section class="card audit" aria-labelledby="audit-title" data-pagefind-ignore>
           <h2 id="audit-title" class="eyebrow eyebrow--muted">{a.audit}</h2>
           <dl>
@@ -113,13 +115,17 @@ const jsonLd = {
                 </div>
               )
             }
-            <div>
-              <dt>{a.confidence}</dt>
-              <dd class="badge-dd">
-                <ConfidenceBadge level={d.confidence} />
-                <span class="conf-note">{CONFIDENCE[d.confidence][lang]}</span>
-              </dd>
-            </div>
+            {
+              d.confidence && (
+                <div>
+                  <dt>{a.confidence}</dt>
+                  <dd class="badge-dd">
+                    <ConfidenceBadge level={d.confidence} />
+                    <span class="conf-note">{CONFIDENCE[d.confidence][lang]}</span>
+                  </dd>
+                </div>
+              )
+            }
             {
               d.limitations && (
                 <div>
@@ -138,6 +144,7 @@ const jsonLd = {
             }
           </dl>
         </section>
+        )}
 
         <div class="prose" data-pagefind-body>
           <Content />
@@ -158,40 +165,40 @@ const jsonLd = {
           )
         }
 
-        <section id="sources" class="sources" aria-labelledby="src-title">
-          <h2 id="src-title">{a.sources}</h2>
+        <section id="sources" class="sources" aria-labelledby={d.references.length ? 'src-title' : 'cite-title'}>
           {
-            d.references.length ? (
-              <ol>
-                {d.references.map((r) => (
-                  <li>
-                    {r.text}
-                    {r.doi && (
-                      <>
-                        {' '}
-                        <a href={`https://doi.org/${r.doi}`} rel="noopener">
-                          doi:{r.doi}
-                        </a>
-                      </>
-                    )}
-                    {r.url && !r.doi && (
-                      <>
-                        {' '}
-                        <a href={r.url} rel="noopener">
-                          {r.url}
-                        </a>
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p class="pending">{a.sourcesPending}</p>
+            d.references.length > 0 && (
+              <>
+                <h2 id="src-title">{a.sources}</h2>
+                <ol>
+                  {d.references.map((r) => (
+                    <li>
+                      {r.text}
+                      {r.doi && (
+                        <>
+                          {' '}
+                          <a href={`https://doi.org/${r.doi}`} rel="noopener">
+                            doi:{r.doi}
+                          </a>
+                        </>
+                      )}
+                      {r.url && !r.doi && (
+                        <>
+                          {' '}
+                          <a href={r.url} rel="noopener">
+                            {r.url}
+                          </a>
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+                <p class="note">{a.sourcesNote}</p>
+              </>
             )
           }
-          {d.references.length > 0 && <p class="note">{a.sourcesNote}</p>}
           <div class="cite">
-            <h3>{a.cite}</h3>
+            <h3 id="cite-title">{a.cite}</h3>
             <p class="mono">{citation}</p>
           </div>
         </section>
@@ -213,9 +220,11 @@ const jsonLd = {
                     <a href="#q-title">{a.question}</a>
                   </li>
                 )}
-                <li>
-                  <a href="#sources">{a.sources}</a>
-                </li>
+                {d.references.length > 0 && (
+                  <li>
+                    <a href="#sources">{a.sources}</a>
+                  </li>
+                )}
               </ul>
             </nav>
           )

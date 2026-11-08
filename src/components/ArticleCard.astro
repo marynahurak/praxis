@@ -23,7 +23,7 @@ const label = `${CATEGORIES[d.category][lang]} · ${SECTIONS[d.section][lang].ti
   </Heading>
   <p class="desc">{d.description}</p>
   <div class="meta">
-    <ConfidenceBadge level={d.confidence} dark={feature} />
+    {d.confidence && <ConfidenceBadge level={d.confidence} dark={feature} />}
     <span class="date">{formatDate(d.pubDate, lang)} · {readingTime(article.body)} {s.article.minRead}</span>
     {feature && <span class="more" aria-hidden="true">{s.latest.read}</span>}
   </div>

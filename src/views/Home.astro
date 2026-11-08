@@ -13,7 +13,7 @@ const { lang } = Astro.props;
 const s = t[lang];
 const articles = await getArticles(lang);
 const featured = articles.find((a) => a.data.featured) ?? articles[0];
-const rest = articles.filter((a) => a !== featured).slice(0, 3);
+const rest = articles.filter((a) => a !== featured).slice(0, 4);
 const counts = Object.fromEntries(SECTION_KEYS.map((k) => [k, articles.filter((a) => a.data.section === k).length]));
 const other = lang === 'uk' ? 'en' : 'uk';
 ---

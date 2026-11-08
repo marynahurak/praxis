@@ -14,7 +14,7 @@ const articles = defineCollection({
     section: z.enum(['upper-limb', 'lower-limb', 'orthotics', 'gait', 'textbooks']),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
-    confidence: z.enum(['high', 'moderate', 'low', 'unknown']),
+    confidence: z.enum(['high', 'moderate', 'low', 'unknown']).optional(),
     evidenceLevel: z.number().int().min(1).max(6).optional(),
     studyType: z.string().optional(),
     limitations: z.string().optional(),
