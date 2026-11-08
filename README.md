@@ -4,7 +4,7 @@
 
 **Незалежна некомерційна база знань, що з’єднує доказові дослідження з клінічною практикою протезування та ортезування в Україні, зокрема з роботою з бойовою політравмою.**
 
-🌐 Website: https://marynagurak.github.io/praxis/ · [English](https://marynagurak.github.io/praxis/en/)
+🌐 Website: https://marynahurak.github.io/praxis/ · [English](https://marynahurak.github.io/praxis/en/)
 
 ---
 

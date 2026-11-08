@@ -8,7 +8,7 @@ export const SITE = {
   name: 'Praxis',
   // Посилання на Telegram-канал. Якщо залишити порожнім — кнопки Telegram на сайті приховані.
   telegramUrl: 'https://t.me/prosthetics_ukraine',
-  repoUrl: 'https://github.com/marynagurak/praxis',
+  repoUrl: 'https://github.com/marynahurak/praxis',
   since: 2026,
   author: {
     uk: { name: 'Марина Гурак', short: 'Гурак М.', role: 'Протезистка-ортезистка, фізична терапевтка', initials: 'МГ' },

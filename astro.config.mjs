@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 // Тимчасова адреса на GitHub Pages.
 // Після підключення власного домену: site → 'https://ваш-домен', base → '/'.
 export default defineConfig({
-  site: 'https://marynagurak.github.io',
+  site: 'https://marynahurak.github.io',
   base: '/praxis',
   trailingSlash: 'always',
   integrations: [
