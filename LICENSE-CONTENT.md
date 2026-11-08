@@ -1,6 +1,6 @@
 # Content licence — CC BY-NC 4.0
 
-Copyright © 2026 Maryna Gurak and Praxis.
+Copyright © 2026 Maryna Hurak and Praxis.
 
 All article texts in [`src/content/`](src/content/) and published on the Praxis website are licensed under the
 **Creative Commons Attribution-NonCommercial 4.0 International** licence (CC BY-NC 4.0).

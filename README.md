@@ -76,6 +76,6 @@ Praxis — освітня платформа та професійна спіл�
 
 ---
 
-**Founder and editor:** Maryna Gurak, Prosthetist-Orthotist, Physical Therapist.
+**Founder and editor:** Maryna Hurak, Prosthetist-Orthotist, Physical Therapist.
 
 <sub>Built with [Astro](https://astro.build) and [Pagefind](https://pagefind.app); hosted on GitHub Pages.</sub>

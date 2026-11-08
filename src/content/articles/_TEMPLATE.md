@@ -41,7 +41,7 @@ references:
     doi: "10.xxxx/xxxxx"
 
 # Посилання на обговорення цього поста в Telegram (необов'язково)
-# telegram: "https://t.me/назва_каналу/123"
+# telegram: "https://t.me/prosthetics_ukraine/123"
 
 # featured: true — показати великою карткою на головній
 featured: false

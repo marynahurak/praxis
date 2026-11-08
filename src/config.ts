@@ -6,14 +6,13 @@ export const LANGS: Lang[] = ['uk', 'en'];
 
 export const SITE = {
   name: 'Praxis',
-  // Посилання на Telegram-канал, напр. 'https://t.me/назва_каналу'.
-  // Поки порожнє — кнопки Telegram на сайті приховані.
-  telegramUrl: '',
+  // Посилання на Telegram-канал. Якщо залишити порожнім — кнопки Telegram на сайті приховані.
+  telegramUrl: 'https://t.me/prosthetics_ukraine',
   repoUrl: 'https://github.com/marynagurak/praxis',
   since: 2026,
   author: {
     uk: { name: 'Марина Гурак', short: 'Гурак М.', role: 'Протезистка-ортезистка, фізична терапевтка', initials: 'МГ' },
-    en: { name: 'Maryna Gurak', short: 'Gurak M.', role: 'Prosthetist-Orthotist, Physical Therapist', initials: 'MG' },
+    en: { name: 'Maryna Hurak', short: 'Hurak M.', role: 'Prosthetist-Orthotist, Physical Therapist', initials: 'MH' },
   },
 } as const;
 
