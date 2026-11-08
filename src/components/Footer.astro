@@ -8,8 +8,10 @@ interface Props {
 }
 const { lang } = Astro.props;
 const s = t[lang];
+const author = SITE.author[lang];
 const year = new Date().getFullYear();
 const years = year > SITE.since ? `${SITE.since}–${year}` : `${SITE.since}`;
+const about = localePath(lang, 'about/');
 ---
 
 <footer class="site-footer">
@@ -20,20 +22,27 @@ const years = year > SITE.since ? `${SITE.since}–${year}` : `${SITE.since}`;
         <span>Praxis</span>
       </a>
       <p>{s.footer.about}</p>
-      <p class="muted">{s.footer.founder}: {SITE.author[lang].name}, {SITE.author[lang].role.toLowerCase()}.</p>
+      <p class="muted">{s.footer.founder}: {author.name}, {author.role.charAt(0).toLowerCase() + author.role.slice(1)}.</p>
     </div>
     <nav aria-labelledby="f-sections" class="col">
       <h2 id="f-sections">{s.footer.sections}</h2>
       {SECTION_KEYS.map((k) => <a href={localePath(lang, `sections/${k}/`)}>{SECTIONS[k][lang].title}</a>)}
+      <a href={localePath(lang, 'library/')}>{s.nav.library}</a>
     </nav>
     <nav aria-labelledby="f-project" class="col">
       <h2 id="f-project">{s.footer.project}</h2>
-      <a href={localePath(lang, 'about/')}>{s.footer.links.about}</a>
-      <a href={`${localePath(lang, 'about/')}#policy`}>{s.footer.links.policy}</a>
-      <a href={`${localePath(lang, 'about/')}#evidence`}>{s.footer.links.evidence}</a>
-      <a href={`${localePath(lang, 'about/')}#license`}>{s.footer.links.license}</a>
-      <a href={SITE.repoUrl} rel="noopener">{s.footer.links.code}</a>
+      <a href={about}>{s.footer.links.about}</a>
+      <a href={`${about}#policy`}>{s.footer.links.policy}</a>
+      <a href={`${about}#evidence`}>{s.footer.links.evidence}</a>
+      <a href={`${about}#ethics`}>{s.footer.links.ethics}</a>
+      <a href={`${about}#license`}>{s.footer.links.license}</a>
+    </nav>
+    <nav aria-labelledby="f-links" class="col">
+      <h2 id="f-links">{lang === 'uk' ? 'Посилання' : 'Links'}</h2>
       {SITE.telegramUrl && <a href={SITE.telegramUrl} rel="noopener">Telegram</a>}
+      {SITE.linkedinUrl && <a href={SITE.linkedinUrl} rel="noopener">LinkedIn</a>}
+      {SITE.instagramUrl && <a href={SITE.instagramUrl} rel="noopener">Instagram</a>}
+      <a href={SITE.repoUrl} rel="noopener">{s.footer.links.code}</a>
     </nav>
   </div>
   <div class="container legal">
@@ -43,14 +52,14 @@ const years = year > SITE.since ? `${SITE.since}–${year}` : `${SITE.since}`;
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--line);
-    background: var(--bg);
+    background: var(--graphite-900);
+    color: var(--on-dark);
   }
   .cols {
     display: flex;
     flex-wrap: wrap;
     gap: 32px 48px;
-    padding-block: 48px 24px;
+    padding-block: 52px 28px;
   }
   .about {
     flex: 2 1 320px;
@@ -61,23 +70,28 @@ const years = year > SITE.since ? `${SITE.since}–${year}` : `${SITE.since}`;
     align-items: center;
     gap: 10px;
     min-height: 44px;
-    color: var(--ink);
+    color: #fff;
     text-decoration: none;
-    font-size: 19px;
+    font-family: var(--font-serif);
+    font-size: 21px;
     font-weight: 600;
+  }
+  .brand :global(.logo) {
+    background: var(--graphite-800);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
   }
   .about p {
     margin: 12px 0 0;
-    max-width: 440px;
+    max-width: 460px;
     font-size: 14px;
     line-height: 1.6;
-    color: var(--text-2);
+    color: var(--on-dark-2);
   }
   .about .muted {
-    color: var(--muted);
+    color: #a3adbb;
   }
   .col {
-    flex: 1 1 180px;
+    flex: 1 1 160px;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -89,26 +103,29 @@ const years = year > SITE.since ? `${SITE.since}–${year}` : `${SITE.since}`;
     font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: #a3adbb;
   }
   .col a {
     display: inline-flex;
     align-items: center;
     min-height: 36px;
     font-size: 14px;
-    color: var(--ink);
+    color: var(--on-dark);
     text-decoration: none;
   }
   .col a:hover {
-    color: var(--accent);
+    color: #fff;
     text-decoration: underline;
   }
   .legal p {
     margin: 0;
     padding: 20px 0 40px;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--dark-line);
     font-size: 13px;
     line-height: 1.6;
-    color: var(--muted);
+    color: #a3adbb;
+  }
+  .site-footer :focus-visible {
+    outline-color: var(--on-dark-accent);
   }
 </style>

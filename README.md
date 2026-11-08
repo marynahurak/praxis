@@ -1,8 +1,8 @@
 # Praxis
 
-**An independent, non-commercial knowledge base bridging evidence-based research and clinical practice in prosthetics & orthotics in Ukraine, including combat-related polytrauma.**
+**An independent, non-commercial knowledge base on evidence-based practice in prosthetics and rehabilitation, connecting international research with clinical practice in Ukraine, including the management of combat-related polytrauma.**
 
-**Незалежна некомерційна база знань, що з’єднує доказові дослідження з клінічною практикою протезування та ортезування в Україні, зокрема з роботою з бойовою політравмою.**
+**Незалежна некомерційна база знань із доказової практики в протезуванні та реабілітації, що поєднує міжнародні дослідження з клінічною практикою в Україні, зокрема з веденням бойової політравми.**
 
 🌐 Website: https://marynahurak.github.io/praxis/ · [English](https://marynahurak.github.io/praxis/en/)
 
@@ -12,7 +12,7 @@
 
 ### Mission
 
-Praxis is an educational platform and professional community for prosthetists-orthotists, physical therapists, physical and rehabilitation medicine (PM&R) physicians, biomedical and rehabilitation engineers, and master’s and PhD students. It translates current international research into decisions for the multidisciplinary rehabilitation team (MDT), with particular attention to the clinical realities of complex combat-related polytrauma in Ukraine.
+Praxis is an educational resource and professional community for prosthetists-orthotists, physical therapists, occupational therapists, physical and rehabilitation medicine (PM&R) physicians, psychologists, biomedical and rehabilitation engineers, and graduate students. It translates current international research into decisions for the multidisciplinary rehabilitation team (MDT), with particular attention to the clinical realities of complex combat-related polytrauma in Ukraine.
 
 ### Editorial principles
 
@@ -35,8 +35,12 @@ Each article states its level in the Praxis evidence hierarchy and a confidence 
 
 ### Content structure
 
-Knowledge base sections: Upper Limb · Lower Limb · Orthotics · Gait · Textbooks.
+Knowledge base sections: **Prosthetics** (upper and lower limb, osseointegration, digital fabrication) and **Rehabilitation** (physical therapy, occupational therapy, physical and rehabilitation medicine, psychology).
 Each article follows the same structure: hook → methodology and mechanics → critical audit → clinical takeaway for the MDT → question for the community → references.
+
+### Publication ethics
+
+Praxis follows the principles of the Committee on Publication Ethics (COPE), the ICMJE Recommendations, the WMA Declaration of Helsinki and the CARE guidelines for case reports. Every article includes a conflict-of-interest statement. The use of AI tools (source retrieval and verification, language editing, website development) is disclosed; all content is reviewed and approved by the author, who takes full responsibility for it.
 
 ### Citation
 
@@ -76,6 +80,6 @@ Praxis — освітня платформа та професійна спіл�
 
 ---
 
-**Founder and editor:** Maryna Hurak, Prosthetist-Orthotist, Physical Therapist.
+**Founder and editor:** Maryna Hurak, Prosthetist-Orthotist, ISPO Associate Prosthetist; Upper Limb Prosthetics Department, Superhumans War Trauma Center.
 
 <sub>Built with [Astro](https://astro.build) and [Pagefind](https://pagefind.app); hosted on GitHub Pages.</sub>

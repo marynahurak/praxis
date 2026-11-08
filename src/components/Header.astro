@@ -52,8 +52,9 @@ const nav = [
 
 <style>
   .site-header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--line);
+    background: var(--graphite-900);
+    border-bottom: 1px solid #0d1116;
+    color: var(--on-dark);
   }
   .bar {
     display: flex;
@@ -68,16 +69,24 @@ const nav = [
     align-items: center;
     gap: 10px;
     min-height: 44px;
-    color: var(--ink);
+    color: #fff;
     text-decoration: none;
-    font-size: 21px;
+    font-family: var(--font-serif);
+    font-size: 23px;
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.005em;
+  }
+  .brand:hover {
+    color: #fff;
+  }
+  .brand :global(.logo) {
+    background: var(--graphite-800);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
   }
   .nav {
     display: flex;
     flex-wrap: wrap;
-    gap: 0 24px;
+    gap: 0 26px;
     font-size: 15px;
     font-weight: 500;
   }
@@ -85,12 +94,15 @@ const nav = [
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    color: var(--ink);
+    color: var(--on-dark-2);
     text-decoration: none;
   }
   .nav a:hover,
   .nav a[aria-current='page'] {
-    color: var(--accent);
+    color: #fff;
+  }
+  .nav a[aria-current='page'] {
+    box-shadow: inset 0 -2px 0 var(--on-dark-accent);
   }
   .tools {
     display: flex;
@@ -99,7 +111,7 @@ const nav = [
   }
   .lang {
     display: flex;
-    border: 1px solid var(--line);
+    border: 1px solid var(--dark-line);
     border-radius: 8px;
     overflow: hidden;
   }
@@ -112,12 +124,15 @@ const nav = [
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 500;
-    color: var(--text-2);
+    color: var(--on-dark-2);
     text-decoration: none;
   }
-  .lang a[aria-current='true'] {
-    background: var(--ink);
+  .lang a:hover {
     color: #fff;
+  }
+  .lang a[aria-current='true'] {
+    background: var(--on-dark);
+    color: var(--graphite-900);
   }
   .icon-btn {
     width: 44px;
@@ -125,14 +140,16 @@ const nav = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--line);
+    border: 1px solid var(--dark-line);
     border-radius: 8px;
-    background: var(--surface);
-    color: var(--ink);
+    color: var(--on-dark);
   }
   .icon-btn:hover {
-    border-color: var(--ink);
-    color: var(--ink);
+    border-color: var(--on-dark-2);
+    color: #fff;
+  }
+  .site-header :focus-visible {
+    outline-color: var(--on-dark-accent);
   }
   @media (max-width: 760px) {
     .bar {

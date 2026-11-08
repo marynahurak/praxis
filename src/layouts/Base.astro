@@ -1,10 +1,11 @@
 ---
-import '@fontsource/ibm-plex-sans/400.css';
-import '@fontsource/ibm-plex-sans/500.css';
-import '@fontsource/ibm-plex-sans/600.css';
-import '@fontsource/ibm-plex-serif/400.css';
-import '@fontsource/ibm-plex-serif/400-italic.css';
-import '@fontsource/ibm-plex-serif/600.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/source-serif-4/400.css';
+import '@fontsource/source-serif-4/400-italic.css';
+import '@fontsource/source-serif-4/600.css';
+import '@fontsource/source-serif-4/700.css';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
 import '../styles/global.css';
@@ -24,7 +25,7 @@ interface Props {
 
 const { lang, title, description, altLangHref, ogType = 'website', noindex = false } = Astro.props;
 const s = t[lang];
-const fullTitle = title ? `${title} — ${SITE.name}` : `${SITE.name} — ${lang === 'uk' ? 'доказова практика протезування та ортезування' : 'evidence-based prosthetics and orthotics'}`;
+const fullTitle = title ? `${title} — ${SITE.name}` : `${SITE.name} — ${s.siteTitle}`;
 const desc = description ?? s.siteDescription;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const other = lang === 'uk' ? 'en' : 'uk';

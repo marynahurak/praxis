@@ -23,6 +23,7 @@ const other = lang === 'uk' ? 'en' : 'uk';
     <p class="mono num">{sec.num}</p>
     <h1 class="h-page">{sec[lang].title}</h1>
     <p class="lead-muted">{sec[lang].desc}</p>
+    <p class="subs">{s.sections.includes} {sec[lang].subs.join(' · ')}</p>
 
     {
       articles.length ? (
@@ -69,6 +70,11 @@ const other = lang === 'uk' ? 'en' : 'uk';
     line-height: 1.1;
     letter-spacing: -0.02em;
     font-weight: 600;
+  }
+  .subs {
+    margin: 10px 0 0;
+    font-size: 15px;
+    color: var(--text-2);
   }
   .list {
     list-style: none;

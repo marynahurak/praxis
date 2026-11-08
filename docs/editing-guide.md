@@ -32,7 +32,7 @@
 | `title` | Заголовок-теза |
 | `description` | 1–2 речення для картки та пошуковиків |
 | `category` | `news`, `research`, `biomechanics` або `discussion` |
-| `section` | `upper-limb`, `lower-limb`, `orthotics`, `gait` або `textbooks` |
+| `section` | `prosthetics` (протезування) або `rehabilitation` (реабілітація: фізична терапія, ерготерапія, ФРМ, психологія) |
 | `pubDate` | Дата у форматі `2026-12-01` |
 | `confidence` | `high`, `moderate`, `low` або `unknown` (необов’язково; без нього позначка не показується) |
 | `evidenceLevel` | Рівень ієрархії доказів Praxis від 1 до 6 |

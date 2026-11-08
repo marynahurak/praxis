@@ -11,7 +11,7 @@ const articles = defineCollection({
     title: z.string(),
     description: z.string(),
     category: z.enum(['news', 'research', 'biomechanics', 'discussion']),
-    section: z.enum(['upper-limb', 'lower-limb', 'orthotics', 'gait', 'textbooks']),
+    section: z.enum(['prosthetics', 'rehabilitation']),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     confidence: z.enum(['high', 'moderate', 'low', 'unknown']).optional(),

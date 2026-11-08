@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import EvidenceHierarchy from '../components/EvidenceHierarchy.astro';
 import ConfidenceBadge from '../components/ConfidenceBadge.astro';
-import { CONFIDENCE, CONFIDENCE_KEYS, SITE, type Lang } from '../config';
+import { CONFIDENCE, CONFIDENCE_KEYS, SECTIONS, SECTION_KEYS, SITE, type Lang } from '../config';
 import { localePath } from '../utils';
 
 interface Props {
@@ -12,93 +12,159 @@ const { lang } = Astro.props;
 const author = SITE.author[lang];
 const other = lang === 'uk' ? 'en' : 'uk';
 
+const LINKS = {
+  cope: 'https://publicationethics.org/',
+  icmje: 'https://www.icmje.org/recommendations/',
+  helsinki: 'https://www.wma.net/policies-post/wma-declaration-of-helsinki/',
+  care: 'https://www.care-statement.org/',
+  equator: 'https://www.equator-network.org/',
+  ccbync: 'https://creativecommons.org/licenses/by-nc/4.0/',
+};
+
 const c = {
   uk: {
     title: 'Про Praxis',
-    lead: 'Praxis — незалежна некомерційна освітня платформа та професійна спільнота. Вона з’єднує світові доказові дослідження з щоденною клінічною реальністю в Україні, зокрема з роботою з пацієнтами після складної бойової політравми.',
+    lead: 'Praxis — незалежний некомерційний освітній ресурс і фахова спільнота, присвячені доказовій практиці в протезуванні та реабілітації. Ресурс поєднує сучасні міжнародні дослідження з клінічною реальністю в Україні, зокрема з веденням пацієнтів після складної бойової політравми.',
+    aimsTitle: 'Мета і завдання',
+    aimsIntro: 'Мета Praxis — скоротити розрив між опублікованими доказами та щоденними клінічними рішеннями. Для цього ресурс:',
+    aims: [
+      'критично оцінює дизайн, методологію та обмеження досліджень;',
+      'аналізує біомеханічні механізми, що лежать в основі клінічних ефектів;',
+      'відокремлює незалежні дані від маркетингових заяв виробників;',
+      'формулює практичні висновки для мультидисциплінарної реабілітаційної команди (МДРК).',
+    ],
+    sectionsTitle: 'Розділи',
+    includes: 'Охоплює',
     audienceTitle: 'Для кого',
-    audience: 'Для протезистів-ортезистів, фізичних терапевтів, лікарів фізичної та реабілітаційної медицини (ФРМ), біомедичних і реабілітаційних інженерів, магістрантів та аспірантів. Ми не пояснюємо базових понять, а одразу працюємо з біомеханікою, методологією досліджень і клінічними рішеннями.',
+    audience:
+      'Для протезистів-ортезистів, фізичних терапевтів, ерготерапевтів, лікарів фізичної та реабілітаційної медицини, психологів, біомедичних і реабілітаційних інженерів, магістрантів та аспірантів. Матеріали розраховані на читача з базовою клінічною підготовкою: вони не пояснюють елементарних понять, а зосереджуються на біомеханіці, методології досліджень і клінічних рішеннях.',
     policyTitle: 'Редакційна політика',
     policy: [
-      ['Синтез, а не переказ', 'Кожен матеріал — оригінальний аналіз через клінічну оптику. Без дослівних перекладів статей і без переказу анотацій.'],
-      ['Жодних вигаданих даних', 'Ми не наводимо результатів, вибірок, p-значень чи DOI, яких немає в першоджерелі. Якщо доказів мало або вони суперечливі, ми прямо про це пишемо.'],
-      ['Аудит методології', 'Кожне дослідження розбираємо критично: розмір вибірки, спосіб валідації моделей, ефект Хоторна в лабораторії ходи, обмеження опитувальників (PROMs).'],
-      ['Незалежність від виробників', 'Praxis не публікує рекламу і не має спонсорів. Компоненти оцінюються за кінематикою, кінетикою, масою, ступенями свободи та незалежними клінічними результатами — не за брошурами.'],
-      ['Двомовна термінологія', 'Під час першої згадки кожен технічний термін подається українською з англійським відповідником, щоб текст можна було звірити з першоджерелом.'],
+      ['Аналітичний синтез', 'Кожен матеріал — оригінальний аналітичний синтез, а не переклад чи переказ першоджерела. Цитати й запозичені формулювання позначаються та супроводжуються посиланням.'],
+      ['Верифікація фактів', 'Кожне фактичне твердження (показники, обсяг вибірки, бібліографічні дані) звіряється з першоджерелом. Твердження, які неможливо верифікувати, не публікуються. Вторинне цитування позначається явно («за оглядом…»).'],
+      ['Розмежування даних і міркувань', 'Механістичні міркування з першопринципів допустимі, але завжди позначені як такі й відокремлені від емпіричних даних.'],
+      ['Незалежність', 'Praxis не публікує рекламу й не має спонсорів. Компоненти оцінюються за кінематичними та кінетичними параметрами, масою, ступенями свободи й незалежними клінічними результатами, а не за матеріалами виробників. Дослідження, автори яких пов’язані з виробником, позначаються.'],
+      ['Двомовна термінологія', 'Під час першої згадки технічні терміни подаються українською з англійським відповідником, що дозволяє звірити текст із першоджерелом.'],
     ],
-    evidenceTitle: 'Як ми оцінюємо докази',
-    evidenceText: 'Кожне твердження прив’язане до рівня в ієрархії доказів. Механістичні міркування допустимі, але завжди позначені як такі.',
+    evidenceTitle: 'Оцінювання доказів',
+    evidenceText:
+      'Кожне ключове твердження співвідноситься з рівнем ієрархії доказів Praxis. Для оцінювання якості досліджень використовуються міжнародні настанови щодо звітування, зібрані мережею EQUATOR: зокрема CONSORT для рандомізованих досліджень, STROBE для обсерваційних досліджень і PRISMA для систематичних оглядів.',
     confidenceTitle: 'Позначки впевненості',
     structureTitle: 'Структура статті',
     structure: [
-      'Гачок — біомеханічний парадокс, несподіваний результат дослідження або клінічна дилема.',
-      'Методологія та механіка — дизайн дослідження, фізика, властивості матеріалів.',
-      'Критичний аудит — ключові результати з точними показниками та обмеженнями.',
-      'Інсайт для МДРК — практичні висновки для мультидисциплінарної реабілітаційної команди.',
-      'Питання до спільноти — для обговорення в Telegram.',
-      'Джерела — повні бібліографічні посилання.',
+      'Вступ: біомеханічний парадокс, неочікуваний результат дослідження або клінічна дилема.',
+      'Методологія та механіка: дизайн дослідження, фізичні механізми, властивості матеріалів.',
+      'Критичний аудит: ключові результати з точними показниками та обмеженнями.',
+      'Висновки для МДРК: практичні рекомендації для мультидисциплінарної команди.',
+      'Питання до спільноти.',
+      'Список джерел, декларація конфлікту інтересів і рекомендація щодо цитування.',
     ],
+    ethicsTitle: 'Етика публікацій та академічна доброчесність',
+    ethicsIntro:
+      'Praxis керується міжнародними принципами етики наукових публікацій. Ресурс не є членом зазначених організацій; їхні документи використовуються як орієнтир редакційної практики.',
+    ethics: [
+      ['COPE', LINKS.cope, 'Основні принципи Комітету з етики публікацій (Committee on Publication Ethics, COPE) щодо авторства, конфлікту інтересів, виправлень, запобігання плагіату та прозорості редакційних процесів.'],
+      ['ICMJE', LINKS.icmje, 'Рекомендації Міжнародного комітету редакторів медичних журналів (International Committee of Medical Journal Editors) щодо декларування конфлікту інтересів і відповідальності автора за зміст.'],
+      ['Гельсінська декларація', LINKS.helsinki, 'Етичні принципи Всесвітньої медичної асоціації (World Medical Association, WMA) щодо досліджень за участю людини, зокрема захисту приватності й конфіденційності персональних даних.'],
+      ['CARE', LINKS.care, 'Настанови CARE щодо описів клінічних випадків: реальні випадки публікуються лише за письмової інформованої згоди пацієнта та в знеособленому вигляді; змодельовані навчальні випадки позначаються як такі.'],
+    ],
+    coiTitle: 'Конфлікт інтересів',
+    coi: 'Кожна стаття містить декларацію конфлікту інтересів. За відсутності конфлікту це зазначається явно.',
+    correctionsTitle: 'Виправлення',
+    corrections: 'Виявлені помилки виправляються якнайшвидше. Суттєві виправлення позначаються датою оновлення статті.',
+    aiTitle: 'Використання інструментів штучного інтелекту',
+    ai: 'Відповідно до позиції COPE щодо авторства та інструментів штучного інтелекту й рекомендацій ICMJE Praxis розкриває використання таких інструментів. Вони застосовуються для пошуку та верифікації джерел, мовного редагування й розробки сайту. Усі матеріали перевіряє та затверджує авторка, яка несе повну відповідальність за їхній зміст. Інструменти штучного інтелекту не є авторами.',
+    copyrightTitle: 'Авторське право та зображення',
+    copyright: 'Використовуються лише власні ілюстрації або матеріали з відкритою ліцензією з атрибуцією. Praxis не розміщує копій підручників, каталогів чи інших матеріалів, захищених авторським правом.',
     authorTitle: 'Авторка',
-    authorText: 'засновниця та редакторка Praxis.',
+    authorText: [
+      'Марина Гурак — засновниця та редакторка Praxis, протезистка-ортезистка, ISPO Associate Prosthetist (2025; освітня програма Human Study e.V. / МКЧХ, акредитована ISPO). Працює у відділенні протезування верхніх кінцівок Superhumans War Trauma Center.',
+      'Магістрантка освітньої програми «Протезування та ортезування» Харківського національного медичного університету. Має ступінь магістра фізичної терапії (Національний університет фізичного виховання і спорту України) та бакалавра фізичної терапії та ерготерапії (КПІ ім. Ігоря Сікорського). Проходила клінічні стажування в Німеччині (BG Unfallklinik Murnau) та США (Міннеаполіс).',
+    ],
     licenseTitle: 'Ліцензія та цитування',
     license: [
-      'Тексти статей поширюються за ліцензією Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0): їх можна поширювати й адаптувати з обов’язковим посиланням на авторку та Praxis, але не в комерційних цілях.',
-      'Код сайту відкритий за ліцензією MIT.',
-      'Ілюстрації та таблиці третіх сторін зберігають ліцензії своїх правовласників.',
+      'Тексти статей поширюються за ліцензією Creative Commons «Зазначення авторства — Некомерційна» 4.0 Міжнародна (CC BY-NC 4.0): їх можна поширювати й адаптувати із зазначенням авторки та Praxis, але не з комерційною метою.',
+      'Вихідний код сайту відкритий за ліцензією MIT. Ілюстрації та таблиці третіх сторін зберігають ліцензії своїх правовласників.',
     ],
     citeTitle: 'Як цитувати статтю',
     citeExample: `${author.short} Назва статті. Praxis. Рік. Доступно за посиланням: URL`,
     disclaimerTitle: 'Застереження',
-    disclaimer: [
-      'Матеріали Praxis мають освітній характер і не замінюють індивідуальної клінічної консультації чи рішення лікуючої команди.',
-      'Клінічні фото й кейси публікуються лише за письмовою згодою пацієнтів і в знеособленому вигляді.',
-    ],
+    disclaimer:
+      'Матеріали Praxis мають освітній характер і не замінюють індивідуальної клінічної консультації чи рішень лікувальної команди.',
     contactTitle: 'Контакти',
-    contact: 'Пропозиції тем, виправлення й запитання — через Telegram-спільноту Praxis.',
+    contact: 'Пропозиції тем, виправлення та запитання надсилайте через спільноту Praxis у Telegram або LinkedIn.',
     repo: 'Вихідний код сайту',
   },
   en: {
     title: 'About Praxis',
-    lead: 'Praxis is an independent, non-commercial educational platform and professional community. It bridges global evidence-based research and everyday clinical reality in Ukraine, including the care of patients with complex combat-related polytrauma.',
-    audienceTitle: 'Who it is for',
-    audience: 'Prosthetists-orthotists, physical therapists, physical and rehabilitation medicine (PM&R) physicians, biomedical and rehabilitation engineers, and master’s and PhD students. We skip the basics and go straight to biomechanics, research methodology and clinical decision-making.',
+    lead: 'Praxis is an independent, non-commercial educational resource and professional community dedicated to evidence-based practice in prosthetics and rehabilitation. It connects current international research with clinical practice in Ukraine, including the management of patients with complex combat-related polytrauma.',
+    aimsTitle: 'Aims and scope',
+    aimsIntro: 'Praxis aims to narrow the gap between published evidence and everyday clinical decision-making. To this end, it:',
+    aims: [
+      'critically appraises study design, methodology and limitations;',
+      'analyses the biomechanical mechanisms underlying clinical effects;',
+      'distinguishes independent evidence from manufacturer claims;',
+      'derives practical implications for the multidisciplinary rehabilitation team (MDT).',
+    ],
+    sectionsTitle: 'Sections',
+    includes: 'Covers',
+    audienceTitle: 'Readership',
+    audience:
+      'Prosthetists-orthotists, physical therapists, occupational therapists, physical and rehabilitation medicine physicians, psychologists, biomedical and rehabilitation engineers, and graduate students. Content assumes basic clinical training: rather than explaining elementary concepts, it focuses on biomechanics, research methodology and clinical decision-making.',
     policyTitle: 'Editorial policy',
     policy: [
-      ['Synthesis, not summary', 'Every piece is an original analysis through a clinical lens. No literal translations of papers and no paraphrased abstracts.'],
-      ['No invented data', 'We never report results, sample sizes, p-values or DOIs that are not in the primary source. When evidence is sparse or contradictory, we say so explicitly.'],
-      ['Methodological audit', 'Every study is appraised critically: sample size, model validation strategy, the Hawthorne effect in the gait lab, the limits of patient-reported outcome measures (PROMs).'],
-      ['Independent of manufacturers', 'Praxis carries no advertising and has no sponsors. Components are judged by kinematics, kinetics, mass, degrees of freedom and independent clinical outcomes — not by brochures.'],
-      ['Bilingual terminology', 'Every technical term is given in Ukrainian with its English equivalent on first use, so that the text can be checked against the primary source.'],
+      ['Analytical synthesis', 'Every piece is an original analytical synthesis rather than a translation or paraphrase of a source. Quotations and borrowed wording are marked and referenced.'],
+      ['Fact verification', 'Every factual claim (outcomes, sample sizes, bibliographic data) is checked against the primary source. Claims that cannot be verified are not published. Secondary citation is indicated explicitly (“as cited in…”).'],
+      ['Data versus reasoning', 'First-principles mechanistic reasoning is permitted but is always labelled as such and kept separate from empirical data.'],
+      ['Independence', 'Praxis carries no advertising and has no sponsors. Components are assessed on kinematic and kinetic parameters, mass, degrees of freedom and independent clinical outcomes rather than on manufacturer materials. Studies whose authors are affiliated with a manufacturer are identified as such.'],
+      ['Bilingual terminology', 'Technical terms are given in Ukrainian with their English equivalents on first use, so that the text can be checked against the primary source.'],
     ],
-    evidenceTitle: 'How we grade evidence',
-    evidenceText: 'Every claim is anchored to a level of the evidence hierarchy. Mechanistic reasoning is allowed, but always labelled as such.',
+    evidenceTitle: 'Appraisal of evidence',
+    evidenceText:
+      'Every key claim is mapped to a level of the Praxis evidence hierarchy. Study quality is appraised against international reporting guidelines collated by the EQUATOR Network, including CONSORT for randomised trials, STROBE for observational studies and PRISMA for systematic reviews.',
     confidenceTitle: 'Confidence labels',
-    structureTitle: 'How an article is structured',
+    structureTitle: 'Article structure',
     structure: [
-      'The hook — a biomechanical paradox, a counterintuitive finding or a clinical dilemma.',
-      'Methodology and mechanics — study design, physics, material properties.',
-      'Critical audit — key findings with exact metrics and limitations.',
-      'Clinical takeaway for the MDT — practical conclusions for the multidisciplinary rehabilitation team.',
-      'Question for the community — for discussion on Telegram.',
-      'References — full bibliographic citations.',
+      'Introduction: a biomechanical paradox, an unexpected research finding or a clinical dilemma.',
+      'Methodology and mechanics: study design, physical mechanisms, material properties.',
+      'Critical appraisal: key findings with exact outcomes and limitations.',
+      'Implications for the MDT: practical recommendations for the multidisciplinary team.',
+      'Questions for the community.',
+      'References, a conflict-of-interest statement and a suggested citation.',
     ],
+    ethicsTitle: 'Publication ethics and academic integrity',
+    ethicsIntro:
+      'Praxis follows international principles of publication ethics. It is not a member of the organisations listed below; their guidance serves as a reference for editorial practice.',
+    ethics: [
+      ['COPE', LINKS.cope, 'The Core Practices of the Committee on Publication Ethics (COPE) on authorship, conflicts of interest, corrections, plagiarism prevention and transparency of editorial processes.'],
+      ['ICMJE', LINKS.icmje, 'The Recommendations of the International Committee of Medical Journal Editors on disclosure of conflicts of interest and authors’ responsibility for content.'],
+      ['Declaration of Helsinki', LINKS.helsinki, 'The ethical principles of the World Medical Association (WMA) for research involving human participants, including protection of privacy and confidentiality of personal data.'],
+      ['CARE', LINKS.care, 'The CARE guidelines for case reports: real cases are published only with the patient’s written informed consent and in de-identified form; simulated teaching cases are labelled as such.'],
+    ],
+    coiTitle: 'Conflicts of interest',
+    coi: 'Every article includes a conflict-of-interest statement. Where no conflict exists, this is stated explicitly.',
+    correctionsTitle: 'Corrections',
+    corrections: 'Errors are corrected promptly once identified. Substantive corrections are indicated by the article’s update date.',
+    aiTitle: 'Use of artificial intelligence tools',
+    ai: 'In line with the COPE position on authorship and AI tools and the ICMJE Recommendations, Praxis discloses its use of such tools. They are used to support source retrieval and verification, language editing and website development. All content is reviewed and approved by the author, who takes full responsibility for it. AI tools are not credited as authors.',
+    copyrightTitle: 'Copyright and images',
+    copyright: 'Only original illustrations or openly licensed material with attribution are used. Praxis does not host copies of textbooks, catalogues or other copyrighted material.',
     authorTitle: 'Author',
-    authorText: 'founder and editor of Praxis.',
+    authorText: [
+      'Maryna Hurak is the founder and editor of Praxis. She is a prosthetist-orthotist and ISPO Associate Prosthetist (2025; Human Study e.V./ICRC programme accredited by ISPO) and works in the Upper Limb Prosthetics Department at Superhumans War Trauma Center.',
+      'She is completing an MSc in Prosthetics and Orthotics at Kharkiv National Medical University. She holds an MSc in Physical Therapy from the National University of Ukraine on Physical Education and Sport and a BSc in Physical Therapy and Occupational Therapy from Igor Sikorsky Kyiv Polytechnic Institute, and has completed clinical rotations in Germany (BG Unfallklinik Murnau) and the United States (Minneapolis).',
+    ],
     licenseTitle: 'Licence and citation',
     license: [
-      'Article texts are licensed under Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0): you may share and adapt them with attribution to the author and Praxis, but not for commercial purposes.',
-      'The site source code is open under the MIT licence.',
-      'Third-party figures and tables keep the licences of their rights holders.',
+      'Article texts are licensed under Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0): they may be shared and adapted with attribution to the author and Praxis, but not for commercial purposes.',
+      'The site source code is available under the MIT licence. Third-party figures and tables retain the licences of their rights holders.',
     ],
     citeTitle: 'How to cite an article',
     citeExample: `${author.short} Article title. Praxis. Year. Available from: URL`,
     disclaimerTitle: 'Disclaimer',
-    disclaimer: [
-      'Praxis content is educational and does not replace individual clinical advice or the decisions of the treating team.',
-      'Clinical photographs and cases are published only with written patient consent and in de-identified form.',
-    ],
+    disclaimer: 'Praxis content is educational and does not replace individual clinical advice or the decisions of the treating team.',
     contactTitle: 'Contact',
-    contact: 'Topic suggestions, corrections and questions are welcome in the Praxis Telegram community.',
+    contact: 'Topic suggestions, corrections and questions are welcome via the Praxis community on Telegram or via LinkedIn.',
     repo: 'Site source code',
   },
 }[lang];
@@ -114,8 +180,38 @@ const c = {
 
     <div class="grid">
       <div class="col-main">
-        <section aria-labelledby="audience">
-          <h2 id="audience">{c.audienceTitle}</h2>
+        <section aria-labelledby="aims-h">
+          <h2 id="aims-h">{c.aimsTitle}</h2>
+          <p>{c.aimsIntro}</p>
+          <ul class="plain">
+            {c.aims.map((a) => <li>{a}</li>)}
+          </ul>
+        </section>
+
+        <section aria-labelledby="sections-h">
+          <h2 id="sections-h">{c.sectionsTitle}</h2>
+          <ul class="numbered">
+            {
+              SECTION_KEYS.map((k) => (
+                <li>
+                  <span class="mono n">{SECTIONS[k].num}</span>
+                  <div>
+                    <h3>
+                      <a href={localePath(lang, `sections/${k}/`)}>{SECTIONS[k][lang].title}</a>
+                    </h3>
+                    <p>{SECTIONS[k][lang].desc}</p>
+                    <p class="subs">
+                      {c.includes}: {SECTIONS[k][lang].subs.join(' · ')}
+                    </p>
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <section aria-labelledby="audience-h">
+          <h2 id="audience-h">{c.audienceTitle}</h2>
           <p>{c.audience}</p>
         </section>
 
@@ -139,6 +235,7 @@ const c = {
         <section id="evidence" aria-labelledby="evidence-h">
           <h2 id="evidence-h">{c.evidenceTitle}</h2>
           <p>{c.evidenceText}</p>
+          <p><a href={LINKS.equator} rel="noopener">EQUATOR Network ↗</a></p>
           <h3 class="sub">{c.confidenceTitle}</h3>
           <ul class="conf">
             {
@@ -150,20 +247,53 @@ const c = {
               ))
             }
           </ul>
-        </section>
-
-        <section aria-labelledby="structure-h">
-          <h2 id="structure-h">{c.structureTitle}</h2>
+          <h3 class="sub">{c.structureTitle}</h3>
           <ol class="plain">
             {c.structure.map((item) => <li>{item}</li>)}
           </ol>
         </section>
 
-        <section aria-labelledby="author-h">
+        <section id="ethics" aria-labelledby="ethics-h">
+          <h2 id="ethics-h">{c.ethicsTitle}</h2>
+          <p>{c.ethicsIntro}</p>
+          <ul class="numbered">
+            {
+              c.ethics.map(([name, href, text]) => (
+                <li>
+                  <span class="mono n">↗</span>
+                  <div>
+                    <h3>
+                      <a href={href} rel="noopener">
+                        {name}
+                      </a>
+                    </h3>
+                    <p>{text}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+          <h3 class="sub">{c.coiTitle}</h3>
+          <p>{c.coi}</p>
+          <h3 class="sub">{c.correctionsTitle}</h3>
+          <p>{c.corrections}</p>
+          <h3 class="sub">{c.aiTitle}</h3>
+          <p>{c.ai}</p>
+          <h3 class="sub">{c.copyrightTitle}</h3>
+          <p>{c.copyright}</p>
+        </section>
+
+        <section id="author" aria-labelledby="author-h">
           <h2 id="author-h">{c.authorTitle}</h2>
           <div class="author">
             <span class="avatar mono" aria-hidden="true">{author.initials}</span>
-            <p><strong>{author.name}</strong> — {author.role.toLowerCase()}, {c.authorText}</p>
+            <div>
+              {c.authorText.map((p) => <p>{p}</p>)}
+              <p class="links">
+                {SITE.linkedinUrl && <a class="btn btn-secondary btn-sm" href={SITE.linkedinUrl} rel="noopener">LinkedIn</a>}
+                {SITE.instagramUrl && <a class="btn btn-secondary btn-sm" href={SITE.instagramUrl} rel="noopener">Instagram</a>}
+              </p>
+            </div>
           </div>
         </section>
 
@@ -171,15 +301,15 @@ const c = {
           <h2 id="license-h">{c.licenseTitle}</h2>
           {c.license.map((p) => <p>{p}</p>)}
           <p>
-            <a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license noopener">CC BY-NC 4.0</a>{' · '}<a href={`${SITE.repoUrl}/blob/main/LICENSE`} rel="noopener">MIT</a>
+            <a href={LINKS.ccbync} rel="license noopener">CC BY-NC 4.0</a>{' · '}<a href={`${SITE.repoUrl}/blob/main/LICENSE`} rel="noopener">MIT</a>
           </p>
           <h3 class="sub">{c.citeTitle}</h3>
-          <p class="cite mono">{c.citeExample}</p>
+          <p class="cite">{c.citeExample}</p>
         </section>
 
         <section aria-labelledby="disclaimer-h">
           <h2 id="disclaimer-h">{c.disclaimerTitle}</h2>
-          {c.disclaimer.map((p) => <p>{p}</p>)}
+          <p>{c.disclaimer}</p>
         </section>
 
         <section aria-labelledby="contact-h">
@@ -187,6 +317,7 @@ const c = {
           <p>{c.contact}</p>
           <p class="links">
             {SITE.telegramUrl && <a class="btn btn-primary" href={SITE.telegramUrl} target="_blank" rel="noopener">Telegram</a>}
+            {SITE.linkedinUrl && <a class="btn btn-secondary" href={SITE.linkedinUrl} rel="noopener">LinkedIn</a>}
             <a class="btn btn-secondary" href={SITE.repoUrl} rel="noopener">{c.repo}</a>
           </p>
         </section>
@@ -204,16 +335,16 @@ const c = {
     padding-block: 56px 88px;
   }
   .intro {
-    max-width: 820px;
+    max-width: 840px;
   }
   .intro .eyebrow {
     margin-bottom: 16px;
   }
   h1 {
     margin: 0;
-    font-size: clamp(34px, 4vw, 52px);
+    font-size: clamp(36px, 4.2vw, 54px);
     line-height: 1.08;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     font-weight: 600;
   }
   .lead {
@@ -252,14 +383,13 @@ const c = {
   }
   h2 {
     margin: 0 0 14px;
-    font-size: 28px;
+    font-size: 30px;
     line-height: 1.2;
-    letter-spacing: -0.01em;
     font-weight: 600;
   }
   .sub {
-    margin: 24px 0 12px;
-    font-size: 18px;
+    margin: 26px 0 10px;
+    font-size: 20px;
     font-weight: 600;
   }
   .col-main p {
@@ -288,12 +418,18 @@ const c = {
   .numbered .n {
     color: var(--accent);
     font-size: 14px;
-    padding-top: 2px;
+    padding-top: 3px;
   }
   .numbered h3 {
     margin: 0;
-    font-size: 17px;
+    font-size: 19px;
     font-weight: 600;
+  }
+  .numbered h3 a {
+    color: var(--ink);
+  }
+  .numbered h3 a:hover {
+    color: var(--accent);
   }
   .col-main .numbered p {
     margin: 6px 0 0;
@@ -301,6 +437,10 @@ const c = {
     font-size: 15px;
     line-height: 1.6;
     color: var(--text-2);
+  }
+  .col-main .numbered .subs {
+    color: var(--muted);
+    font-size: 14px;
   }
   .conf {
     list-style: none;
@@ -319,7 +459,7 @@ const c = {
     color: var(--text-2);
   }
   .plain {
-    margin: 0;
+    margin: 0 0 12px;
     padding-left: 1.3em;
     font-family: var(--font-serif);
     font-size: 18px;
@@ -335,18 +475,15 @@ const c = {
   }
   .author {
     display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .col-main .author p {
-    margin: 0;
+    align-items: flex-start;
+    gap: 18px;
   }
   .avatar {
     flex: 0 0 auto;
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    background: var(--ink);
+    background: var(--graphite-900);
     color: var(--on-dark);
     display: flex;
     align-items: center;
@@ -366,5 +503,10 @@ const c = {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .author {
+      flex-direction: column;
+    }
   }
 </style>

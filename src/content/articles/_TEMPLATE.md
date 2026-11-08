@@ -11,8 +11,8 @@ description: "1–2 речення для картки статті та пош�
 # Категорія: news | research | biomechanics | discussion
 category: research
 
-# Розділ: upper-limb | lower-limb | orthotics | gait | textbooks
-section: upper-limb
+# Розділ: prosthetics (протезування) | rehabilitation (реабілітація)
+section: prosthetics
 
 # Дата публікації (РРРР-ММ-ДД). updatedDate — якщо статтю оновили.
 pubDate: 2026-12-01
