@@ -201,6 +201,7 @@ const jsonLd = {
             <h3 id="cite-title">{a.cite}</h3>
             <p class="mono">{citation}</p>
           </div>
+          <p class="coi"><strong>{a.coi}:</strong> {d.coi ?? a.coiNone}</p>
         </section>
       </div>
 
@@ -502,6 +503,12 @@ const jsonLd = {
     line-height: 1.6;
     color: var(--text-2);
     overflow-wrap: anywhere;
+  }
+  .coi {
+    margin: 16px 0 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-2);
   }
   .box {
     padding: 22px 24px;

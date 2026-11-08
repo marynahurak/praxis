@@ -31,6 +31,7 @@ const articles = defineCollection({
       )
       .default([]),
     telegram: z.string().optional(),
+    coi: z.string().optional(),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
     demo: z.boolean().default(false),

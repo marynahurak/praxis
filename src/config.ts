@@ -159,6 +159,8 @@ export const t = {
       cite: 'Як цитувати',
       available: 'Доступно за посиланням',
       related: 'Читайте також',
+      coi: 'Конфлікт інтересів',
+      coiNone: 'авторка заявляє про відсутність конфлікту інтересів.',
     },
     footer: {
       about: 'Незалежний некомерційний освітній проєкт про протезування, ортезування та реабілітаційну інженерію. Без реклами та спонсорства виробників.',
@@ -248,6 +250,8 @@ export const t = {
       cite: 'How to cite',
       available: 'Available from',
       related: 'Further reading',
+      coi: 'Conflict of interest',
+      coiNone: 'the author declares no conflict of interest.',
     },
     footer: {
       about: 'An independent, non-commercial educational project on prosthetics, orthotics and rehabilitation engineering. No advertising, no manufacturer sponsorship.',
