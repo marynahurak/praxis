@@ -9,7 +9,7 @@ export const SITE = {
   // Посилання на Telegram-спільноту. Якщо залишити порожнім — кнопки Telegram приховані.
   telegramUrl: 'https://t.me/prosthetics_ukraine',
   linkedinUrl: 'https://www.linkedin.com/in/maryna-hurak-86b262226',
-  instagramUrl: '',
+  instagramUrl: 'https://www.instagram.com/gurak_gu/',
   repoUrl: 'https://github.com/marynahurak/praxis',
   since: 2026,
   author: {
