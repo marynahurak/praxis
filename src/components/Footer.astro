@@ -38,8 +38,9 @@ const about = localePath(lang, 'about/');
       <a href={`${about}#license`}>{s.footer.links.license}</a>
     </nav>
     <nav aria-labelledby="f-links" class="col">
-      <h2 id="f-links">{lang === 'uk' ? 'Посилання' : 'Links'}</h2>
+      <h2 id="f-links">{s.footer.linksTitle}</h2>
       {SITE.telegramUrl && <a href={SITE.telegramUrl} rel="noopener">Telegram</a>}
+      {SITE.orcidUrl && <a href={SITE.orcidUrl} rel="noopener">ORCID</a>}
       {SITE.linkedinUrl && <a href={SITE.linkedinUrl} rel="noopener">LinkedIn</a>}
       {SITE.instagramUrl && <a href={SITE.instagramUrl} rel="noopener">Instagram</a>}
       <a href={SITE.repoUrl} rel="noopener">{s.footer.links.code}</a>

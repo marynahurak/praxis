@@ -1,8 +1,8 @@
 # Praxis
 
-**An independent, non-commercial knowledge base on evidence-based practice in prosthetics and rehabilitation, connecting international research with clinical practice in Ukraine, including the management of combat-related polytrauma.**
+**An independent scientific and educational initiative dedicated to advancing evidence-based practice (EBP) and innovation in prosthetics, orthotics and rehabilitation.**
 
-**Незалежна некомерційна база знань із доказової практики в протезуванні та реабілітації, що поєднує міжнародні дослідження з клінічною практикою в Україні, зокрема з веденням бойової політравми.**
+**Незалежна науково-освітня ініціатива, присвячена розвитку доказової практики (EBP) та інновацій у протезуванні, ортезуванні й реабілітації.**
 
 🌐 Website: https://marynahurak.github.io/praxis/ · [English](https://marynahurak.github.io/praxis/en/)
 
@@ -12,14 +12,15 @@
 
 ### Mission
 
-Praxis is an educational resource and professional community for prosthetists-orthotists, physical therapists, occupational therapists, physical and rehabilitation medicine (PM&R) physicians, psychologists, biomedical and rehabilitation engineers, and graduate students. It translates current international research into decisions for the multidisciplinary rehabilitation team (MDT), with particular attention to the clinical realities of complex combat-related polytrauma in Ukraine.
+Praxis is an independent scientific and educational initiative dedicated to advancing evidence-based practice (EBP) and innovation in prosthetics, orthotics and rehabilitation. It focuses on translational research, the biomechanics of gait and upper-limb movement, the objective evaluation of prosthetic technologies and the structured synthesis of peer-reviewed literature. Its mission is to foster a shared research environment for clinicians, academic researchers, R&D engineers and the international rehabilitation community, with particular attention to the Ukrainian clinical context, including combat-related limb loss.
 
 ### Editorial principles
 
 - **Synthesis, not summary.** Every article is an original clinical analysis, never a translated abstract.
 - **No invented data.** Results, sample sizes, p-values and DOIs are reported only as they appear in the primary source. Where evidence is sparse or contradictory, the article says so.
 - **Methodological audit.** Studies are appraised for sample size, validation strategy (e.g. shuffled cross-validation versus leave-one-subject-out), laboratory versus real-world conditions, and the limits of patient-reported outcome measures.
-- **Independence.** No advertising, no sponsorship. Hardware is assessed by kinematics, kinetics, mass, degrees of freedom and independent clinical outcomes.
+- **Independence.** No commercial funding and no advertising. Technologies are assessed on kinematic and kinetic parameters, mass, degrees of freedom and peer-reviewed clinical outcomes; manufacturer materials are labelled as such.
+- **Open dialogue.** Substantiated objections, new data and correction requests from clinicians, researchers and industry are welcome.
 - **Bilingual terminology.** Every technical term is anchored to its English equivalent on first use.
 
 ### Evidence hierarchy
@@ -60,15 +61,16 @@ Content is educational and does not replace individual clinical advice.
 
 ### Місія
 
-Praxis — освітня платформа та професійна спільнота для протезистів-ортезистів, фізичних терапевтів, лікарів ФРМ, біомедичних і реабілітаційних інженерів, магістрантів та аспірантів. Praxis перетворює сучасні міжнародні дослідження на рішення для мультидисциплінарної реабілітаційної команди (МДРК) з урахуванням клінічної реальності бойової політравми в Україні.
+Praxis — незалежна науково-освітня ініціатива, присвячена розвитку доказової практики (evidence-based practice, EBP) та інновацій у протезуванні, ортезуванні й реабілітації. У центрі уваги — трансляційні дослідження, біомеханіка ходи та рухів верхньої кінцівки, об'єктивне оцінювання ефективності протезних технологій і систематизація рецензованої фахової літератури. Мета Praxis — створити спільний дослідницький простір для фахівців-практиків, науковців, R&D-інженерів та академічної спільноти в Україні й світі. Окрему увагу приділено українському клінічному контексту, зокрема реабілітації осіб із втратою кінцівки внаслідок бойової травми.
 
 ### Редакційні принципи
 
 - **Синтез, а не переказ** — кожна стаття є оригінальним клінічним аналізом.
 - **Жодних вигаданих даних** — показники наводяться лише так, як вони є в першоджерелі.
 - **Аудит методології** — критичний розбір дизайну, вибірки та валідації досліджень.
-- **Незалежність** — без реклами та спонсорства виробників.
-- **Двомовна термінологія** — кожен технічний термін з англійським відповідником.
+- **Незалежність** — без комерційного фінансування й реклами; матеріали виробників позначено як такі.
+- **Відкритість до діалогу** — обґрунтовані заперечення, нові дані й запити на виправлення від клініцистів, науковців та індустрії вітаються.
+- **Двомовна термінологія** — кожен технічний термін подано з англійським відповідником.
 
 ### Ліцензія
 
@@ -80,6 +82,6 @@ Praxis — освітня платформа та професійна спіл�
 
 ---
 
-**Founder and editor:** Maryna Hurak, Prosthetist-Orthotist, ISPO Associate Prosthetist; Upper Limb Prosthetics Department, Superhumans War Trauma Center.
+**Founder and editor:** Maryna Hurak, Prosthetist-Orthotist, ISPO Associate Prosthetist; Upper Limb Prosthetics Department, Superhumans War Trauma Center. ORCID: [0009-0008-7275-8079](https://orcid.org/0009-0008-7275-8079)
 
 <sub>Built with [Astro](https://astro.build) and [Pagefind](https://pagefind.app); hosted on GitHub Pages.</sub>

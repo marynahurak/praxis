@@ -1,15 +1,18 @@
 cff-version: 1.2.0
 message: "If you use or refer to Praxis, please cite it as below."
-title: "Praxis: an independent evidence-based knowledge base for prosthetics and orthotics"
+title: "Praxis: an independent scientific and educational initiative on evidence-based practice and innovation in prosthetics, orthotics and rehabilitation"
 abstract: >-
-  An independent, non-commercial knowledge base bridging evidence-based research and
-  clinical practice in prosthetics and orthotics in Ukraine, including combat-related
-  polytrauma. Critical appraisal of studies, clinical biomechanics and practical
-  takeaways for multidisciplinary rehabilitation teams. Ukrainian and English.
+  Praxis is an independent, non-commercial scientific and educational initiative
+  dedicated to advancing evidence-based practice (EBP) and innovation in prosthetics,
+  orthotics and rehabilitation. It focuses on translational research, the biomechanics
+  of gait and upper-limb movement, the objective evaluation of prosthetic technologies
+  and the structured synthesis of peer-reviewed literature, with particular attention
+  to the Ukrainian clinical context, including combat-related limb loss. Articles are
+  published in Ukrainian with English translations.
 authors:
   - family-names: Hurak
     given-names: Maryna
-    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    orcid: "https://orcid.org/0009-0008-7275-8079"
 url: "https://marynahurak.github.io/praxis/"
 repository-code: "https://github.com/marynahurak/praxis"
 license:
@@ -18,8 +21,9 @@ license:
 keywords:
   - prosthetics
   - orthotics
-  - rehabilitation engineering
+  - rehabilitation
   - clinical biomechanics
   - evidence-based practice
-  - medical education
+  - translational research
+  - medical devices
   - Ukraine
