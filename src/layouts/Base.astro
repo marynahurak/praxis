@@ -33,7 +33,9 @@ const altHref = altLangHref ?? localePath(other);
 const altAbs = new URL(altHref, Astro.site);
 const ukAbs = lang === 'uk' ? canonical : altAbs;
 const enAbs = lang === 'en' ? canonical : altAbs;
-const ogImage = new URL(url(`og-${lang}.png`), Astro.site);
+const ogImage = new URL(url(`og-${lang}.png?v=2`), Astro.site);
+// Версія іконок: змініть число після оновлення значка, щоб браузери не показували старий з кешу.
+const ICON_V = '?v=2';
 ---
 
 <!doctype html>
@@ -47,10 +49,10 @@ const ogImage = new URL(url(`og-${lang}.png`), Astro.site);
     <link rel="alternate" hreflang="uk" href={ukAbs} />
     <link rel="alternate" hreflang="en" href={enAbs} />
     <link rel="alternate" hreflang="x-default" href={ukAbs} />
-    <link rel="icon" href={url('favicon.ico')} sizes="48x48" />
-    <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
-    <link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
-    <link rel="manifest" href={url('site.webmanifest')} />
+    <link rel="icon" href={url('favicon.ico') + ICON_V} sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href={url('favicon.svg') + ICON_V} />
+    <link rel="apple-touch-icon" href={url('apple-touch-icon.png') + ICON_V} />
+    <link rel="manifest" href={url('site.webmanifest') + ICON_V} />
     <link rel="sitemap" href={url('sitemap-index.xml')} />
     <meta name="theme-color" content="#161B22" />
     <meta name="author" content={SITE.author[lang].name} />
