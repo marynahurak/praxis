@@ -33,6 +33,7 @@ const altHref = altLangHref ?? localePath(other);
 const altAbs = new URL(altHref, Astro.site);
 const ukAbs = lang === 'uk' ? canonical : altAbs;
 const enAbs = lang === 'en' ? canonical : altAbs;
+const ogImage = new URL(url(`og-${lang}.png`), Astro.site);
 ---
 
 <!doctype html>
@@ -46,9 +47,12 @@ const enAbs = lang === 'en' ? canonical : altAbs;
     <link rel="alternate" hreflang="uk" href={ukAbs} />
     <link rel="alternate" hreflang="en" href={enAbs} />
     <link rel="alternate" hreflang="x-default" href={ukAbs} />
+    <link rel="icon" href={url('favicon.ico')} sizes="48x48" />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+    <link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
+    <link rel="manifest" href={url('site.webmanifest')} />
     <link rel="sitemap" href={url('sitemap-index.xml')} />
-    <meta name="theme-color" content="#1C2026" />
+    <meta name="theme-color" content="#161B22" />
     <meta name="author" content={SITE.author[lang].name} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:site_name" content={SITE.name} />
@@ -57,7 +61,11 @@ const enAbs = lang === 'en' ? canonical : altAbs;
     <meta property="og:description" content={desc} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={lang === 'uk' ? 'uk_UA' : 'en_GB'} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE.name} — ${s.siteTitle}`} />
+    <meta name="twitter:card" content="summary_large_image" />
     <slot name="head" />
   </head>
   <body>

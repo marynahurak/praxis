@@ -1,17 +1,16 @@
 ---
+// Знак Praxis: літера «P», накреслена як кінематична схема — дві ланки
+// й два обертальні шарніри (як у протезному шарнірному механізмі).
+// Верхня вісь водночас читається як лінза — науковий погляд.
 interface Props {
   size?: number;
 }
 const { size = 32 } = Astro.props;
-const icon = Math.round(size * 0.62);
+const GLYPH = `<g transform="translate(1.9 0.25)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 31.1V13H31A11.5 11.5 0 0 1 31 36H25.9" stroke="#E6EAF0" stroke-width="5"/><path d="M21 40.9V51" stroke="#E6EAF0" stroke-width="5"/><circle cx="21" cy="36" r="3" stroke="#8DB0FF" stroke-width="2.6"/><circle cx="31" cy="24.5" r="3" stroke="#8DB0FF" stroke-width="2.6"/></g>`;
 ---
 
 <span class="logo" style={`width:${size}px;height:${size}px;border-radius:${Math.round(size * 0.22)}px`} aria-hidden="true">
-  <svg width={icon} height={icon} viewBox="0 0 20 20" fill="none">
-    <path d="M3 17.5 H17" stroke="#A9B0BB" stroke-width="1.5" stroke-linecap="round"></path>
-    <path d="M7 17 L13.5 5" stroke="#8FB0FF" stroke-width="2" stroke-linecap="round"></path>
-    <path d="M9.6 5.7 L13.5 5 L14.7 8.7" stroke="#8FB0FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-  </svg>
+  <svg width={size} height={size} viewBox="0 0 64 64" set:html={GLYPH} />
 </span>
 
 <style>
@@ -20,6 +19,6 @@ const icon = Math.round(size * 0.62);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--ink);
+    background: var(--graphite-900);
   }
 </style>
