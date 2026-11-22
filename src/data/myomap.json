@@ -62,8 +62,34 @@
   ],
   "tmr": []
  },
+ "changelog": [
+  {
+   "v": "2.1.0",
+   "date": "2026-11-22",
+   "text": {
+    "uk": "Окрема повноекранна інтерактивна мапа; сторінка-довідник у новому дизайні; симулятор із чотирма хватами та перемиканням коскороченням (Kerver et al., 2023); масштабна лінійка на кожній проєкції й зрізі; паспорт методології, журнал змін і ліцензія CC BY-NC-ND 4.0.",
+    "en": "Separate full-screen interactive map; redesigned guide page; simulator with four grips and co-contraction switching (Kerver et al., 2023); scale bar on every view and section; methodology passport, changelog and CC BY-NC-ND 4.0 licence."
+   }
+  },
+  {
+   "v": "2.0.0",
+   "date": "2026-11-22",
+   "text": {
+    "uk": "Анатомічний атлас на основі 3D-моделі BodyParts3D: реальні м'язи й кістки, шість поперечних зрізів, сухожилкові зони, електроди в масштабі з автоматичною оцінкою розміщення, розділи про слабкий сигнал, енергоефективність і сигнальний ланцюг.",
+    "en": "Anatomical atlas based on the BodyParts3D model: real muscles and bones, six cross-sections, tendinous zones, true-scale electrodes with automatic placement feedback, sections on weak signal, energy efficiency and the signal chain."
+   }
+  },
+  {
+   "v": "1.0.0",
+   "date": "2026-11-22",
+   "text": {
+    "uk": "Перша публікація: схематична мапа м'язів для чотирьох рівнів ампутації з режимами прямого керування, розпізнавання патернів і TMR.",
+    "en": "First release: schematic muscle map for four amputation levels with direct control, pattern recognition and TMR modes."
+   }
+  }
+ ],
  "meta": {
-  "version": "2.0",
+  "version": "2.1.0",
   "updated": "2026-11-22"
  },
  "roles": {

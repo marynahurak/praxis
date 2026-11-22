@@ -42,7 +42,7 @@ const SEC_SHORT = SEC_SHORT_L[lang];
     <header class="appbar">
       <a class="brand" href={localePath(lang)} aria-label="Praxis"><Logo size={30} /></a>
       <a class="back" href={guideHref}><span aria-hidden="true">←</span> <span class="back-t">{ui.guideBack}</span></a>
-      <h1 class="app-title">{ui.atlasShort}</h1>
+      <h1 class="app-title">{ui.atlasShort} <span class="ver">v{D.meta.version}</span></h1>
       <p class="notice">{ui.notice} <a href={`${guideHref}#scope`}>{ui.noticeMore}</a></p>
       <a class="lang-sw" href={localePath(other, 'tools/myotesting-map/atlas/')} hreflang={other} lang={other}>{other === 'en' ? 'EN' : 'УКР'}</a>
     </header>
@@ -153,7 +153,7 @@ const SEC_SHORT = SEC_SHORT_L[lang];
             <label><input type="checkbox" data-toggle="labels" /> {ui.labels}</label>
             <label><input type="checkbox" data-toggle="align" checked /> {ui.align}</label>
           </div>
-          <p class="credit">{ui.credit} · <a href={`${guideHref}#anatomy-source`}>{ui.sourceTitle}</a></p>
+          <p class="credit"><a href={`${guideHref}#copyright`}>{ui.copyShort} · {ui.licName}</a> · {ui.credit} · <a href={`${guideHref}#anatomy-source`}>{ui.sourceTitle}</a></p>
         </div>
       </figure>
 
@@ -277,6 +277,7 @@ const SEC_SHORT = SEC_SHORT_L[lang];
   .back { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 10px; border-radius: 8px; color: var(--on-dark-2); font-size: 14px; text-decoration: none; white-space: nowrap; }
   .back:hover { color: #fff; background: rgba(255, 255, 255, 0.07); }
   .app-title { margin: 0 0 0 4px; font: 600 17px/1.2 var(--font-serif); color: #fff; white-space: nowrap; }
+  .ver { margin-left: 6px; padding: 1px 6px; border: 1px solid var(--dark-line); border-radius: 5px; font: 500 11px var(--font-mono); color: var(--on-dark-2); vertical-align: 2px; }
   .notice { margin: 0 0 0 auto; font-size: 12.5px; color: var(--on-dark-2); text-align: right; }
   .notice a { color: var(--on-dark-accent); }
   .lang-sw { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 36px; padding: 0 10px; border: 1px solid var(--dark-line); border-radius: 8px; color: var(--on-dark); font: 500 12.5px var(--font-mono); text-decoration: none; }

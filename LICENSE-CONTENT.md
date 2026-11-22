@@ -19,10 +19,12 @@ Full legal code: https://creativecommons.org/licenses/by-nc/4.0/legalcode
 
 ## Exceptions
 
+Praxis tools (for example, the Myosite localisation and sEMG electrode configuration atlas) are licensed under the stricter terms in [LICENSE-TOOLS.md](LICENSE-TOOLS.md).
+
 Figures, tables and other materials reproduced from third parties are not covered by this licence and remain under the terms set by their rights holders, as indicated in each article.
 
 ---
 
 # Ліцензія на контент — CC BY-NC 4.0
 
-Тексти статей Praxis поширюються за ліцензією **Creative Commons «Зазначення авторства — Некомерційна» 4.0 Міжнародна**. Їх можна поширювати й адаптувати з обов’язковим зазначенням авторки та Praxis, посиланням на оригінал і ліцензію, але не в комерційних цілях, зокрема не в рекламі виробників. Ілюстрації та таблиці третіх сторін зберігають ліцензії своїх правовласників.
+Тексти статей Praxis поширюються за ліцензією **Creative Commons «Зазначення авторства — Некомерційна» 4.0 Міжнародна**. Їх можна поширювати й адаптувати з обов’язковим зазначенням авторки та Praxis, посиланням на оригінал і ліцензію, але не в комерційних цілях, зокрема не в рекламі виробників. Ілюстрації та таблиці третіх сторін зберігають ліцензії своїх правовласників. Інструменти Praxis поширюються на суворіших умовах — див. [LICENSE-TOOLS.md](LICENSE-TOOLS.md).

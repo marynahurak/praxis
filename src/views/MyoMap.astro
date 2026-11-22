@@ -3,7 +3,7 @@
 // призначення, методологія, зони слабкого сигналу, енергоефективність, сигнальний ланцюг і симулятор, джерела.
 // Сама інтерактивна мапа — на окремій повноекранній сторінці (src/views/MyoAtlas.astro, …/atlas/).
 import Base from '../layouts/Base.astro';
-import { type Lang } from '../config';
+import { SITE, type Lang } from '../config';
 import { localePath, url } from '../utils';
 import { D, LEVELS, MODES, VIEW_SHORT, SEC_SHORT_L, tr, getUi, simData, fmtUpdated } from '../lib/myomap';
 
@@ -16,6 +16,10 @@ const tx = tr(lang);
 const ui = getUi(lang);
 const atlasHref = localePath(lang, 'tools/myotesting-map/atlas/');
 const fmtDate = fmtUpdated(lang);
+const otherTitle = getUi(other).title;
+const fmtDay = (d: string) => new Intl.DateTimeFormat(lang === 'uk' ? 'uk-UA' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(d));
+const pageUrl = new URL(localePath(lang, 'tools/myotesting-map/'), Astro.site).href;
+const repo = SITE.repoUrl;
 
 const nViews = LEVELS.reduce((n, lv) => n + D.levels[lv].views.length, 0);
 const nSections = LEVELS.reduce((n, lv) => n + D.levels[lv].sections.length, 0);
@@ -380,16 +384,48 @@ const GRIPS = ['power', 'tripod', 'key', 'point'] as const;
       </div>
     </section>
 
-    <!-- ============================================================ 11 REFERENCES -->
-    <section class="band" id="references">
+    <!-- ============================================================ 11 PASSPORT -->
+    <section class="band" id="passport">
       <div class="container">
-        <header class="sec-h"><span class="sec-n">11</span><span class="sec-k">{ui.sec.refs}</span></header>
+        <header class="sec-h"><span class="sec-n">11</span><span class="sec-k">{ui.sec.passport}</span></header>
+        <h2 class="h2">{ui.passTitle}</h2>
+        <p class="sec-lead">{ui.passLead}</p>
+        <div class="pass-grid">
+          <dl class="pass">
+            <div><dt>{ui.pass.name}</dt><dd>{ui.title} <span class="dim">({otherTitle})</span></dd></div>
+            <div><dt>{ui.pass.version}</dt><dd><span class="ver">v{D.meta.version}</span> · {fmtDate}</dd></div>
+            <div><dt>{ui.pass.status}</dt><dd>{ui.passStatus}</dd></div>
+            <div><dt>{ui.pass.purpose}</dt><dd>{ui.passPurpose}</dd></div>
+            <div><dt>{ui.pass.evidence}</dt><dd>{ui.passEvidence}</dd></div>
+            <div><dt>{ui.pass.repro}</dt><dd>{ui.passRepro} <a href={`${repo}/tree/main/scripts/myomap-pipeline`} rel="noopener">{ui.passLinks.pipeline}</a> · <a href={`${repo}/blob/main/docs/myomap-design-log.md`} rel="noopener">{ui.passLinks.log}</a> · <a href={`${repo}/commits/main`} rel="noopener">{ui.passLinks.history}</a></dd></div>
+            <div><dt>{ui.pass.author}</dt><dd>{SITE.author[lang].name} · <a href={SITE.orcidUrl} rel="noopener">ORCID {SITE.orcid}</a></dd></div>
+            <div><dt>{ui.pass.rights}</dt><dd>{ui.passRights} <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license noopener">CC BY-NC-ND 4.0</a></dd></div>
+            <div><dt>{ui.pass.cite}</dt><dd class="cite">{ui.cite} {ui.avail} {pageUrl}</dd></div>
+          </dl>
+          <div class="pass-side">
+            <h3 class="sub-k">{ui.changelogTitle}</h3>
+            <ol class="clog">
+              {D.changelog.map((c: any) => <li><span class="cl-v">v{c.v}</span><span class="cl-d">{fmtDay(c.date)}</span><p>{tx(c.text)}</p></li>)}
+            </ol>
+            <p class="fine">{ui.versioning}</p>
+          </div>
+        </div>
+        <div class="legal" id="copyright">
+          <h3 class="sub-k">{ui.legalTitle}</h3>
+          {ui.legal.map((p: string) => <p>{p}</p>)}
+          <p>{ui.legalContact} <a href={`${localePath(lang, 'about/')}#contact`}>{ui.legalContactLink}</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ 12 REFERENCES -->
+    <section class="band band-alt" id="references">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">12</span><span class="sec-k">{ui.sec.refs}</span></header>
         <h2 class="h2">{ui.refsTitle}</h2>
         <ol class="refs">{D.references.map((r: any) => <li>{r.text} <a href={`https://doi.org/${r.doi}`} rel="noopener">doi:{r.doi}</a></li>)}</ol>
         <h3 class="sub-k">{ui.mfrTitle}</h3>
         <ul class="refs mfr">{D.electrodes.map((e: any) => <li><strong>{e.example}.</strong> {tx(e.note)} <a href={e.url} rel="noopener">{ui.source2}</a></li>)}</ul>
-        <h3 class="sub-k">{ui.citeTitle}</h3>
-        <p class="cite">{ui.cite} {ui.avail} {new URL(localePath(lang, 'tools/myotesting-map/'), Astro.site).href}</p>
         <p class="fine">{ui.coi}</p>
       </div>
     </section>
@@ -640,5 +676,28 @@ const GRIPS = ['power', 'tripod', 'key', 'point'] as const;
   .refs li::marker { font-family: var(--font-mono); color: var(--accent); }
   .refs.mfr { list-style: disc; font-size: 13.5px; }
   .sub-k { margin: 26px 0 8px; font: 500 12px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .pass-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+  @media (max-width: 960px) { .pass-grid { grid-template-columns: minmax(0, 1fr); } }
+  .pass { margin: 0; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); overflow: hidden; }
+  .pass > div { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 16px; padding: 12px 16px; border-bottom: 1px solid var(--line-2); }
+  .pass > div:last-child { border-bottom: 0; }
+  @media (max-width: 640px) { .pass > div { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+  .pass dt { font: 500 11.5px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+  .pass dd { margin: 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.55; }
+  .pass .dim { color: var(--muted); }
+  .ver { display: inline-block; padding: 1px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font: 600 13px var(--font-mono); }
+  .pass dd.cite { padding: 0; border: 0; background: none; font-size: 13px; }
+  .clog { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--line); }
+  .clog li { position: relative; padding: 0 0 18px 18px; }
+  .clog li::before { content: ''; position: absolute; left: -7px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 2px solid var(--accent); }
+  .clog li:first-child::before { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .cl-v { font: 600 14px var(--font-mono); color: var(--ink); margin-right: 10px; }
+  .cl-d { font: 500 12px var(--font-mono); color: var(--muted); }
+  .clog p { margin: 4px 0 0; font-size: 14px; color: var(--text-2); line-height: 1.55; }
+  .legal { margin-top: 26px; padding: 18px 20px; border-radius: 14px; background: #10151c; color: var(--on-dark-2); font-size: 14px; line-height: 1.6; }
+  .legal .sub-k { margin: 0 0 8px; color: var(--on-dark-accent); }
+  .legal p { margin: 0 0 8px; }
+  .legal p:last-child { margin: 0; }
+  .legal a { color: var(--on-dark-accent); }
   .cite { color: var(--text-2); overflow-wrap: anywhere; padding: 12px 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font-family: var(--font-mono); font-size: 13px; line-height: 1.6; }
 </style>

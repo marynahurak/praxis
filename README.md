@@ -55,9 +55,12 @@ Use the **“Cite this repository”** button on GitHub (generated from [`CITATI
 
 ### Licence
 
+© 2026 Maryna Hurak.
+
 - Article texts (`src/content/`): [CC BY-NC 4.0](LICENSE-CONTENT.md)
-- Site source code: [MIT](LICENSE)
-- Third-party figures and tables keep the licences of their rights holders.
+- Praxis tools (Myosite atlas): content [CC BY-NC-ND 4.0](LICENSE-TOOLS.md), source code all rights reserved
+- Remaining site source code: [MIT](LICENSE)
+- Third-party material keeps the licences of its rights holders (BodyParts3D: CC BY 4.0).
 
 Content is educational and does not replace individual clinical advice.
 
@@ -86,7 +89,7 @@ Praxis — незалежна науково-освітня ініціатива
 
 ### Ліцензія
 
-Тексти статей — CC BY-NC 4.0, код сайту — MIT. Матеріали мають освітній характер і не замінюють індивідуальної клінічної консультації.
+© 2026 Марина Гурак. Тексти статей — CC BY-NC 4.0; інструменти Praxis — зміст CC BY-NC-ND 4.0, код — усі права захищено ([LICENSE-TOOLS.md](LICENSE-TOOLS.md)); решта коду сайту — MIT. Матеріали мають освітній характер і не замінюють індивідуальної клінічної консультації.
 
 ### Для редакторки
 

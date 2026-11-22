@@ -17,6 +17,7 @@ url: "https://marynahurak.github.io/praxis/"
 repository-code: "https://github.com/marynahurak/praxis"
 license:
   - CC-BY-NC-4.0
+  - CC-BY-NC-ND-4.0
   - MIT
 keywords:
   - prosthetics

@@ -91,8 +91,9 @@ const c = {
     ],
     licenseTitle: 'Ліцензія та цитування',
     license: [
-      'Тексти статей поширюються за ліцензією Creative Commons «Зазначення авторства — Некомерційна» 4.0 Міжнародна (CC BY-NC 4.0): їх можна поширювати й адаптувати із зазначенням авторки та Praxis, але не з комерційною метою.',
-      'Вихідний код сайту поширюється за ліцензією MIT. Ілюстрації та таблиці третіх сторін зберігають ліцензії своїх правовласників.',
+      'Авторське право на матеріали Praxis належить Марині Гурак. Тексти статей поширюються за ліцензією Creative Commons «Зазначення авторства — Некомерційна» 4.0 Міжнародна (CC BY-NC 4.0): їх можна поширювати й адаптувати із зазначенням авторки та Praxis, але не з комерційною метою.',
+      'Інструменти Praxis (зокрема «Атлас локалізації міоточок та конфігурації sEMG-електродів») поширюються за суворішою ліцензією CC BY-NC-ND 4.0: без змін і не з комерційною метою; вихідний код інструментів — усі права захищено. Умови — на сторінці кожного інструмента.',
+      'Решта вихідного коду сайту поширюється за ліцензією MIT. Ілюстрації та таблиці третіх сторін зберігають ліцензії своїх правовласників.',
     ],
     citeTitle: 'Як цитувати статтю',
     citeExample: `${author.short} Назва статті. Praxis. Рік. Доступно за посиланням: URL`,
@@ -172,8 +173,9 @@ const c = {
     ],
     licenseTitle: 'Licence and citation',
     license: [
-      'Article texts are licensed under Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0): they may be shared and adapted with attribution to the author and Praxis, but not for commercial purposes.',
-      'The site source code is available under the MIT licence. Third-party figures and tables retain the licences of their rights holders.',
+      'Copyright in Praxis materials belongs to Maryna Hurak. Article texts are licensed under Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0): they may be shared and adapted with attribution to the author and Praxis, but not for commercial purposes.',
+      'Praxis tools (including the Myosite localisation and sEMG electrode configuration atlas) are licensed under the stricter CC BY-NC-ND 4.0: unchanged and non-commercial only; the tools\' source code is all rights reserved. The terms are given on each tool page.',
+      'The remaining site source code is available under the MIT licence. Third-party figures and tables retain the licences of their rights holders.',
     ],
     citeTitle: 'How to cite an article',
     citeExample: `${author.short} Article title. Praxis. Year. Available from: URL`,
@@ -338,7 +340,7 @@ const c = {
           <p>{c.disclaimer}</p>
         </section>
 
-        <section aria-labelledby="contact-h">
+        <section id="contact" aria-labelledby="contact-h">
           <h2 id="contact-h">{c.contactTitle}</h2>
           <p>{c.contact}</p>
           <p class="links">
