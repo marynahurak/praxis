@@ -25,6 +25,12 @@ const SHORT: Record<string, { uk: string; en: string }> = {
   dome: { uk: 'Куполи', en: 'Domes' },
 };
 const ROLE_KEYS = ['primary', 'secondary', 'caution', 'conditional', 'deep', 'context'];
+// шкала: найбільший «круглий» відрізок, що займає не більше 28% ширини схеми
+const scaleBar = (ppm: number, w: number) => {
+  let mm = 10;
+  for (const o of [10, 20, 50, 100]) if ((o * ppm) / 1000 <= 0.28 * w) mm = o;
+  return { mm, px: (mm * ppm) / 1000 };
+};
 const roleLegend = ROLE_KEYS.map((r) => ({ r, label: tx(D.roles[r]) }));
 const SEC_SHORT = SEC_SHORT_L[lang];
 ---
@@ -101,6 +107,7 @@ const SEC_SHORT = SEC_SHORT_L[lang];
                     </g>
                     <g class="tmr-g" aria-hidden="true">{muscles.filter((s: any) => isTmr(lv, s.key)).map((s: any) => <path d={s.d} fill={`url(#h-${v.id})`} class="tmrp" fill-rule="evenodd" />)}</g>
                     <g class="lbl-g" aria-hidden="true">{muscles.filter((s: any) => (s.belly_cm2 ?? 0) > 1.2).map((s: any) => <text x={s.site[0]} y={s.site[1]} class="lbl">{ABBR[s.key]}</text>)}</g>
+                    <g class="scalebar" aria-hidden="true">{(() => { const b = scaleBar(g.ppm, g.w); return <><path d={`M14 ${g.h - 16}v6h${b.px.toFixed(1)}v-6`} /><text x={14 + b.px / 2} y={g.h - 20}>{b.mm} {ui.mm}</text></>; })()}</g>
                     <g class="els" />
                   </svg>
                 </div>
@@ -130,6 +137,7 @@ const SEC_SHORT = SEC_SHORT_L[lang];
                       )}
                     </g>
                     <g class="weak-g" aria-hidden="true">{g.structs.filter((s: any) => s.tendon || s.kind === 'bone').map((s: any) => <path d={s.d} fill={`url(#w-${sv.id})`} fill-rule="evenodd" />)}</g>
+                    <g class="scalebar" aria-hidden="true">{(() => { const b = scaleBar(g.ppm, g.w); return <><path d={`M-18 ${g.h + 18}v6h${b.px.toFixed(1)}v-6`} /><text x={-18 + b.px / 2} y={g.h + 14}>{b.mm} {ui.mm}</text></>; })()}</g>
                     <g class="lbl-g on" aria-hidden="true">{g.structs.filter((s: any) => s.kind === 'muscle' && !s.tendon && (s.area_cm2 ?? 0) > (lv === 'ph' ? 0.15 : 0.45)).map((s: any) => <text x={s.site[0]} y={s.site[1]} class="lbl sl">{ABBR[s.key]}</text>)}</g>
                     <g class="els" />
                   </svg>
@@ -292,7 +300,9 @@ const SEC_SHORT = SEC_SHORT_L[lang];
 
   /* work area */
   .work { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(330px, 400px); }
-  .fig { position: relative; margin: 0; min-height: 0; display: flex; flex-direction: column; padding: 6px 12px 8px; }
+  .fig { position: relative; margin: 0; min-height: 0; display: flex; flex-direction: column; padding: 6px 12px 8px; background-color: var(--bg); background-image: linear-gradient(rgba(39, 86, 184, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(39, 86, 184, 0.05) 1px, transparent 1px); background-size: 24px 24px; }
+  .stage :global(.scalebar path), .stage .scalebar path { fill: none; stroke: #3b4452; stroke-width: 1.6; }
+  .stage .scalebar text { font: 600 10px var(--font-mono); fill: #3b4452; text-anchor: middle; }
   .stage-area { position: relative; flex: 1; min-height: 0; }
   .stage-wrap { position: absolute; inset: 0; display: flex; flex-direction: column; }
   .orient { display: flex; justify-content: space-between; gap: 8px; font: 500 11.5px var(--font-mono); color: var(--muted); padding: 2px 4px 4px; }

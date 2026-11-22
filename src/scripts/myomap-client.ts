@@ -651,23 +651,113 @@ export function initMyoMap() {
 }
 
 // ---------------------------------------------------------------- EMG simulator (guide page)
+// Навчальна модель: синтетична ЕМГ двох каналів, огинаюча, поріг, пропорційне розкриття/закриття
+// і перемикання хватів коскороченням. Кисть — схематична багатосуглобова «конструкторна» модель.
+type Finger = { cx: number; w: number; L: number[] };
+const FINGERS: Record<string, Finger> = {
+  little: { cx: 80, w: 19, L: [30, 20, 17] },
+  ring: { cx: 103, w: 21, L: [39, 25, 20] },
+  middle: { cx: 128, w: 22, L: [43, 28, 21] },
+  index: { cx: 153, w: 22, L: [40, 25, 20] },
+};
+const THUMB = { x: 170, y: 196, w: 23, L: [34, 26, 21] };
+const BASE_Y = 120;
+type Pose = { f: Record<string, number[]>; t: { phi: number; a: number[] } };
+const OPEN: Pose = { f: { little: [0, 0, 0], ring: [0, 0, 0], middle: [0, 0, 0], index: [0, 0, 0] }, t: { phi: 40, a: [0, 0, 0] } };
+const CURL = [84, 98, 60];
+const GRIP_POSES: Record<string, Pose> = {
+  power: { f: { little: [78, 96, 58], ring: [78, 96, 58], middle: [78, 96, 58], index: [78, 96, 58] }, t: { phi: -26, a: [20, 35, 35] } },
+  tripod: { f: { little: CURL, ring: CURL, middle: [56, 50, 22], index: [52, 48, 22] }, t: { phi: -10, a: [5, 10, 10] } },
+  key: { f: { little: [72, 88, 48], ring: [72, 88, 48], middle: [72, 88, 48], index: [72, 88, 48] }, t: { phi: -34, a: [0, 8, 10] } },
+  point: { f: { little: CURL, ring: CURL, middle: CURL, index: [0, 0, 0] }, t: { phi: -22, a: [20, 35, 35] } },
+};
+const GRIP_ORDER = ['power', 'tripod', 'key', 'point'];
+
+function digitSvg(cx: number, baseY: number, w: number, L: number[], ang: number[], thumb = false) {
+  let out = '';
+  let y = baseY, cum = 0;
+  const pin = (yy: number) => `<circle cx="${cx}" cy="${yy.toFixed(1)}" r="3.3" class="s-pin"/><circle cx="${cx}" cy="${yy.toFixed(1)}" r="1.3" class="s-hole"/>`;
+  const pins: number[] = [y];
+  for (let k = 0; k < 3; k++) {
+    cum += ang[k];
+    const c = Math.cos((cum * Math.PI) / 180);
+    const len = L[k] * c;
+    const y2 = y - len;
+    const minH = w * 0.5;
+    let top = Math.min(y, y2), h = Math.abs(len);
+    if (h < minH) { top = (y + y2) / 2 - minH / 2; h = minH; }
+    const face = (thumb ? 't-' : '') + (c >= 0 ? 'seg-f' : 'seg-b');
+    out += `<rect x="${cx - w / 2}" y="${top.toFixed(1)}" width="${w}" height="${h.toFixed(1)}" rx="5" class="seg ${face}"/>`;
+    if (h > 10) out += `<rect x="${cx - w / 2 + 3}" y="${(top + 3).toFixed(1)}" width="4" height="${(h - 6).toFixed(1)}" rx="2" class="seg-hl"/>`;
+    if (c > 0.35 && h > 15) out += `<circle cx="${cx + 2}" cy="${(top + h / 2).toFixed(1)}" r="${(w * 0.24).toFixed(1)}" class="${thumb ? 't-stud' : 's-stud'}"/>`;
+    if (k === 2) {
+      const tipY = c >= 0 ? top : top + h - 5;
+      out += `<rect x="${cx - w / 2 + 4}" y="${tipY.toFixed(1)}" width="${w - 8}" height="5" rx="2.5" class="tip"/>`;
+    }
+    y = y2;
+    if (k < 2) pins.push(y);
+  }
+  return out + pins.map(pin).join('');
+}
+
 export function initSim() {
   const box = document.querySelector<HTMLElement>('.sim');
   const cv = box?.querySelector<HTMLCanvasElement>('.sim-cv');
   const data = document.getElementById('mm-sim-data');
   if (!box || !cv || !data) return;
-  const D = { ui: JSON.parse(data.textContent || '{}') };
+  const U = JSON.parse(data.textContent || '{}');
   const c = cv.getContext('2d')!;
   const inp = (k: string) => box.querySelector<HTMLInputElement>(`[data-sim="${k}"]`)!;
   const stateEl = box.querySelector<HTMLElement>('.sim-state')!;
-  const f1 = box.querySelector<SVGGElement>('.sh-f1')!, f2 = box.querySelector<SVGGElement>('.sh-f2')!;
-  const N = 360;
+  const digits = box.querySelector<SVGGElement>('.hand .digits')!;
+  const gripName = box.querySelector<HTMLElement>('.grip-name');
+  const elc1 = box.querySelector('.elc-1'), elc2 = box.querySelector('.elc-2');
+  const gripBtns = [...box.querySelectorAll<HTMLButtonElement>('[data-grip]')];
+  const N = 420;
   const raw1 = new Float32Array(N), raw2 = new Float32Array(N), env1 = new Float32Array(N), env2 = new Float32Array(N);
-  let e1 = 0, e2 = 0, ap = 0.3, head = 0, running = false, lastState = '';
+  let e1 = 0, e2 = 0, ap = 0.55, head = 0, running = false, lastState = '', grip = 'power', latched = false, lastAp = -1, lastGrip = '';
+  let W = 720, H = 340;
+  let msgUntil = 0, pulseUntil = 0, t1on = -1e9, t2on = -1e9, was1 = false, was2 = false;
+  box.querySelector('[data-co]')?.addEventListener('click', () => { pulseUntil = performance.now() + 450; });
   const gauss = () => { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
-  const W = cv.width, H = cv.height;
+
+  const setGrip = (g: string, announce = false) => {
+    grip = g;
+    gripBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.grip === g)));
+    if (gripName) gripName.textContent = U.grips[g];
+    if (announce) { stateEl.textContent = `${U.sw} «${U.grips[g]}»`; lastState = 'switch'; msgUntil = performance.now() + 1800; }
+    drawHand();
+  };
+  gripBtns.forEach((b) => b.addEventListener('click', () => setGrip(b.dataset.grip!)));
+
+  function drawHand() {
+    if (Math.abs(ap - lastAp) < 0.002 && grip === lastGrip) return;
+    lastAp = ap; lastGrip = grip;
+    const k = 1 - ap; const P = GRIP_POSES[grip];
+    const mix = (a: number[], b: number[]) => a.map((v, i) => v + (b[i] - v) * k);
+    let out = '';
+    for (const name of ['little', 'ring', 'middle', 'index']) {
+      const F = FINGERS[name];
+      out += digitSvg(F.cx, BASE_Y, F.w, F.L, mix(OPEN.f[name], P.f[name]));
+    }
+    const phi = OPEN.t.phi + (P.t.phi - OPEN.t.phi) * k;
+    out += `<g transform="translate(${THUMB.x} ${THUMB.y}) rotate(${phi.toFixed(1)})">${digitSvg(0, 0, THUMB.w, THUMB.L, mix(OPEN.t.a, P.t.a), true)}</g>`;
+    digits.innerHTML = out;
+  }
+
+  function resize() {
+    const r = cv!.getBoundingClientRect();
+    if (!r.width) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv!.width = Math.round(W * dpr); cv!.height = Math.round(H * dpr);
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw(+inp('thr').value / 100);
+  }
+
   function step() {
-    const A = +inp('a').value / 100, B = +inp('b').value / 100, thr = +inp('thr').value / 100;
+    const now = performance.now(); const pulse = now < pulseUntil;
+    const A = Math.max(+inp('a').value / 100, pulse ? 0.8 : 0), B = Math.max(+inp('b').value / 100, pulse ? 0.8 : 0), thr = +inp('thr').value / 100;
     const x = inp('x').checked, t = inp('t').checked;
     for (let k = 0; k < 3; k++) {
       const m1 = gauss() * A * (t ? 0.15 : 1), m2 = gauss() * B;
@@ -676,39 +766,70 @@ export function initSim() {
       raw1[head] = r1; raw2[head] = r2; env1[head] = e1; env2[head] = e2; head = (head + 1) % N;
     }
     const on1 = e1 > thr, on2 = e2 > thr;
+    if (on1 && !was1) t1on = now; if (on2 && !was2) t2on = now; was1 = on1; was2 = on2;
+    // коскорочення = обидва канали перетнули поріг майже одночасно (вікно 350 мс)
+    const coOnset = on1 && on2 && Math.abs(t1on - t2on) < 350;
+    elc1?.classList.toggle('on', on1); elc2?.classList.toggle('on', on2);
     let s = 'idle';
-    if (on1 && on2) s = 'both';
-    else if (on1) { ap = Math.min(1, ap + 0.012 * (e1 - thr) / (1 - thr + 0.01) + 0.002); s = 'open'; }
-    else if (on2) { ap = Math.max(0, ap - 0.012 * (e2 - thr) / (1 - thr + 0.01) - 0.002); s = 'close'; }
-    if (s === 'open' && ap >= 1) s = 'idle';
-    if (s === 'close' && ap <= 0) s = 'idle';
-    if (s !== lastState) { stateEl.textContent = D.ui.simState[s]; lastState = s; }
-    f1.setAttribute('transform', `rotate(${20 - ap * 48} 38 86)`); f2.setAttribute('transform', `rotate(${-5 + ap * 16} 74 82)`);
+    if (coOnset && !latched) {
+      latched = true; setGrip(GRIP_ORDER[(GRIP_ORDER.indexOf(grip) + 1) % GRIP_ORDER.length], true);
+      s = 'switch';
+    } else if (on1 && on2) {
+      s = latched ? 'switch' : 'both';
+    } else if (latched && (on1 || on2)) {
+      s = 'switch'; // після коскорочення кисть чекає, доки обидва канали розслабляться
+    } else {
+      latched = false;
+      if (on1) { ap = Math.min(1, ap + 0.012 * (e1 - thr) / (1 - thr + 0.01) + 0.002); s = ap >= 1 ? 'idle' : 'open'; }
+      else if (on2) { ap = Math.max(0, ap - 0.012 * (e2 - thr) / (1 - thr + 0.01) - 0.002); s = ap <= 0 ? 'idle' : 'close'; }
+    }
+    const hold = now < msgUntil && (s === 'idle' || s === 'switch' || s === 'both');
+    if (s !== lastState && s !== 'switch' && !hold) { stateEl.textContent = U.simState[s]; }
+    if (hold) { lastState = 'switch'; drawHand(); draw(thr); return; }
+    lastState = s;
+    drawHand();
     draw(thr);
   }
-  function trace(buf: Float32Array, y0: number, h: number, col: string, scale: number, fill = false) {
+
+  function trace(buf: Float32Array, y0: number, h: number, col: string, fill = false) {
     c.beginPath();
     for (let i = 0; i < N; i++) {
-      const v = buf[(head + i) % N]; const x = (i / (N - 1)) * (W - 20) + 10; const y = y0 - Math.max(-1.2, Math.min(1.2, v * scale)) * h;
+      const v = buf[(head + i) % N]; const x = 12 + (i / (N - 1)) * (W - 24);
+      const y = y0 - Math.max(-1.25, Math.min(1.25, v)) * h;
       i ? c.lineTo(x, y) : c.moveTo(x, y);
     }
-    c.strokeStyle = col; c.lineWidth = fill ? 2 : 1; c.stroke();
+    c.strokeStyle = col; c.lineWidth = fill ? 2 : 1.1; c.shadowColor = col; c.shadowBlur = fill ? 10 : 6;
+    c.stroke();
+    if (fill) {
+      c.shadowBlur = 0;
+      c.lineTo(W - 12, y0); c.lineTo(12, y0); c.closePath();
+      const g = c.createLinearGradient(0, y0 - h, 0, y0); g.addColorStop(0, col + '40'); g.addColorStop(1, col + '00');
+      c.fillStyle = g; c.fill();
+    }
+    c.shadowBlur = 0;
   }
   function draw(thr: number) {
     c.clearRect(0, 0, W, H);
-    c.font = '12px ui-monospace, monospace'; c.fillStyle = '#6b7380';
-    c.fillText(`${D.ui.ch} 1 · ${D.ui.raw}`, 12, 16); c.fillText(`${D.ui.ch} 2`, 12, 96);
-    c.strokeStyle = '#e3e7ee'; c.lineWidth = 1;
-    [50, 130].forEach((y) => { c.beginPath(); c.moveTo(10, y); c.lineTo(W - 10, y); c.stroke(); });
-    trace(raw1, 50, 28, '#2756b8', 1); trace(raw2, 130, 28, '#c98a1b', 1);
-    const y0 = 300, h = 120;
-    c.fillText(D.ui.env, 12, 176);
-    c.beginPath(); c.moveTo(10, y0); c.lineTo(W - 10, y0); c.strokeStyle = '#cfd5de'; c.stroke();
-    c.setLineDash([6, 5]); c.beginPath(); c.moveTo(10, y0 - thr * h); c.lineTo(W - 10, y0 - thr * h); c.strokeStyle = '#b23b3b'; c.stroke(); c.setLineDash([]);
-    trace(env1, y0, h, '#2756b8', 1, true); trace(env2, y0, h, '#c98a1b', 1, true);
+    // grid
+    c.lineWidth = 1;
+    for (let i = 1; i < 12; i++) { const x = Math.round((W * i) / 12) + 0.5; c.strokeStyle = 'rgba(141,176,255,0.06)'; c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); }
+    for (let j = 1; j < 8; j++) { const y = Math.round((H * j) / 8) + 0.5; c.strokeStyle = j === 4 ? 'rgba(141,176,255,0.16)' : 'rgba(141,176,255,0.06)'; c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
+    c.font = '500 11px "IBM Plex Mono", ui-monospace, monospace'; c.fillStyle = '#8a93a3';
+    c.fillText(W < 480 ? `${U.ch} 1` : `${U.ch} 1 · ${U.raw}`, 12, 16);
+    c.fillText(`${U.ch} 2`, 12, H * 0.27 + 4);
+    c.fillText(U.env, 12, H * 0.5 + 16);
+    trace(raw1, H * 0.15, H * 0.085, '#8db0ff');
+    trace(raw2, H * 0.36, H * 0.085, '#e3b462');
+    const y0 = H * 0.94, h = H * 0.36;
+    c.setLineDash([6, 5]); c.strokeStyle = '#f07178'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(12, y0 - thr * h); c.lineTo(W - 12, y0 - thr * h); c.stroke(); c.setLineDash([]);
+    c.fillStyle = '#f07178'; c.fillText(U.thr, W - 12 - c.measureText(U.thr).width, y0 - thr * h - 6);
+    trace(env1, y0, h, '#8db0ff', true);
+    trace(env2, y0, h, '#e3b462', true);
   }
   const loop = () => { if (!running) return; step(); requestAnimationFrame(loop); };
   const io = new IntersectionObserver((es) => { const vis = es.some((e) => e.isIntersecting); if (vis && !running) { running = true; requestAnimationFrame(loop); } else if (!vis) running = false; });
   io.observe(cv);
-  draw(+inp('thr').value / 100);
+  new ResizeObserver(resize).observe(cv);
+  resize();
+  drawHand();
 }

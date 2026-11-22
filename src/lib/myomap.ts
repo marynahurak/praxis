@@ -52,6 +52,15 @@ export function getUi(lang: Lang) {
     openAtlas: 'Відкрити інтерактивну мапу', openAtlasNote: 'Мапа відкривається на весь екран: рівні, проєкції, поперечні зрізи, електроди та оцінка розміщення.',
     quickTitle: 'Одразу до потрібного вигляду', modesTitle: 'Типи керування', aboutModes: 'Про типи керування',
     sheetToggle: 'Панель', legendTitle: 'Позначення', mapNav: 'Налаштування мапи',
+    statLevels: 'рівні ампутації', statViews: 'анатомічних проєкцій', statSections: 'поперечних зрізів', statMuscles: 'м\'язів і частин м\'язів', statElectrodes: 'типи електродів', statRefs: 'наукових джерел',
+    levelsTitle: 'Оберіть рівень ампутації', levelsLead: 'Кожне посилання відкриває мапу одразу в потрібній проєкції або на поперечному зрізі.',
+    figCaption: 'РИС. 01 · Інтерактивна мапа: задня поверхня передпліччя, два канали прямого керування',
+    sec: { scope: 'Призначення', how: 'Як користуватися', modes: 'Типи керування', weak: 'Слабкий сигнал', effort: 'Енергоефективність', chain: 'Сигнальний ланцюг', pitfalls: 'Пастки', systems: 'Системи', evidence: 'Докази', source: 'Анатомія', refs: 'Джерела' },
+    chainLead: 'Від наміру рухатися до руху протеза: шість перетворень сигналу. Нижче — симулятор, у якому можна керувати кистю двома каналами.',
+    curveTitle: 'Схема: відносна інтенсивність скорочення і час до втоми', curveX: 'Відносна інтенсивність скорочення, % максимального зусилля', curveY: 'Час до втоми', curveZone: 'робочий діапазон керування', curveNote: 'Схематично, без числових значень: що вища відносна інтенсивність статичного скорочення, то коротший час до втоми, і ця залежність нелінійна (Frey-Law & Avin, 2010).',
+    coBtn: 'Коскорочення (короткий імпульс)', simGrip: 'Хват', grips: { power: 'Силовий', tripod: 'Тридигітальний', key: 'Латеральний (ключовий)', point: 'Вказівний' },
+    simSwitch: 'Коскорочення: перемикання на хват', simGripNote: 'У багатохватових міоелектричних кистях м\'язи-розгиначі зазвичай розкривають кисть, м\'язи-згиначі закривають, а для перемикання хватів використовують тригери, наприклад подвійні імпульси чи коскорочення (Kerver et al., 2023). Тут коскорочення — коли обидва канали перетинають поріг майже одночасно — перемикає хват по колу; спробуйте кнопку «Коскорочення».',
+    socket: 'Куксоприймач з двома електродами', handAlt: 'Схематична багатосуглобова кисть',
     scopeTitle: 'Призначення та межі застосування',
     scope: 'Інструмент призначений для навчальної та методичної підтримки етапу пошуку міоточок (міотестингу) під час первинного та повторного міоелектричного протезування верхньої кінцівки. Він поєднує анатомо-топографічні орієнтири цільових м\'язових черевців, фізіологічно конгруентні рухові команди для інтуїтивного керування протезом, схеми позиціонування sEMG-електродів у масштабі та дані виробників щодо окремих електродів. Атлас є навчальним довідковим ресурсом, а не засобом підтримки клінічних рішень щодо конкретного пацієнта: анатомічна карта задає лише початкову гіпотезу розміщення. Остаточне положення електродів визначає інструментальна верифікація sEMG-сигналу (амплітуда, співвідношення сигнал/шум, відсутність перехресних наводок) з урахуванням індивідуальних анатомічних і посттравматичних особливостей залишкової кінцівки.',
     lead: 'Інтерактивний анатомічний атлас для пошуку місць міоелектричних електродів: реальна анатомія м\'язів і кісток, зони слабкого сигналу, розміщення електродів у масштабі з миттєвою оцінкою та пояснення того, як працює міоелектрична кисть.',
@@ -79,7 +88,7 @@ export function getUi(lang: Lang) {
     simTitle: 'Симулятор двоканального керування', simOpen: 'Канал 1 (м\'язи-розгиначі) → розкрити', simClose: 'Канал 2 (м\'язи-згиначі) → закрити',
     simCross: 'Перехресні наводки між каналами (30%)', simTendon: 'Електрод каналу 1 над сухожилком', simThr: 'Поріг',
     simRaw: 'Сира ЕМГ після диференційного підсилення', simEnv: 'Огинаюча та поріг',
-    simState: { idle: 'Кисть нерухома', open: 'Кисть розкривається', close: 'Кисть закривається', both: 'Обидва канали вище порогу: коскорочення, кисть стоїть' },
+    simState: { idle: 'Кисть нерухома', open: 'Кисть розкривається', close: 'Кисть закривається', both: 'Обидва канали вище порогу: кисть стоїть' },
     simNote: 'Навчальна модель: сигнал синтезовано, параметри умовні. Реальні контролери використовують різні стратегії (наприклад, «перемагає сильніший канал»).',
     systemsTitle: 'Приклади комерційних систем керування',
     systemsNote: 'Дані виробників станом на листопад 2026 року; наведено лише як приклади типів керування. Перевіряйте актуальну документацію виробника.',
@@ -111,6 +120,15 @@ export function getUi(lang: Lang) {
     openAtlas: 'Open the interactive map', openAtlasNote: 'The map opens full screen: levels, views, cross-sections, electrodes and placement feedback.',
     quickTitle: 'Go straight to a view', modesTitle: 'Control types', aboutModes: 'About control types',
     sheetToggle: 'Panel', legendTitle: 'Key', mapNav: 'Map settings',
+    statLevels: 'amputation levels', statViews: 'anatomical views', statSections: 'cross-sections', statMuscles: 'muscles and muscle parts', statElectrodes: 'electrode types', statRefs: 'scientific sources',
+    levelsTitle: 'Choose the amputation level', levelsLead: 'Each link opens the map directly in the right view or cross-section.',
+    figCaption: 'FIG. 01 · Interactive map: posterior forearm, two direct-control channels',
+    sec: { scope: 'Scope', how: 'How to use', modes: 'Control types', weak: 'Weak signal', effort: 'Energy efficiency', chain: 'Signal chain', pitfalls: 'Pitfalls', systems: 'Systems', evidence: 'Evidence', source: 'Anatomy', refs: 'References' },
+    chainLead: 'From the intention to move to the movement of the prosthesis: six signal transformations. Below is a simulator in which you can control the hand with two channels.',
+    curveTitle: 'Schematic: relative contraction intensity and time to fatigue', curveX: 'Relative contraction intensity, % of maximal effort', curveY: 'Time to fatigue', curveZone: 'working control range', curveNote: 'Schematic, without numerical values: the higher the relative intensity of a static contraction, the shorter the time to fatigue, and the relationship is non-linear (Frey-Law & Avin, 2010).',
+    coBtn: 'Co-contraction (short pulse)', simGrip: 'Grip', grips: { power: 'Power', tripod: 'Tripod', key: 'Lateral (key)', point: 'Index point' },
+    simSwitch: 'Co-contraction: switching to', simGripNote: 'In multi-grip myoelectric hands the extensors usually open the hand and the flexors close it, while triggers such as double pulses or co-contractions are used to switch grips (Kerver et al., 2023). Here, a co-contraction (both channels crossing the threshold almost simultaneously) cycles through the grips; try the Co-contraction button.',
+    socket: 'Socket with two electrodes', handAlt: 'Schematic multi-articulating hand',
     scopeTitle: 'Scope and intended use',
     scope: 'The tool provides educational and methodological support for myosite localisation (myotesting) in primary and repeat upper-limb myoelectric prosthetic fitting. It brings together anatomical and topographic landmarks of target muscle bellies, physiologically congruent movement commands for intuitive prosthesis control, true-scale sEMG electrode positioning, and manufacturer data for selected electrodes. The atlas is an educational reference, not a decision-support tool for individual patients: the anatomical map provides only an initial placement hypothesis. Final electrode positions are determined by instrumented verification of the sEMG signal (amplitude, signal-to-noise ratio, absence of crosstalk), taking into account the individual anatomical and post-traumatic features of the residual limb.',
     lead: 'An interactive anatomical atlas for finding myoelectric electrode sites: real muscle and bone anatomy, weak-signal zones, true-scale electrode placement with instant feedback, and an explanation of how a myoelectric hand works.',
@@ -138,7 +156,7 @@ export function getUi(lang: Lang) {
     simTitle: 'Two-channel control simulator', simOpen: 'Channel 1 (extensors) → open', simClose: 'Channel 2 (flexors) → close',
     simCross: 'Crosstalk between channels (30%)', simTendon: 'Channel 1 electrode over tendon', simThr: 'Threshold',
     simRaw: 'Raw EMG after differential amplification', simEnv: 'Envelope and threshold',
-    simState: { idle: 'Hand at rest', open: 'Hand opening', close: 'Hand closing', both: 'Both channels above threshold: co-contraction, hand holds' },
+    simState: { idle: 'Hand at rest', open: 'Hand opening', close: 'Hand closing', both: 'Both channels above threshold: the hand holds' },
     simNote: 'Teaching model: the signal is synthetic and the parameters are illustrative. Real controllers use different strategies (for example, "the stronger channel wins").',
     systemsTitle: 'Examples of commercial control systems',
     systemsNote: 'Manufacturer data as of November 2026; listed only as examples of control types. Check the manufacturer\'s current documentation.',
@@ -243,7 +261,7 @@ export function buildClientData(lang: Lang) {
 
 export function simData(lang: Lang) {
   const ui = getUi(lang);
-  return { ch: ui.ch, simState: ui.simState, raw: ui.simRaw, env: ui.simEnv };
+  return { ch: ui.ch, simState: ui.simState, raw: ui.simRaw, env: ui.simEnv, thr: ui.simThr, grips: ui.grips, sw: ui.simSwitch };
 }
 
 export const fmtUpdated = (lang: Lang) =>

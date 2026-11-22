@@ -2730,8 +2730,8 @@
    },
    {
     "text": {
-     "uk": "Клінічна практика: на трансрадіальному рівні електроди зазвичай не ставлять на м'язи-привертачі, бо пацієнти швидко втомлюються.",
-     "en": "Clinical practice: at the transradial level, electrodes are usually not placed over the pronators because patients tire quickly."
+     "uk": "На трансрадіальному рівні електроди зазвичай не ставлять на м'язи-привертачі, бо пацієнти швидко втомлюються.",
+     "en": "At the transradial level, electrodes are usually not placed over the pronators because patients tire quickly."
     },
     "basis": "expert"
    },
@@ -2931,6 +2931,11 @@
    "id": "adewuyi2017",
    "text": "Adewuyi AA, Hargrove LJ, Kuiken TA. Resolving the effect of wrist position on myoelectric pattern recognition control. J Neuroeng Rehabil. 2017;14:39.",
    "doi": "10.1186/s12984-017-0246-x"
+  },
+  {
+   "id": "kerver2023",
+   "text": "Kerver N, Schuurmans V, van der Sluis CK, Bongers RM. The multi-grip and standard myoelectric hand prosthesis compared: does the multi-grip hand live up to its promise? J Neuroeng Rehabil. 2023;20:22.",
+   "doi": "10.1186/s12984-023-01131-w"
   },
   {
    "id": "mitsuhashi2009",

@@ -1,6 +1,6 @@
 ---
 // «Атлас локалізації міоточок та конфігурації sEMG-електродів» — сторінка-довідник:
-// призначення, методологія, зони слабкого сигналу, енергоефективність, симулятор, джерела.
+// призначення, методологія, зони слабкого сигналу, енергоефективність, сигнальний ланцюг і симулятор, джерела.
 // Сама інтерактивна мапа — на окремій повноекранній сторінці (src/views/MyoAtlas.astro, …/atlas/).
 import Base from '../layouts/Base.astro';
 import { type Lang } from '../config';
@@ -16,148 +16,382 @@ const tx = tr(lang);
 const ui = getUi(lang);
 const atlasHref = localePath(lang, 'tools/myotesting-map/atlas/');
 const fmtDate = fmtUpdated(lang);
-const quick = LEVELS.map((lv) => ({
+
+const nViews = LEVELS.reduce((n, lv) => n + D.levels[lv].views.length, 0);
+const nSections = LEVELS.reduce((n, lv) => n + D.levels[lv].sections.length, 0);
+const stats = [
+  [LEVELS.length, ui.statLevels], [nViews, ui.statViews], [nSections, ui.statSections],
+  [Object.keys(D.muscles).length, ui.statMuscles], [D.electrodes.length, ui.statElectrodes], [D.references.length, ui.statRefs],
+] as [number, string][];
+
+const levelCards = LEVELS.map((lv) => ({
   lv,
   title: tx(D.levels[lv].title),
+  img: url(`myomap/${D.levels[lv].views[0].id}.webp`),
   links: [
     ...D.levels[lv].views.map((v: any) => ({ id: v.id, label: VIEW_SHORT[v.id][lang], title: tx(v.label) })),
     ...D.levels[lv].sections.map((s: any) => ({ id: s.id, label: `${SEC_SHORT_L[lang]}: ${tx(s.label).toLowerCase()}`, title: `${ui.section}: ${tx(s.label)}` })),
   ],
 }));
+
+// ---- детерміновані «ЕМГ-подібні» криві для декоративних графіків (лише ілюстрація, не дані)
+function rng(seed: number) {
+  let s = seed >>> 0;
+  return () => ((s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296);
+}
+const gauss = (x: number, c: number, w: number) => Math.exp(-((x - c) ** 2) / (2 * w * w));
+function emg(seed: number, W: number, mid: number, amp: number, bursts: [number, number, number][], step = 2.2, floor = 0.05, repeat = 1) {
+  const r = rng(seed);
+  const ys: number[] = [];
+  for (let x = 0; x <= W; x += step) {
+    const env = floor + bursts.reduce((a, [c, w, h]) => a + h * gauss(x, c, w), 0);
+    ys.push((r() * 2 - 1) * env * amp);
+  }
+  let d = '';
+  for (let k = 0; k < repeat; k++) ys.forEach((y, i) => { d += `${d ? 'L' : 'M'}${(k * W + i * step).toFixed(1)} ${(mid + y).toFixed(1)}`; });
+  return d;
+}
+const heroTraces = [
+  { d: emg(7, 800, 60, 46, [[140, 40, 1], [470, 55, 0.8], [690, 30, 0.6]], 2.4, 0.05, 2), c: 't1' },
+  { d: emg(19, 800, 60, 40, [[300, 50, 0.9], [600, 45, 1]], 2.4, 0.05, 2), c: 't2' },
+];
+// міні-графіки для сигнального ланцюга (160 × 56)
+const W = 160;
+const spikes = Array.from({ length: 9 }, (_, i) => 12 + i * 17 + (i % 3) * 3).map((x) => `M${x} 44V10`).join('');
+const muap = emg(3, W, 28, 24, [[80, 34, 1]], 1.6, 0.06);
+const noisy = (() => { const r = rng(11); let d = ''; for (let x = 0; x <= W; x += 1.6) d += `${d ? 'L' : 'M'}${x.toFixed(1)} ${(16 + Math.sin(x / 6) * 7 + (r() * 2 - 1) * 2).toFixed(1)}`; return d; })();
+const clean = emg(5, W, 42, 12, [[80, 30, 1]], 1.6, 0.04);
+const rect = (() => { const r = rng(23); let d = ''; for (let x = 0; x <= W; x += 1.6) { const e = 0.06 + gauss(x, 80, 30); d += `M${x.toFixed(1)} 48V${(48 - r() * e * 40).toFixed(1)}`; } return d; })();
+const envl = (() => { let d = ''; for (let x = 0; x <= W; x += 4) d += `${d ? 'L' : 'M'}${x} ${(48 - (0.06 + gauss(x, 80, 30)) * 24).toFixed(1)}`; return d; })();
+const ctrlEnv = (() => { let d = ''; for (let x = 0; x <= W; x += 4) d += `${d ? 'L' : 'M'}${x} ${(46 - (0.05 + gauss(x, 82, 26)) * 36).toFixed(1)}`; return d; })();
+const minis = [
+  `<path d="${spikes}" class="mw-a"/><path d="M0 44H160" class="mw-ax"/>`,
+  `<path d="M0 28H160" class="mw-ax"/><path d="${muap}" class="mw-a"/>`,
+  `<path d="${noisy}" class="mw-g"/><path d="${clean}" class="mw-a"/>`,
+  `<path d="M0 48H160" class="mw-ax"/><path d="M8 48C30 48 36 14 52 12H120C134 14 140 48 156 48" class="mw-band"/><text x="52" y="9" class="mw-t">90</text><text x="112" y="9" class="mw-t">450 Hz</text>`,
+  `<path d="${rect}" class="mw-g"/><path d="${envl}" class="mw-a"/>`,
+  `<path d="${ctrlEnv}" class="mw-a"/><path d="M0 30H160" class="mw-thr"/><path d="M0 52H58V40H108V52H160" class="mw-b"/>`,
+];
+
+const STEP_ICONS = [
+  '<rect x="6" y="8" width="36" height="32" rx="5"/><path d="M6 18h36M16 8v10M28 8v10"/>',
+  '<circle cx="19" cy="19" r="12"/><circle cx="19" cy="19" r="4"/><path d="M27 27l15 6-6 2-2 6z"/>',
+  '<rect x="8" y="14" width="32" height="20" rx="5"/><path d="M17 18v12M24 18v12M31 18v12"/>',
+];
+const MODE_ICONS: Record<string, string> = {
+  direct: '<circle cx="40" cy="40" r="24"/><rect x="31" y="6" width="18" height="10" rx="3" class="ic-a"/><rect x="31" y="64" width="18" height="10" rx="3" class="ic-b"/><path d="M40 20v8M40 52v8"/>',
+  pr: '<circle cx="40" cy="40" r="24"/>' + Array.from({ length: 8 }, (_, k) => { const a = (k * Math.PI) / 4; const x = 40 + 30 * Math.cos(a), y = 40 + 30 * Math.sin(a); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" class="ic-a"/>`; }).join('') + '<circle cx="40" cy="40" r="3" class="ic-f"/>',
+  tmr: '<rect x="44" y="20" width="26" height="40" rx="6" class="ic-h"/><path d="M8 52c10 0 14-28 26-28h10" class="ic-n"/><circle cx="8" cy="52" r="3" class="ic-f"/>',
+};
+const WEAK_ICONS = [
+  '<path d="M6 14c6-4 10 4 16 0s10 4 16 0M6 24c6-4 10 4 16 0s10 4 16 0M6 34c6-4 10 4 16 0s10 4 16 0"/>',
+  '<path d="M12 10a5 5 0 1 0 2 8l12 12a5 5 0 1 0 8 2 5 5 0 1 0-2-8L20 12a5 5 0 1 0-8-2z"/>',
+  '<circle cx="24" cy="24" r="4"/><path d="M18 24H6M30 24h12M10 20l-4 4 4 4M38 20l4 4-4 4"/>',
+  '<path d="M6 12h36M6 20h36M6 28h36M6 36h36" /><circle cx="24" cy="36" r="3"/>',
+  '<rect x="6" y="10" width="16" height="28" rx="3"/><rect x="26" y="10" width="16" height="28" rx="3"/><path d="M24 6v36" class="ic-d"/>',
+  '<path d="M6 30l6-8 6 8 6-8 6 8 6-8 6 8"/>',
+];
+const sim = simData(lang);
+const GRIPS = ['power', 'tripod', 'key', 'point'] as const;
 ---
 
 <Base lang={lang} title={ui.title} description={ui.lead} altLangHref={localePath(other, 'tools/myotesting-map/')}>
   <script is:inline define:vars={{ atlasHref }}>
-    // Старі посилання на конкретний вигляд (#tr_post/ed, #th…) ведуть на нову сторінку мапи.
+    // Старі посилання на конкретний вигляд (#tr_post/ed, #th…) ведуть на сторінку мапи.
     if (/^#(ph|tr|th|sd)(_[a-z0-9]+)?(\/[a-z_]+)?$/.test(location.hash)) location.replace(atlasHref + location.hash);
   </script>
-  <script type="application/json" id="mm-sim-data" set:html={JSON.stringify(simData(lang))} />
-  <div class="container page" data-pagefind-body>
-    <nav class="crumbs" aria-label={ui.crumbs}><a href={localePath(lang, 'tools/')}>← {ui.crumbs}</a></nav>
-    <p class="eyebrow">{ui.eyebrow}</p>
-    <h1 class="h-page">{ui.title}</h1>
-    <p class="lead-muted">{ui.lead}</p>
-    <div class="meta-row">
-      <span class="badge-ev"><span class="dot" aria-hidden="true"></span>{ui.evidenceBadge}</span>
-      <span class="mono small">{ui.version} {D.meta.version} · {ui.updated} {fmtDate}</span>
-    </div>
+  <script type="application/json" id="mm-sim-data" set:html={JSON.stringify(sim)} />
 
-    <section class="cta" aria-labelledby="cta-h">
-      <a class="cta-img" href={atlasHref} tabindex="-1" aria-hidden="true"><img src={url(`myomap/preview-${lang}.webp`)} width="1200" height="750" alt="" loading="eager" /></a>
-      <div class="cta-body">
-        <h2 id="cta-h" class="cta-h"><a href={atlasHref}>{ui.openAtlas} →</a></h2>
-        <p class="cta-note">{ui.openAtlasNote}</p>
-        <p class="ctl-label">{ui.quickTitle}</p>
-        <dl class="quick">
-          {quick.map((q) => (
-            <>
-              <dt>{q.title}</dt>
-              <dd>{q.links.map((l: any) => <a class="chip-link" href={`${atlasHref}#${l.id}`} title={l.title}>{l.label}</a>)}</dd>
-            </>
-          ))}
-        </dl>
+  <div data-pagefind-body>
+    <!-- ============================================================ HERO -->
+    <section class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-traces-wrap" aria-hidden="true">
+        <svg class="hero-traces" viewBox="0 0 1600 120" preserveAspectRatio="none">
+          {heroTraces.map((t) => <path d={t.d} class={t.c} />)}
+        </svg>
+      </div>
+      <div class="container hero-in">
+        <div class="hero-text">
+          <nav class="crumbs" aria-label={ui.crumbs}><a href={localePath(lang, 'tools/')}>← {ui.crumbs}</a></nav>
+          <p class="kicker">{ui.eyebrow}</p>
+          <h1 class="hero-h">{ui.title}</h1>
+          <p class="hero-lead">{ui.lead}</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-glow" href={atlasHref}>{ui.openAtlas} <span aria-hidden="true">→</span></a>
+            <a class="btn btn-ghost" href="#chain">{ui.howWorksTitle} <span aria-hidden="true">↓</span></a>
+          </div>
+          <p class="hero-meta">
+            <span class="pill pill-ev"><span class="dot" aria-hidden="true"></span>{ui.evidenceBadge}</span>
+            <span class="pill">{ui.version} {D.meta.version} · {fmtDate}</span>
+          </p>
+        </div>
+        <a class="hero-vis" href={atlasHref} aria-label={ui.openAtlas}>
+          <span class="frame">
+            <img src={url(`myomap/preview-${lang}.webp`)} width="1200" height="750" alt="" loading="eager" />
+            <span class="crn tl" aria-hidden="true"></span><span class="crn tr" aria-hidden="true"></span><span class="crn bl" aria-hidden="true"></span><span class="crn br" aria-hidden="true"></span>
+          </span>
+          <span class="fig-cap">{ui.figCaption}</span>
+        </a>
+      </div>
+      <div class="container">
+        <ul class="stats">
+          {stats.map(([n, l]) => <li><span class="stat-n">{String(n).padStart(2, '0')}</span><span class="stat-l">{l}</span></li>)}
+        </ul>
       </div>
     </section>
 
-    <section class="scope" id="scope" aria-labelledby="scope-h">
-      <h2 id="scope-h" class="scope-h">{ui.scopeTitle}</h2>
-      <p>{ui.scope}</p>
-    </section>
-    <aside class="warn" role="note"><strong>{ui.warnTitle}.</strong>{' '}{ui.warn}</aside>
-
-    <section class="block" id="how">
-      <h2 class="h-sub">{ui.howTitle}</h2>
-      <ol class="how-list">{ui.how.map((h: string) => <li>{h}</li>)}</ol>
-    </section>
-
-    <section class="block" id="modes">
-      <h2 class="h-sub">{ui.modesTitle}</h2>
-      <ul class="tiles">{MODES.map((m) => <li><h3>{tx(D.modes[m].label)}</h3><p>{tx(D.modes[m].desc)}</p></li>)}</ul>
-    </section>
-
-    <section class="block" id="weak">
-      <h2 class="h-sub">{ui.weakTitle}</h2>
-      <ul class="tiles">
-        {D.weak.map((w: any) => <li><h3>{tx(w.title)} <span class={`basis basis-${w.basis}`}>{(ui.basis as any)[w.basis]}</span></h3><p>{tx(w.text)}</p></li>)}
-      </ul>
+    <!-- ============================================================ LEVELS -->
+    <section class="band" id="levels">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">00</span><h2>{ui.levelsTitle}</h2></header>
+        <p class="sec-lead">{ui.levelsLead}</p>
+        <ul class="lv-grid">
+          {levelCards.map((c) => (
+            <li class="lv-card">
+              <a class="lv-img" href={`${atlasHref}#${c.lv}`} tabindex="-1" aria-hidden="true"><img src={c.img} alt="" loading="lazy" /></a>
+              <div class="lv-body">
+                <h3><a href={`${atlasHref}#${c.lv}`}>{c.title}</a></h3>
+                <p class="lv-links">{c.links.map((l: any) => <a class="chip-link" href={`${atlasHref}#${l.id}`} title={l.title}>{l.label}</a>)}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
 
-    <section class="block" id="effort">
-      <h2 class="h-sub">{ui.effortTitle}</h2>
-      <p class="block-lead">{tx(D.effort.intro)}</p>
-      <ul class="principles">
-        {D.effort.principles.map((p: any) => <li><span class={`basis basis-${p.basis}`}>{(ui.basis as any)[p.basis]}</span> {tx(p.text)}</li>)}
-      </ul>
-      <p class="eff-legend">{['low', 'moderate', 'high'].map((k) => <span class={`eff eff-${k}`}>{tx(D.effort.levels[k])}</span>)}</p>
-      <p class="small muted">{tx(D.effort.note)}</p>
+    <!-- ============================================================ 01 SCOPE -->
+    <section class="band band-alt" id="scope">
+      <div class="container two">
+        <div>
+          <header class="sec-h"><span class="sec-n">01</span><span class="sec-k">{ui.sec.scope}</span></header>
+          <h2 class="h2">{ui.scopeTitle}</h2>
+        </div>
+        <div>
+          <p class="scope-p">{ui.scope}</p>
+          <aside class="warn" role="note"><strong>{ui.warnTitle}.</strong>{' '}{ui.warn}</aside>
+        </div>
+      </div>
     </section>
 
-    <section class="block" id="how-it-works">
-      <h2 class="h-sub">{ui.howWorksTitle}</h2>
-      <ol class="steps">
-        {D.how.map((s: any, i: number) => <li><span class="step-n">{i + 1}</span><div><h3>{tx(s.t)}</h3><p>{tx(s.x)}</p></div></li>)}
-      </ol>
-      <div class="sim card-x">
-        <h3 class="sim-title">{ui.simTitle}</h3>
-        <div class="sim-grid">
-          <div class="sim-ctl">
-            <label class="sl"><span>{ui.simOpen}</span><input type="range" min="0" max="100" value="0" data-sim="a" /></label>
-            <label class="sl"><span>{ui.simClose}</span><input type="range" min="0" max="100" value="0" data-sim="b" /></label>
-            <label class="sl"><span>{ui.simThr}</span><input type="range" min="5" max="60" value="25" data-sim="thr" /></label>
-            <label class="ck"><input type="checkbox" data-sim="x" /> {ui.simCross}</label>
-            <label class="ck"><input type="checkbox" data-sim="t" /> {ui.simTendon}</label>
+    <!-- ============================================================ 02 HOW TO USE -->
+    <section class="band" id="how">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">02</span><span class="sec-k">{ui.sec.how}</span></header>
+        <h2 class="h2">{ui.howTitle}</h2>
+        <ol class="steps3">
+          {ui.how.map((h: string, i: number) => (
+            <li>
+              <span class="st-top"><span class="st-n">{String(i + 1).padStart(2, '0')}</span><svg class="st-ic" viewBox="0 0 48 48" aria-hidden="true" set:html={STEP_ICONS[i]} /></span>
+              <p>{h}</p>
+            </li>
+          ))}
+        </ol>
+        <p class="center"><a class="btn btn-primary" href={atlasHref}>{ui.openAtlas} <span aria-hidden="true">→</span></a></p>
+      </div>
+    </section>
+
+    <!-- ============================================================ 03 MODES -->
+    <section class="band band-alt" id="modes">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">03</span><span class="sec-k">{ui.sec.modes}</span></header>
+        <h2 class="h2">{ui.modesTitle}</h2>
+        <ul class="cards3">
+          {MODES.map((m) => (
+            <li class="mode-card">
+              <svg class="mode-ic" viewBox="0 0 80 80" aria-hidden="true" set:html={MODE_ICONS[m]} />
+              <h3>{tx(D.modes[m].label)}</h3>
+              <p>{tx(D.modes[m].desc)}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================ 04 WEAK -->
+    <section class="band" id="weak">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">04</span><span class="sec-k">{ui.sec.weak}</span></header>
+        <h2 class="h2">{ui.weakTitle}</h2>
+        <ul class="tiles">
+          {D.weak.map((w: any, i: number) => (
+            <li>
+              <svg class="tile-ic" viewBox="0 0 48 48" aria-hidden="true" set:html={WEAK_ICONS[i] ?? ''} />
+              <h3>{tx(w.title)}</h3>
+              <p>{tx(w.text)}</p>
+              <span class={`basis basis-${w.basis}`}>{(ui.basis as any)[w.basis]}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================ 05 EFFORT -->
+    <section class="band band-alt" id="effort">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">05</span><span class="sec-k">{ui.sec.effort}</span></header>
+        <h2 class="h2">{ui.effortTitle}</h2>
+        <div class="effort-grid">
+          <div>
+            <p class="sec-lead">{tx(D.effort.intro)}</p>
+            <ul class="principles">
+              {D.effort.principles.map((p: any) => <li><span class={`basis basis-${p.basis}`}>{(ui.basis as any)[p.basis]}</span><span>{tx(p.text)}</span></li>)}
+            </ul>
+            <p class="eff-legend">{['low', 'moderate', 'high'].map((k) => <span class={`eff eff-${k}`}>{tx(D.effort.levels[k])}</span>)}</p>
+            <p class="fine">{tx(D.effort.note)}</p>
+          </div>
+          <figure class="curve">
+            <svg viewBox="0 0 360 250" role="img" aria-label={ui.curveTitle}>
+              <defs>
+                <linearGradient id="cz" x1="0" x2="1"><stop offset="0" stop-color="#2756b8" stop-opacity="0.18" /><stop offset="1" stop-color="#2756b8" stop-opacity="0.04" /></linearGradient>
+              </defs>
+              <rect x="52" y="20" width="92" height="190" fill="url(#cz)" />
+              <path d="M52 210V20M52 210H340" class="cv-ax" />
+              {[1, 2, 3, 4].map((i) => <path d={`M${52 + i * 72} 210V20`} class="cv-grid" />)}
+              {[1, 2, 3].map((i) => <path d={`M52 ${210 - i * 47}H340`} class="cv-grid" />)}
+              <path d="M62 26C80 120 120 170 170 186S280 200 336 203" class="cv-line" />
+              <text x="98" y="202" class="cv-zone" text-anchor="middle">{ui.curveZone}</text>
+              <text x="196" y="238" class="cv-lab" text-anchor="middle">{ui.curveX}</text>
+              <text x="20" y="115" class="cv-lab" text-anchor="middle" transform="rotate(-90 20 115)">{ui.curveY}</text>
+            </svg>
+            <figcaption>{ui.curveNote}</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ 06 SIGNAL CHAIN + SIMULATOR -->
+    <section class="dark" id="chain">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="container">
+        <header class="sec-h on-dark"><span class="sec-n">06</span><span class="sec-k">{ui.sec.chain}</span></header>
+        <h2 class="h2 on-dark">{ui.howWorksTitle}</h2>
+        <p class="sec-lead on-dark">{ui.chainLead}</p>
+        <ol class="chain">
+          {D.how.map((s: any, i: number) => (
+            <li>
+              <span class="ch-n">{String(i + 1).padStart(2, '0')}</span>
+              <svg class="mini" viewBox="0 0 160 56" aria-hidden="true" set:html={minis[i]} />
+              <h3>{tx(s.t)}</h3>
+              <p>{tx(s.x)}</p>
+            </li>
+          ))}
+        </ol>
+
+        <div class="sim" id="simulator">
+          <div class="sim-head">
+            <h3 class="sim-title">{ui.simTitle}</h3>
             <p class="sim-state" aria-live="polite">{ui.simState.idle}</p>
           </div>
-          <div class="sim-plot">
-            <canvas class="sim-cv" width="720" height="320" role="img" aria-label={`${ui.simRaw}; ${ui.simEnv}`}></canvas>
-            <p class="sim-legend"><span class="k1">■</span> {lang === 'uk' ? 'Канал 1' : 'Channel 1'} · <span class="k2">■</span> {lang === 'uk' ? 'Канал 2' : 'Channel 2'} · {ui.simRaw} / {ui.simEnv}</p>
+          <div class="sim-grid">
+            <div class="sim-ctl">
+              <div class="sim-sliders">
+              <label class="sl sl-1"><span>{ui.simOpen}</span><input type="range" min="0" max="100" value="0" data-sim="a" /></label>
+              <label class="sl sl-2"><span>{ui.simClose}</span><input type="range" min="0" max="100" value="0" data-sim="b" /></label>
+              <label class="sl sl-t"><span>{ui.simThr}</span><input type="range" min="5" max="60" value="25" data-sim="thr" /></label>
+              </div>
+              <div class="sim-opts">
+              <label class="ck"><input type="checkbox" data-sim="x" /> {ui.simCross}</label>
+              <label class="ck"><input type="checkbox" data-sim="t" /> {ui.simTendon}</label>
+              <div class="grips" role="group" aria-label={ui.simGrip}>
+                <span class="grips-k">{ui.simGrip}</span>
+                {GRIPS.map((g, i) => <button type="button" class="grip-btn" data-grip={g} aria-pressed={i === 0 ? 'true' : 'false'}>{(ui.grips as any)[g]}</button>)}
+                <button type="button" class="co-btn" data-co>⚡ {ui.coBtn}</button>
+              </div>
+              </div>
+            </div>
+            <div class="scope-box">
+              <canvas class="sim-cv" width="720" height="340" role="img" aria-label={`${ui.simRaw}; ${ui.simEnv}`}></canvas>
+              <p class="sim-legend"><span><span class="k1">━</span> {sim.ch} 1</span><span><span class="k2">━</span> {sim.ch} 2</span><span><span class="k3">┅</span> {ui.simThr}</span></p>
+            </div>
+            <div class="hand-box">
+              <svg class="hand" viewBox="40 14 196 286" role="img" aria-label={ui.handAlt}>
+                <defs>
+                  <radialGradient id="spot" cx="50%" cy="55%" r="60%"><stop offset="0" stop-color="#2756b8" stop-opacity="0.35" /><stop offset="1" stop-color="#2756b8" stop-opacity="0" /></radialGradient>
+                  <linearGradient id="palmG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a4352" /><stop offset="1" stop-color="#222831" /></linearGradient>
+                  <linearGradient id="sockG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a313c" /><stop offset="1" stop-color="#171c23" /></linearGradient>
+                </defs>
+                <ellipse cx="120" cy="170" rx="118" ry="130" fill="url(#spot)" />
+                <path d="M30 296H210" class="floor" />
+                <path d="M84 232H156L164 292H76Z" fill="url(#sockG)" class="sock" />
+                <rect x="88" y="246" width="20" height="12" rx="3" class="elc elc-1" />
+                <rect x="132" y="246" width="20" height="12" rx="3" class="elc elc-2" />
+                <text x="98" y="275" class="elc-t" text-anchor="middle">1</text>
+                <text x="142" y="275" class="elc-t" text-anchor="middle">2</text>
+                <rect x="92" y="214" width="56" height="20" rx="6" class="wrist" />
+                <circle cx="120" cy="224" r="5" class="pin" /><path d="M117 224h6M120 221v6" class="pin-x" />
+                <rect x="64" y="118" width="112" height="98" rx="12" fill="url(#palmG)" class="palm" />
+                <path d="M74 124h92" class="palm-hl" />
+                {[0, 1, 2].map((r) => [0, 1, 2].map((c) => <g class="stud"><circle cx={86 + c * 34} cy={142 + r * 28} r="9" /><circle cx={84 + c * 34} cy={140 + r * 28} r="4" class="stud-hl" /></g>))}
+                <g class="digits"></g>
+              </svg>
+              <p class="grip-now"><span>{ui.simGrip}:</span> <strong class="grip-name">{ui.grips.power}</strong></p>
+            </div>
           </div>
-          <svg class="sim-hand" viewBox="0 0 120 140" aria-hidden="true">
-            <g class="sh-f2"><rect x="58" y="14" width="13" height="72" rx="6.5" class="sh-fin" /><rect x="72" y="18" width="13" height="68" rx="6.5" class="sh-fin" /></g>
-            <g class="sh-f1"><rect x="30" y="42" width="15" height="48" rx="7.5" class="sh-fin" /></g>
-            <rect x="34" y="78" width="54" height="50" rx="12" class="sh-palm" />
-          </svg>
+          <p class="sim-note">{ui.simGripNote}</p>
+          <p class="sim-note dim">{ui.simNote}</p>
         </div>
-        <p class="small muted">{ui.simNote}</p>
       </div>
     </section>
 
-    <section class="block">
-      <h2 class="h-sub">{ui.pitfallsTitle}</h2>
-      <ul class="tiles">{D.pitfalls.map((p: any) => <li><h3>{tx(p.title)} <span class={`basis basis-${p.basis}`}>{(ui.basis as any)[p.basis]}</span></h3><p>{tx(p.text)}</p></li>)}</ul>
-    </section>
-
-    <section class="block">
-      <h2 class="h-sub">{ui.systemsTitle}</h2>
-      <div class="systems">
-        {['direct', 'pr'].map((m) => (
-          <div>
-            <h3 class="sys-h">{tx(D.modes[m].label)}</h3>
-            <ul class="refs mfr">{D.systems[m].map((s: any) => <li><strong>{s.name}.</strong> {tx(s.note)} <a href={s.url} rel="noopener">{ui.source2}</a></li>)}</ul>
-          </div>
-        ))}
+    <!-- ============================================================ 07 PITFALLS -->
+    <section class="band" id="pitfalls">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">07</span><span class="sec-k">{ui.sec.pitfalls}</span></header>
+        <h2 class="h2">{ui.pitfallsTitle}</h2>
+        <ul class="tiles">{D.pitfalls.map((p: any) => <li><h3>{tx(p.title)}</h3><p>{tx(p.text)}</p><span class={`basis basis-${p.basis}`}>{(ui.basis as any)[p.basis]}</span></li>)}</ul>
       </div>
-      <p class="small muted">{ui.systemsNote}</p>
     </section>
 
-    <section class="block">
-      <h2 class="h-sub">{ui.evidenceTitle}</h2>
-      <dl class="ev">{ui.evidenceRows.map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}</dl>
+    <!-- ============================================================ 08 SYSTEMS -->
+    <section class="band band-alt" id="systems">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">08</span><span class="sec-k">{ui.sec.systems}</span></header>
+        <h2 class="h2">{ui.systemsTitle}</h2>
+        <div class="systems">
+          {['direct', 'pr'].map((m) => (
+            <div class="sys-col">
+              <h3 class="sys-h">{tx(D.modes[m].label)}</h3>
+              <ul class="sys-list">{D.systems[m].map((s: any) => <li><strong>{s.name}</strong><span>{tx(s.note)}</span><a href={s.url} rel="noopener">{ui.source2} ↗</a></li>)}</ul>
+            </div>
+          ))}
+        </div>
+        <p class="fine">{ui.systemsNote}</p>
+      </div>
     </section>
 
-    <section class="block" id="anatomy-source">
-      <h2 class="h-sub">{ui.sourceTitle}</h2>
-      <p class="block-lead">{ui.source} <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener license">CC BY 4.0</a> · <a href={url('myomap/ATTRIBUTION-BodyParts3D.md')}>ATTRIBUTION</a></p>
+    <!-- ============================================================ 09 EVIDENCE -->
+    <section class="band" id="evidence">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">09</span><span class="sec-k">{ui.sec.evidence}</span></header>
+        <h2 class="h2">{ui.evidenceTitle}</h2>
+        <dl class="ev">{ui.evidenceRows.map(([k, v]: [string, string]) => <div class="ev-row"><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+      </div>
     </section>
 
-    <section class="block">
-      <h2 class="h-sub">{ui.refsTitle}</h2>
-      <ol class="refs">{D.references.map((r: any) => <li>{r.text} <a href={`https://doi.org/${r.doi}`} rel="noopener">doi:{r.doi}</a></li>)}</ol>
-      <h3 class="cite-h">{ui.mfrTitle}</h3>
-      <ul class="refs mfr">{D.electrodes.map((e: any) => <li><strong>{e.example}.</strong> {tx(e.note)} <a href={e.url} rel="noopener">{ui.source2}</a></li>)}</ul>
-      <h3 class="cite-h">{ui.citeTitle}</h3>
-      <p class="cite">{ui.cite} {ui.avail} {new URL(localePath(lang, 'tools/myotesting-map/'), Astro.site).href}</p>
-      <p class="small muted">{ui.coi}</p>
+    <!-- ============================================================ 10 SOURCE -->
+    <section class="band band-alt" id="anatomy-source">
+      <div class="container two">
+        <div>
+          <header class="sec-h"><span class="sec-n">10</span><span class="sec-k">{ui.sec.source}</span></header>
+          <h2 class="h2">{ui.sourceTitle}</h2>
+        </div>
+        <p class="scope-p">{ui.source} <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener license">CC BY 4.0</a> · <a href={url('myomap/ATTRIBUTION-BodyParts3D.md')}>ATTRIBUTION</a></p>
+      </div>
+    </section>
+
+    <!-- ============================================================ 11 REFERENCES -->
+    <section class="band" id="references">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">11</span><span class="sec-k">{ui.sec.refs}</span></header>
+        <h2 class="h2">{ui.refsTitle}</h2>
+        <ol class="refs">{D.references.map((r: any) => <li>{r.text} <a href={`https://doi.org/${r.doi}`} rel="noopener">doi:{r.doi}</a></li>)}</ol>
+        <h3 class="sub-k">{ui.mfrTitle}</h3>
+        <ul class="refs mfr">{D.electrodes.map((e: any) => <li><strong>{e.example}.</strong> {tx(e.note)} <a href={e.url} rel="noopener">{ui.source2}</a></li>)}</ul>
+        <h3 class="sub-k">{ui.citeTitle}</h3>
+        <p class="cite">{ui.cite} {ui.avail} {new URL(localePath(lang, 'tools/myotesting-map/'), Astro.site).href}</p>
+        <p class="fine">{ui.coi}</p>
+      </div>
     </section>
   </div>
 </Base>
@@ -168,83 +402,243 @@ const quick = LEVELS.map((lv) => ({
 </script>
 
 <style>
-  .page { padding-block: 32px 80px; }
-  .crumbs a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; color: var(--muted); }
-  .h-page { margin: 6px 0 0; font-size: clamp(32px, 4vw, 46px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 600; }
-  .lead-muted { max-width: 820px; }
-  .meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 18px; }
-  .badge-ev { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: #fbf3e4; border: 1px solid #ecd6ad; color: #6b4a12; font-size: 14px; font-weight: 500; }
-  .badge-ev .dot { width: 8px; height: 8px; border-radius: 50%; background: #c98a1b; }
-  .mono { font-family: var(--font-mono); }
-  .small { font-size: 13.5px; }
-  .muted { color: var(--muted); }
-  .ctl-label { margin: 0 0 6px; font: 500 11.5px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  /* ---------- hero ---------- */
+  .hero { position: relative; overflow: hidden; color: var(--on-dark); background: radial-gradient(900px 520px at 78% 38%, rgba(39, 86, 184, 0.38), transparent 65%), linear-gradient(180deg, #161b22 0%, #0e1218 100%); }
+  .hero-grid { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(141, 176, 255, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(141, 176, 255, 0.07) 1px, transparent 1px); background-size: 44px 44px; -webkit-mask-image: radial-gradient(ellipse 80% 70% at 60% 40%, #000 35%, transparent 85%); mask-image: radial-gradient(ellipse 80% 70% at 60% 40%, #000 35%, transparent 85%); }
+  .hero-traces-wrap { position: absolute; left: 0; right: 0; bottom: 100px; height: 120px; overflow: hidden; pointer-events: none; -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 40%, #000 62%, #000 92%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, transparent 40%, #000 62%, #000 92%, transparent 100%); }
+  @media (max-width: 980px) { .hero-traces-wrap { bottom: auto; top: 46%; -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent); mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent); opacity: 0.6; } }
+  .hero-traces { position: absolute; left: 0; top: 0; width: 200%; height: 120px; opacity: 0.55; animation: scrollx 38s linear infinite; }
+  .hero-traces .t1 { fill: none; stroke: #8db0ff; stroke-width: 1.1; }
+  .hero-traces .t2 { fill: none; stroke: #e3b462; stroke-width: 1; opacity: 0.55; }
+  @keyframes scrollx { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .hero-traces { animation: none; } }
+  .hero-in { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 56px; align-items: center; padding-block: 28px 40px; }
+  @media (max-width: 980px) { .hero-in { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
+  .crumbs a { display: inline-flex; align-items: center; min-height: 40px; font-size: 14px; color: var(--on-dark-2); }
+  .crumbs a:hover { color: #fff; }
+  .kicker { margin: 8px 0 0; font: 500 12px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-dark-accent); }
+  .hero-h { margin: 12px 0 0; font-size: clamp(34px, 4.4vw, 56px); line-height: 1.05; letter-spacing: -0.025em; font-weight: 600; color: #fff; }
+  .hero-lead { margin: 18px 0 0; max-width: 560px; font-size: 17.5px; line-height: 1.6; color: var(--on-dark-2); }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .btn-glow { box-shadow: 0 0 0 1px rgba(141, 176, 255, 0.35), 0 10px 30px rgba(39, 86, 184, 0.55); }
+  .btn-ghost { background: transparent; color: var(--on-dark); border: 1px solid var(--dark-line); }
+  .btn-ghost:hover { border-color: var(--on-dark-accent); color: #fff; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 11px; border: 1px solid var(--dark-line); border-radius: 999px; font: 500 12.5px var(--font-mono); color: var(--on-dark-2); background: rgba(14, 18, 24, 0.5); }
+  .pill-ev { color: #f0d39a; border-color: rgba(227, 180, 98, 0.35); }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #e3b462; box-shadow: 0 0 8px #e3b462; }
+  .hero-vis { display: block; text-decoration: none; perspective: 1600px; }
+  .frame { position: relative; display: block; padding: 10px; border-radius: 16px; background: linear-gradient(140deg, rgba(141, 176, 255, 0.18), rgba(141, 176, 255, 0.02)); box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55); transform: rotateY(-7deg) rotateX(3deg); transition: transform 0.4s ease; }
+  .hero-vis:hover .frame { transform: rotateY(-2deg) rotateX(1deg) translateY(-4px); }
+  @media (prefers-reduced-motion: reduce) { .frame, .hero-vis:hover .frame { transform: none; transition: none; } }
+  .frame img { display: block; width: 100%; height: auto; border-radius: 9px; }
+  .crn { position: absolute; width: 22px; height: 22px; border-color: var(--on-dark-accent); border-style: solid; border-width: 0; }
+  .crn.tl { top: -8px; left: -8px; border-top-width: 2px; border-left-width: 2px; }
+  .crn.tr { top: -8px; right: -8px; border-top-width: 2px; border-right-width: 2px; }
+  .crn.bl { bottom: -8px; left: -8px; border-bottom-width: 2px; border-left-width: 2px; }
+  .crn.br { bottom: -8px; right: -8px; border-bottom-width: 2px; border-right-width: 2px; }
+  .fig-cap { display: block; margin-top: 16px; font: 500 11.5px var(--font-mono); letter-spacing: 0.04em; color: var(--on-dark-2); }
+  .stats { position: relative; list-style: none; margin: 0; padding: 22px 0 30px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--dark-line); }
+  .stats li { display: flex; flex-direction: column; gap: 4px; padding: 0 16px; border-left: 1px solid var(--dark-line); }
+  .stats li:first-child { border-left: 0; padding-left: 0; }
+  .stat-n { font: 500 34px/1 var(--font-mono); color: #fff; letter-spacing: -0.02em; }
+  .stat-l { font-size: 13px; color: var(--on-dark-2); }
+  @media (max-width: 860px) { .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 18px; } .stats li:nth-child(4) { border-left: 0; padding-left: 0; } }
 
-  .cta { margin-top: 26px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: stretch; background: var(--graphite-900); border-radius: var(--radius); overflow: hidden; max-width: 1120px; }
-  @media (max-width: 860px) { .cta { grid-template-columns: minmax(0, 1fr); } }
-  .cta-img { display: block; background: #eef1f6; }
-  .cta-img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
-  .cta-body { padding: 24px 26px; color: var(--on-dark); }
-  .cta-h { margin: 0 0 8px; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.2; }
-  .cta-h a { color: #fff; text-decoration: none; }
-  .cta-h a:hover { color: var(--on-dark-accent); }
-  .cta-note { margin: 0 0 18px; color: var(--on-dark-2); line-height: 1.55; }
-  .cta .ctl-label { color: var(--on-dark-accent); }
-  .quick { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 14px; margin: 0; align-items: baseline; }
-  @media (max-width: 520px) { .quick { grid-template-columns: minmax(0, 1fr); gap: 4px; } .quick dd { margin-bottom: 8px !important; } }
-  .quick dt { font-size: 14px; color: var(--on-dark); font-weight: 600; }
-  .quick dd { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip-link { display: inline-flex; align-items: center; min-height: 32px; padding: 4px 11px; border: 1px solid var(--dark-line); border-radius: 999px; color: var(--on-dark); font-size: 13px; text-decoration: none; }
+  /* ---------- section scaffolding ---------- */
+  .band { padding-block: 64px; }
+  .band-alt { background: var(--surface); border-block: 1px solid var(--line-2); }
+  .sec-h { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; }
+  .sec-h h2 { margin: 0; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.2; color: var(--ink); }
+  .sec-n { display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 26px; padding: 0 8px; border: 1px solid var(--accent); border-radius: 6px; font: 500 12px var(--font-mono); color: var(--accent); }
+  .sec-k { font: 500 12px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .h2 { margin: 0 0 18px; font-size: clamp(26px, 3vw, 36px); line-height: 1.15; letter-spacing: -0.015em; color: var(--ink); max-width: 760px; }
+  .sec-lead { margin: 0 0 24px; max-width: 760px; color: var(--text-2); font-size: 16.5px; line-height: 1.6; }
+  .two { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 40px; align-items: start; }
+  @media (max-width: 860px) { .two { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
+  .scope-p { margin: 0; font-size: 16.5px; line-height: 1.7; color: var(--text-2); }
+  .warn { margin-top: 18px; padding: 14px 16px; border-left: 3px solid #c98a1b; background: #fffaf1; border-radius: 0 10px 10px 0; color: var(--ink-2); line-height: 1.55; font-size: 15px; }
+  .center { margin: 28px 0 0; text-align: center; }
+  .fine { margin: 14px 0 0; font-size: 13px; color: var(--muted); max-width: 820px; }
+
+  /* ---------- levels ---------- */
+  .lv-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 1040px) { .lv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .lv-grid { grid-template-columns: minmax(0, 1fr); } }
+  .lv-card { display: flex; flex-direction: column; overflow: hidden; border-radius: 14px; background: #10151c; border: 1px solid #222a35; box-shadow: 0 12px 30px rgba(22, 27, 34, 0.12); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .lv-card:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(22, 27, 34, 0.2); }
+  .lv-img { position: relative; display: block; height: 190px; overflow: hidden; background: radial-gradient(120% 90% at 50% 20%, #1d3a78 0%, #10151c 70%); }
+  .lv-img::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(141, 176, 255, 0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(141, 176, 255, 0.09) 1px, transparent 1px); background-size: 18px 18px; }
+  .lv-img::after { content: ''; position: absolute; inset: auto 0 0; height: 60px; background: linear-gradient(transparent, #10151c); }
+  .lv-img img { position: relative; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 22%; filter: invert(1) sepia(1) hue-rotate(180deg) saturate(2.4) brightness(0.92) contrast(1.15); mix-blend-mode: screen; opacity: 0.92; transition: transform 0.4s ease; }
+  .lv-card:hover .lv-img img { transform: scale(1.04); }
+  .lv-body { padding: 14px 16px 16px; }
+  .lv-body h3 { margin: 0 0 10px; font-size: 18px; }
+  .lv-body h3 a { color: #fff; text-decoration: none; }
+  .lv-body h3 a:hover { color: var(--on-dark-accent); }
+  .lv-links { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+  .chip-link { display: inline-flex; align-items: center; min-height: 30px; padding: 3px 10px; border: 1px solid #2b3543; border-radius: 999px; color: var(--on-dark-2); font-size: 12.5px; text-decoration: none; }
   .chip-link:hover { border-color: var(--on-dark-accent); color: #fff; }
 
-  .scope { margin-top: 26px; max-width: 900px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); scroll-margin-top: 16px; }
-  .scope-h { margin: 0 0 6px; font: 500 12px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
-  .scope p { margin: 0; color: var(--text-2); line-height: 1.6; }
-  .warn { margin-top: 14px; padding: 16px 18px; border-left: 4px solid #c98a1b; background: #fffaf1; border-radius: 0 var(--radius) var(--radius) 0; color: var(--ink-2); max-width: 900px; line-height: 1.55; }
-  .how-list { margin: 0; padding-left: 22px; color: var(--text-2); line-height: 1.6; max-width: 900px; }
-  .how-list li { margin-bottom: 6px; }
-  .card-x { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; color: var(--text-2); line-height: 1.55; }
-  .card-x p { margin: 0 0 9px; }
-  .block { margin-top: 44px; max-width: 1040px; }
-  .h-sub { margin: 0 0 12px; font-size: 26px; line-height: 1.25; color: var(--ink); }
-  .block-lead { color: var(--text-2); line-height: 1.6; max-width: 880px; }
-  .tiles { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
-  .tiles li { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; color: var(--text-2); line-height: 1.55; }
-  .tiles h3 { margin: 0 0 6px; font-size: 16px; color: var(--ink); }
-  .tiles p { margin: 0; font-size: 14.5px; }
-  .basis { display: inline-block; padding: 1px 8px; border-radius: 999px; font: 500 11.5px var(--font-mono); vertical-align: 2px; white-space: nowrap; }
+  /* ---------- steps & modes ---------- */
+  .steps3 { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 860px) { .steps3 { grid-template-columns: minmax(0, 1fr); } }
+  .steps3 li { position: relative; padding: 20px 20px 18px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+  .steps3 li::after { content: ''; position: absolute; left: 20px; right: 20px; top: 0; height: 3px; border-radius: 0 0 3px 3px; background: linear-gradient(90deg, var(--accent), #8db0ff); }
+  .st-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .st-n { font: 500 30px/1 var(--font-mono); color: var(--accent); }
+  .st-ic { width: 40px; height: 40px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .steps3 p { margin: 0; color: var(--text-2); line-height: 1.6; font-size: 15px; }
+  .cards3 { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 960px) { .cards3 { grid-template-columns: minmax(0, 1fr); } }
+  .mode-card { padding: 22px; border-radius: 14px; background: linear-gradient(180deg, #f8faff, #fff); border: 1px solid var(--line); }
+  .mode-ic { width: 76px; height: 76px; fill: none; stroke: #3b4452; stroke-width: 2; }
+  .mode-ic :global(.ic-a) { fill: #2756b8; stroke: none; }
+  .mode-ic :global(.ic-b) { fill: #e3b462; stroke: none; }
+  .mode-ic :global(.ic-f) { fill: #3b4452; stroke: none; }
+  .mode-ic :global(.ic-h) { fill: #dfe7f8; stroke: #2756b8; stroke-dasharray: 4 3; }
+  .mode-ic :global(.ic-n) { stroke: #e3b462; stroke-width: 3; }
+  .mode-card h3 { margin: 12px 0 6px; font-size: 19px; color: var(--ink); }
+  .mode-card p { margin: 0; color: var(--text-2); line-height: 1.6; font-size: 14.5px; }
+
+  /* ---------- tiles ---------- */
+  .tiles { list-style: none; padding: 0; margin: 8px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  .tiles li { display: flex; flex-direction: column; padding: 18px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); color: var(--text-2); line-height: 1.55; transition: border-color 0.2s ease; }
+  .tiles li:hover { border-color: #b7c5e3; }
+  .tile-ic { width: 34px; height: 34px; margin-bottom: 10px; fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .tile-ic :global(.ic-d) { stroke: #c98a1b; stroke-dasharray: 3 3; }
+  .tiles h3 { margin: 0 0 6px; font-size: 16.5px; color: var(--ink); }
+  .tiles p { margin: 0 0 12px; font-size: 14.5px; flex: 1; }
+  .basis { align-self: flex-start; display: inline-block; padding: 2px 9px; border-radius: 999px; font: 500 11.5px var(--font-mono); white-space: nowrap; }
   .basis-evidence { background: #e2f0e6; color: #1f5a32; } .basis-mechanistic { background: var(--chip); color: var(--text-2); } .basis-expert { background: #f6ecd3; color: #6b4a12; }
-  .principles { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; color: var(--text-2); line-height: 1.55; max-width: 900px; }
-  .eff-legend { display: flex; flex-wrap: wrap; gap: 6px; }
-  .steps { list-style: none; padding: 0; margin: 0 0 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
-  .steps li { display: flex; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; color: var(--text-2); line-height: 1.55; }
-  .step-n { flex: 0 0 30px; height: 30px; border-radius: 50%; background: var(--graphite-900); color: #fff; display: inline-flex; align-items: center; justify-content: center; font: 600 14px var(--font-mono); }
-  .steps h3 { margin: 2px 0 4px; font-size: 16px; color: var(--ink); }
-  .steps p { margin: 0; font-size: 14.5px; }
-  .sim-title { margin: 0 0 12px !important; font: 600 17px var(--font-sans) !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--ink) !important; }
-  .sim-grid { display: grid; grid-template-columns: minmax(200px, 0.8fr) minmax(0, 2fr) 110px; gap: 16px; align-items: center; }
-  @media (max-width: 760px) { .sim-grid { grid-template-columns: minmax(0, 1fr) 90px; } .sim-plot { grid-column: 1 / -1; grid-row: 2; } }
-  .sim-ctl { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
-  .sl { display: flex; flex-direction: column; gap: 4px; }
-  .sl input { width: 100%; accent-color: var(--accent); min-height: 28px; }
-  .ck { display: flex; align-items: center; gap: 6px; min-height: 30px; }
-  .ck input { accent-color: var(--accent); width: 16px; height: 16px; }
-  .sim-state { margin: 4px 0 0 !important; font-weight: 600; color: var(--ink); }
-  .sim-cv { width: 100%; height: auto; display: block; background: #f8f9fb; border: 1px solid var(--line-2); border-radius: 8px; }
-  .sim-legend { margin: 6px 0 0 !important; font-size: 12px; color: var(--muted); }
-  .k1 { color: #2756b8; } .k2 { color: #c98a1b; }
-  .sim-hand { width: 100%; height: auto; }
-  .sh-palm { fill: #c9ced6; stroke: #3f4754; stroke-width: 2; }
-  .sh-fin { fill: #dfe3e9; stroke: #3f4754; stroke-width: 2; }
-  .systems { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 8px 24px; }
-  .sys-h { margin: 0 0 6px; font-size: 16px; color: var(--ink); }
-  .ev { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 8px 20px; margin: 0; color: var(--text-2); }
+
+  /* ---------- effort ---------- */
+  .effort-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 36px; align-items: start; }
+  @media (max-width: 960px) { .effort-grid { grid-template-columns: minmax(0, 1fr); } }
+  .principles { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .principles li { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; align-items: baseline; color: var(--text-2); line-height: 1.55; font-size: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
+  .principles .basis { justify-self: start; }
+  @media (max-width: 560px) { .principles li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+  .eff-legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; }
+  .eff { display: inline-block; padding: 2px 10px; border-radius: 999px; font: 600 12px var(--font-sans); }
+  .eff-low { background: #e2f0e6; color: #1f5a32; } .eff-moderate { background: #f6ecd3; color: #6b4a12; } .eff-high { background: #f6dede; color: #8a2a2a; }
+  .curve { margin: 0; padding: 18px; border-radius: 14px; background: #fbfcfe; border: 1px solid var(--line); }
+  .curve svg { display: block; width: 100%; height: auto; }
+  .cv-ax { fill: none; stroke: #3b4452; stroke-width: 1.5; }
+  .cv-grid { fill: none; stroke: #e1e6ee; stroke-width: 1; }
+  .cv-line { fill: none; stroke: #2756b8; stroke-width: 3; stroke-linecap: round; }
+  .cv-zone { font: 600 10px var(--font-sans); fill: #2756b8; }
+  .cv-lab { font: 500 10.5px var(--font-sans); fill: #586172; }
+  .curve figcaption { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+
+  /* ---------- dark chain + simulator ---------- */
+  .dark { position: relative; overflow: hidden; padding-block: 72px; color: var(--on-dark); background: radial-gradient(900px 500px at 20% 0%, rgba(39, 86, 184, 0.28), transparent 60%), #0e1218; }
+  .dark .container { position: relative; }
+  .sec-h.on-dark .sec-n { border-color: var(--on-dark-accent); color: var(--on-dark-accent); }
+  .sec-h.on-dark .sec-k { color: var(--on-dark-2); }
+  .h2.on-dark { color: #fff; }
+  .sec-lead.on-dark { color: var(--on-dark-2); }
+  .chain { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; position: relative; }
+  .chain::before { content: ''; position: absolute; left: 3%; right: 3%; top: 15px; height: 1px; background: linear-gradient(90deg, transparent, rgba(141, 176, 255, 0.5), transparent); }
+  @media (max-width: 1100px) { .chain { grid-template-columns: repeat(3, minmax(0, 1fr)); } .chain::before { display: none; } }
+  @media (max-width: 640px) { .chain { grid-template-columns: minmax(0, 1fr); } }
+  .chain li { position: relative; padding: 14px; border-radius: 12px; background: rgba(22, 27, 34, 0.85); border: 1px solid #232c38; }
+  .ch-n { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: #0e1218; border: 1px solid var(--on-dark-accent); font: 500 12px var(--font-mono); color: var(--on-dark-accent); box-shadow: 0 0 12px rgba(141, 176, 255, 0.35); }
+  .mini { display: block; width: 100%; height: auto; margin: 10px 0 8px; border-radius: 6px; background: #0b0f14; }
+  .mini :global(.mw-a) { fill: none; stroke: #8db0ff; stroke-width: 1.3; }
+  .mini :global(.mw-g) { fill: none; stroke: #5b6472; stroke-width: 1; }
+  .mini :global(.mw-ax) { fill: none; stroke: #243040; stroke-width: 1; }
+  .mini :global(.mw-band) { fill: rgba(141, 176, 255, 0.18); stroke: #8db0ff; stroke-width: 1.3; }
+  .mini :global(.mw-t) { font: 500 8px var(--font-mono); fill: #8a93a3; }
+  .mini :global(.mw-thr) { fill: none; stroke: #f07178; stroke-width: 1; stroke-dasharray: 4 3; }
+  .mini :global(.mw-b) { fill: none; stroke: #e3b462; stroke-width: 1.5; }
+  .chain h3 { margin: 0 0 4px; font-size: 15px; color: #fff; }
+  .chain p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--on-dark-2); }
+
+  .sim { margin-top: 36px; padding: 22px; border-radius: 18px; background: linear-gradient(180deg, rgba(22, 27, 34, 0.95), rgba(14, 18, 24, 0.95)); border: 1px solid #263040; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(141, 176, 255, 0.12); }
+  .sim-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-bottom: 16px; }
+  .sim-title { margin: 0; font-size: 20px; color: #fff; }
+  .sim-state { margin: 0; padding: 4px 12px; border-radius: 999px; background: rgba(141, 176, 255, 0.1); border: 1px solid rgba(141, 176, 255, 0.3); font: 500 13px var(--font-mono); color: var(--on-dark-accent); }
+  .sim-grid { display: grid; grid-template-columns: 230px minmax(0, 1fr) 280px; grid-template-areas: 'ctl scope hand'; gap: 18px; align-items: stretch; }
+  .sim-ctl { grid-area: ctl; display: flex; flex-direction: column; gap: 12px; font-size: 13.5px; color: var(--on-dark-2); }
+  .sim-sliders, .sim-opts { display: flex; flex-direction: column; gap: 12px; }
+  .scope-box { grid-area: scope; }
+  .hand-box { grid-area: hand; }
+  @media (max-width: 1100px) { .sim-grid { grid-template-columns: minmax(0, 1fr) 260px; grid-template-areas: 'ctl hand' 'scope scope'; } }
+  @media (max-width: 620px) {
+    .sim { padding: 16px; }
+    .sim-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); grid-template-areas: 'scope scope' 'hand sliders' 'opts opts'; gap: 12px; }
+    .sim-ctl { display: contents; }
+    .sim-sliders { grid-area: sliders; justify-content: center; font-size: 12.5px; color: var(--on-dark-2); }
+    .sim-opts { grid-area: opts; font-size: 13px; color: var(--on-dark-2); }
+    .sim-grid .sim-cv { aspect-ratio: 4 / 3; }
+  }
+  .sl { display: flex; flex-direction: column; gap: 6px; }
+  .sl input { width: 100%; min-height: 26px; accent-color: #8db0ff; }
+  .sl-2 input { accent-color: #e3b462; }
+  .sl-t input { accent-color: #f07178; }
+  .ck { display: flex; align-items: center; gap: 8px; min-height: 28px; }
+  .ck input { width: 16px; height: 16px; accent-color: #8db0ff; }
+  .grips { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 8px; border-top: 1px solid #263040; }
+  .grips-k { flex-basis: 100%; font: 500 11px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: #8a93a3; }
+  .grip-btn { min-height: 32px; padding: 4px 10px; border: 1px solid #2e3743; border-radius: 999px; background: transparent; color: var(--on-dark-2); font: 500 12.5px var(--font-sans); cursor: pointer; }
+  .grip-btn:hover { border-color: var(--on-dark-accent); color: #fff; }
+  .grip-btn[aria-pressed='true'] { background: rgba(141, 176, 255, 0.16); border-color: var(--on-dark-accent); color: #fff; }
+  .co-btn { flex-basis: 100%; min-height: 38px; margin-top: 4px; border: 1px solid rgba(240, 113, 120, 0.5); border-radius: 10px; background: rgba(240, 113, 120, 0.08); color: #f6b3b7; font: 600 13px var(--font-sans); cursor: pointer; }
+  .co-btn:hover { background: rgba(240, 113, 120, 0.16); color: #fff; }
+  .co-btn:active { transform: translateY(1px); }
+  .scope-box { display: flex; flex-direction: column; min-width: 0; }
+  .sim-cv { display: block; width: 100%; height: auto; aspect-ratio: 720 / 340; touch-action: pan-y; border-radius: 12px; background: #0a0d12; border: 1px solid #1f2834; }
+  .sim-legend { margin: 8px 0 0; font: 500 11.5px var(--font-mono); color: #8a93a3; display: flex; gap: 6px 14px; flex-wrap: wrap; }
+  .k1 { color: #8db0ff; } .k2 { color: #e3b462; } .k3 { color: #f07178; }
+  .hand-box { display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; background: #0a0d12; border: 1px solid #1f2834; padding: 8px; }
+  .hand { width: 100%; max-width: 270px; height: auto; }
+  .floor { stroke: #263040; stroke-width: 1.5; }
+  .sock { stroke: #3a4352; stroke-width: 1.2; }
+  .elc { fill: #1c2430; stroke: #5b6472; stroke-width: 1.2; transition: fill 0.12s, filter 0.12s; }
+  .elc-1.on { fill: #8db0ff; filter: drop-shadow(0 0 6px #8db0ff); }
+  .elc-2.on { fill: #e3b462; filter: drop-shadow(0 0 6px #e3b462); }
+  .elc-t { font: 600 10px var(--font-mono); fill: #8a93a3; }
+  .wrist { fill: #2a313c; stroke: #4a5363; stroke-width: 1.2; }
+  .palm { stroke: #4a5363; stroke-width: 1.5; }
+  .palm-hl { stroke: rgba(255, 255, 255, 0.12); stroke-width: 2; stroke-linecap: round; }
+  .stud circle:first-child { fill: #2f3744; stroke: #4a5363; stroke-width: 1.2; }
+  .stud-hl { fill: rgba(255, 255, 255, 0.08); }
+  .pin { fill: #e6eaf0; }
+  .pin-x { stroke: #161b22; stroke-width: 1.6; }
+  .hand :global(.seg) { stroke: #0e1218; stroke-width: 1.2; }
+  .hand :global(.seg-f) { fill: #2f63cf; }
+  .hand :global(.seg-b) { fill: #1d3f86; }
+  .hand :global(.seg-hl) { fill: rgba(255, 255, 255, 0.14); }
+  .hand :global(.s-stud) { fill: #4a7be0; stroke: #0e1218; stroke-width: 1; }
+  .hand :global(.s-pin) { fill: #e6eaf0; stroke: #0e1218; stroke-width: 1; }
+  .hand :global(.s-hole) { fill: #161b22; }
+  .hand :global(.tip) { fill: #8db0ff; }
+  .hand :global(.t-seg-f) { fill: #d5dbe3; }
+  .hand :global(.t-seg-b) { fill: #9aa4b3; }
+  .hand :global(.t-stud) { fill: #eef1f6; stroke: #0e1218; stroke-width: 1; }
+  .grip-now { margin: 6px 0 0; font: 500 12.5px var(--font-mono); color: #8a93a3; }
+  .grip-now strong { color: #fff; font-weight: 600; }
+  .sim-note { margin: 16px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--on-dark-2); max-width: 900px; }
+  .sim-note.dim { margin-top: 6px; color: #8a93a3; font-size: 12.5px; }
+
+  /* ---------- systems, evidence, refs ---------- */
+  .systems { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  @media (max-width: 860px) { .systems { grid-template-columns: minmax(0, 1fr); } }
+  .sys-h { margin: 0 0 10px; font: 500 12px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .sys-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .sys-list li { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fbfcfe; font-size: 14px; color: var(--text-2); line-height: 1.5; }
+  .sys-list strong { color: var(--ink); font-size: 15px; }
+  .sys-list a { align-self: flex-start; font-size: 13px; }
+  .ev { margin: 8px 0 0; border-top: 1px solid var(--line); }
+  .ev-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  @media (max-width: 640px) { .ev-row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
   .ev dt { font-weight: 600; color: var(--ink); }
-  .ev dd { margin: 0; }
-  @media (max-width: 640px) { .ev { grid-template-columns: minmax(0, 1fr); gap: 2px; } .ev dd { margin-bottom: 10px; } }
-  .refs { padding-left: 22px; color: var(--text-2); font-size: 14.5px; line-height: 1.55; }
-  .refs li { margin-bottom: 6px; overflow-wrap: anywhere; }
+  .ev dd { margin: 0; color: var(--text-2); }
+  .refs { padding-left: 24px; color: var(--text-2); font-size: 14.5px; line-height: 1.6; max-width: 980px; }
+  .refs li { margin-bottom: 8px; overflow-wrap: anywhere; }
+  .refs li::marker { font-family: var(--font-mono); color: var(--accent); }
   .refs.mfr { list-style: disc; font-size: 13.5px; }
-  .cite-h { margin: 16px 0 6px; font: 500 12px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-  .cite { font-size: 14.5px; color: var(--text-2); overflow-wrap: anywhere; }
+  .sub-k { margin: 26px 0 8px; font: 500 12px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .cite { color: var(--text-2); overflow-wrap: anywhere; padding: 12px 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font-family: var(--font-mono); font-size: 13px; line-height: 1.6; }
 </style>
