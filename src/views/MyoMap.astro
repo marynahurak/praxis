@@ -1,0 +1,1287 @@
+---
+// Інтерактивний довідник «Анатомічні орієнтири для міотестингу».
+// Тексти, джерела й приклади систем — у src/data/myomap.json (редагуються без коду).
+// Геометрія схем — нижче, у LAYOUT. Схеми оригінальні й умовні (не в масштабі).
+import Base from '../layouts/Base.astro';
+import { SITE, type Lang } from '../config';
+import { localePath } from '../utils';
+import data from '../data/myomap.json';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other = lang === 'uk' ? 'en' : 'uk';
+const author = SITE.author[lang];
+
+type L10n = { uk: string; en: string };
+const tx = (v: L10n | undefined) => (v ? v[lang] : '');
+
+const ui = {
+  uk: {
+    title: 'Анатомічні орієнтири для міотестингу',
+    lead: 'Інтерактивна карта: з яких м\'язів починати пошук місць для електродів на різних рівнях ампутації верхньої кінцівки, які команди давати під час міотесту і звідки беруться перехресні наводки.',
+    crumbs: 'Інструменти',
+    eyebrow: 'Інструмент · Протезування верхньої кінцівки',
+    warnTitle: 'Важливо',
+    warn: 'Після бойової, мінно-вибухової чи вогнепальної травми анатомія залишкової кінцівки часто нетипова: м\'язові черевця зміщені, виконано міодез або міопластику, є дефекти тканин. Карта — лише відправна точка. Остаточне розміщення електродів завжди визначає інструментальний міотест.',
+    evidenceBadge: 'Рівень доказів: низька–помірна впевненість',
+    evidenceHint: 'переважно експертний консенсус, клінічна практика та рекомендації виробників',
+    version: 'Версія',
+    updated: 'оновлено',
+    howTitle: 'Як користуватися',
+    how: ['Оберіть рівень ампутації.', 'Оберіть тип керування.', 'Натисніть на м\'яз на схемі, щоб побачити обґрунтування, команду для міотесту та джерела перехресних наводок.'],
+    levelLabel: 'Рівень ампутації',
+    modeLabel: 'Тип керування',
+    schematic: 'Схема, не в масштабі. Відправна точка для міотесту, а не точка встановлення електрода.',
+    pick: 'Натисніть на м\'яз або структуру на схемі.',
+    why: 'Чому саме цей орієнтир',
+    commands: 'Команда для міотесту',
+    crosstalk: 'Перехресні наводки',
+    back: '← До опису рівня',
+    toForearm: 'М\'язи передпліччя → трансрадіальний рівень',
+    legend: 'Позначення',
+    prLegend: 'Умовне розміщення 8 каналів по колу; кількість і розташування залежать від системи.',
+    tmrLegend: 'Можливі м\'язи-мішені TMR; конкретні сегменти визначає операційний протокол.',
+    prSites: 'Можливі зони власних м\'язів кисті для поєднання із сигналами передпліччя.',
+    systemsTitle: 'Приклади комерційних систем',
+    systemsNote: 'Дані виробників станом на листопад 2026 року; наведено лише як приклади типів керування. Перевіряйте актуальну документацію виробника.',
+    systemsNone: 'TMR — хірургічна методика, а не продукт. Для керування після TMR використовують системи з розпізнаванням патернів або пряме керування.',
+    source: 'джерело',
+    pitfallsTitle: 'Типові пастки',
+    levelPitfalls: 'Особливості рівня',
+    basis: { evidence: 'дослідження', mechanistic: 'механістичне міркування' },
+    evidenceTitle: 'Рівень доказів',
+    evidenceRows: [
+      ['Анатомія м\'язів', 'усталені анатомічні знання'],
+      ['Вибір орієнтирів для міотесту', 'експертний консенсус, клінічна практика й рекомендації виробників — низька впевненість'],
+      ['Пастки, розпізнавання патернів і TMR', 'лабораторні та клінічні дослідження — помірна впевненість'],
+    ],
+    refsTitle: 'Джерела',
+    citeTitle: 'Як цитувати',
+    cite: `${author.short} Анатомічні орієнтири для міотестингу [інтерактивний інструмент]. Praxis. 2026.`,
+    coi: 'Конфлікт інтересів: авторка заявляє про відсутність конфлікту інтересів. Комерційні системи наведено лише як приклади типів керування; Praxis не має фінансових відносин із їхніми виробниками.',
+  },
+  en: {
+    title: 'Anatomical landmarks for myotesting',
+    lead: 'An interactive map of which muscles to start from when searching for electrode sites at different levels of upper limb amputation, which commands to give during myotesting, and where crosstalk comes from.',
+    crumbs: 'Tools',
+    eyebrow: 'Tool · Upper limb prosthetics',
+    warnTitle: 'Important',
+    warn: 'After combat, blast or gunshot injuries, the anatomy of the residual limb is often atypical: muscle bellies are displaced, myodesis or myoplasty has been performed, or tissue is missing. The map is only a starting point; final electrode placement is always determined by instrumented myotesting.',
+    evidenceBadge: 'Level of evidence: low to moderate confidence',
+    evidenceHint: 'mainly expert consensus, clinical practice and manufacturer guidance',
+    version: 'Version',
+    updated: 'updated',
+    howTitle: 'How to use',
+    how: ['Choose the amputation level.', 'Choose the control type.', 'Click a muscle in the diagram to see the rationale, the myotest command and the sources of crosstalk.'],
+    levelLabel: 'Amputation level',
+    modeLabel: 'Control type',
+    schematic: 'Schematic, not to scale. A starting point for myotesting, not an electrode position.',
+    pick: 'Click a muscle or structure in the diagram.',
+    why: 'Why this landmark',
+    commands: 'Myotest command',
+    crosstalk: 'Crosstalk',
+    back: '← Back to level overview',
+    toForearm: 'Forearm muscles → transradial level',
+    legend: 'Key',
+    prLegend: 'Indicative placement of 8 channels around the circumference; number and position depend on the system.',
+    tmrLegend: 'Possible TMR target muscles; the specific segments are defined by the operative protocol.',
+    prSites: 'Possible intrinsic hand muscle sites to combine with forearm signals.',
+    systemsTitle: 'Examples of commercial systems',
+    systemsNote: 'Manufacturer data as of November 2026, given only as examples of control types. Always check the manufacturer\'s current documentation.',
+    systemsNone: 'TMR is a surgical technique, not a product. After TMR, control uses pattern recognition or direct control systems.',
+    source: 'source',
+    pitfallsTitle: 'Common pitfalls',
+    levelPitfalls: 'Level-specific',
+    basis: { evidence: 'research', mechanistic: 'mechanistic reasoning' },
+    evidenceTitle: 'Level of evidence',
+    evidenceRows: [
+      ['Muscle anatomy', 'established anatomical knowledge'],
+      ['Choice of myotesting landmarks', 'expert consensus, clinical practice and manufacturer guidance — low confidence'],
+      ['Pitfalls, pattern recognition and TMR', 'laboratory and clinical studies — moderate confidence'],
+    ],
+    refsTitle: 'References',
+    citeTitle: 'How to cite',
+    cite: `${author.short} Anatomical landmarks for myotesting [interactive tool]. Praxis. 2026.`,
+    coi: 'Conflict of interest: the author declares no conflict of interest. Commercial systems are listed only as examples of control types; Praxis has no financial relationship with their manufacturers.',
+  },
+}[lang];
+
+// ---------- Геометрія ----------
+type Ell = { cx: number; cy: number; rx: number; ry: number; rot?: number };
+type Shape = { d: string } | Ell;
+type Geo = { shapes: Shape[]; label?: [number, number] };
+type Frame = { cx: number; cy: number; rx: number; ry: number };
+
+const R = (n: number) => Math.round(n * 10) / 10;
+const pt = (F: Frame, a: number, r: number): [number, number] => {
+  const t = (a * Math.PI) / 180;
+  return [F.cx + F.rx * r * Math.cos(t), F.cy - F.ry * r * Math.sin(t)];
+};
+// Кільцевий сектор еліпса: кут 90° — верх схеми, 180° — лівий бік.
+const sector = (F: Frame, a0: number, a1: number, r0 = 0.6, r1 = 0.94): Geo => {
+  const [x0, y0] = pt(F, a0, r1);
+  const [x1, y1] = pt(F, a1, r1);
+  const [x2, y2] = pt(F, a1, r0);
+  const [x3, y3] = pt(F, a0, r0);
+  const large = a1 - a0 > 180 ? 1 : 0;
+  const d = `M${R(x0)} ${R(y0)}A${R(F.rx * r1)} ${R(F.ry * r1)} 0 ${large} 0 ${R(x1)} ${R(y1)}L${R(x2)} ${R(y2)}A${R(F.rx * r0)} ${R(F.ry * r0)} 0 ${large} 1 ${R(x3)} ${R(y3)}Z`;
+  const [lx, ly] = pt(F, (a0 + a1) / 2, (r0 + r1) / 2);
+  return { shapes: [{ d }], label: [R(lx), R(ly)] };
+};
+const e = (cx: number, cy: number, rx: number, ry: number, rot = 0): Ell => ({ cx, cy, rx, ry, rot });
+
+const TR: Frame = { cx: 200, cy: 168, rx: 150, ry: 112 };
+const TH: Frame = { cx: 200, cy: 168, rx: 126, ry: 118 };
+const PH: Frame = { cx: 200, cy: 168, rx: 168, ry: 72 };
+
+type Layout = {
+  frame?: Frame;
+  ring?: boolean;
+  outline: string;
+  under?: string; // декоративні елементи під м'язами
+  over?: string; // кістки та інше поверх м'язів (без кліків)
+  geo: Record<string, Geo>;
+};
+
+const LAYOUT: Record<string, Layout> = {
+  tr: {
+    frame: TR,
+    ring: true,
+    outline: `<ellipse cx="200" cy="168" rx="150" ry="112" class="skin"/><ellipse cx="200" cy="168" rx="90" ry="67.2" class="deeptissue"/>`,
+    over: `<line x1="149" y1="182" x2="282" y2="205" class="membrane"/><ellipse cx="132" cy="178" rx="18" ry="15" class="bone"/><ellipse cx="296" cy="209" rx="15" ry="12" transform="rotate(-30 296 209)" class="bone"/><text x="132" y="181" class="bonelbl">${lang === 'uk' ? 'ПК' : 'R'}</text><text x="296" y="212" class="bonelbl">${lang === 'uk' ? 'ЛК' : 'U'}</text>`,
+    geo: {
+      fcu: sector(TR, -18, 56),
+      fds: sector(TR, 56, 84),
+      pl: sector(TR, 84, 98, 0.74),
+      fcr: sector(TR, 98, 122),
+      pt: sector(TR, 122, 146),
+      br: sector(TR, 146, 182),
+      ecrl: sector(TR, 182, 203),
+      ecrb: sector(TR, 203, 224),
+      ed: sector(TR, 224, 262),
+      edm: sector(TR, 262, 276),
+      ecu: sector(TR, 276, 318),
+      ulna: { ...sector(TR, 318, 342), label: [326, 240] },
+      fdp: { shapes: [e(245, 141, 30, 15, -15)], label: [245, 144] },
+      fpl: { shapes: [e(160, 136, 22, 12, 20)], label: [160, 139] },
+      sup: { shapes: [e(128, 200, 20, 9, 25)], label: [150, 208] },
+      deepext: { shapes: [e(208, 214, 32, 11, 8)], label: [208, 217] },
+    },
+  },
+  th: {
+    frame: TH,
+    ring: true,
+    outline: `<ellipse cx="200" cy="168" rx="126" ry="118" class="skin"/><ellipse cx="200" cy="168" rx="75.6" ry="70.8" class="deeptissue"/>`,
+    over: `<ellipse cx="196" cy="172" rx="22" ry="21" class="bone"/><text x="196" y="175" class="bonelbl">${lang === 'uk' ? 'ПлК' : 'H'}</text><circle cx="297" cy="152" r="5" class="artery"/><circle cx="289" cy="163" r="3.5" class="nerve"/><circle cx="304" cy="163" r="3.5" class="nerve"/>`,
+    geo: {
+      biceps: sector(TH, 35, 140),
+      brachialis: { shapes: [...sector(TH, 140, 160).shapes, e(198, 126, 38, 13)], label: [124, 108] },
+      deltoid: sector(TH, 160, 205),
+      tri_lat: sector(TH, 205, 252),
+      tri_long: sector(TH, 252, 333),
+      nv: { ...sector(TH, 333, 395), label: [312, 186] },
+      tri_med: { shapes: [e(200, 214, 34, 11)], label: [200, 217] },
+      coraco: { shapes: [e(246, 135, 13, 9, 20)], label: [246, 138] },
+    },
+  },
+  ph: {
+    frame: PH,
+    outline: `<g class="skin-union"><ellipse cx="200" cy="168" rx="168" ry="72" class="skin-stroke"/><ellipse cx="78" cy="156" rx="52" ry="50" class="skin-stroke"/><ellipse cx="200" cy="168" rx="168" ry="72" class="skin-fill"/><ellipse cx="78" cy="156" rx="52" ry="50" class="skin-fill"/></g>`,
+    over: `<ellipse cx="74" cy="160" rx="11" ry="10" class="bone"/><circle cx="150" cy="178" r="12" class="bone"/><circle cx="190" cy="180" r="11" class="bone"/><circle cx="228" cy="180" r="10.5" class="bone"/><circle cx="265" cy="176" r="10" class="bone"/><text x="74" y="163" class="bonelbl">I</text><text x="150" y="181" class="bonelbl">II</text><text x="190" y="183" class="bonelbl">III</text><text x="228" y="183" class="bonelbl">IV</text><text x="265" y="179" class="bonelbl">V</text>`,
+    geo: {
+      thenar: { shapes: [e(82, 146, 40, 32)], label: [84, 136] },
+      fdi: { shapes: [e(110, 194, 22, 11, -18)], label: [110, 197] },
+      hypothenar: { shapes: [e(310, 160, 34, 30)], label: [312, 163] },
+      dio: { shapes: [e(170, 194, 9, 8), e(209, 196, 9, 8), e(247, 194, 9, 8)], label: [209, 222] },
+      addpol: { shapes: [e(126, 160, 28, 9, 8)], label: [122, 152] },
+      pio: { shapes: [e(170, 168, 7, 6), e(209, 168, 7, 6), e(247, 166, 7, 6)], label: [209, 158] },
+      flextend: {
+        shapes: [148, 162, 186, 200, 224, 238, 262, 276].map((x) => e(x, 130, 5.5, 5.5)),
+        label: [212, 117],
+      },
+      exttend: { shapes: [150, 190, 228, 265].map((x) => e(x, 214, 4.5, 4.5)), label: [150, 230] },
+    },
+  },
+  sd: {
+    outline: `<path d="M188 30L152 30L150 56C128 68 100 72 76 78C48 84 32 102 34 128C36 150 48 164 54 184L60 258C62 288 64 306 66 318L188 318Z" class="skin"/><path d="M188 30V318" class="midline"/><path d="M212 30L248 30L250 56C272 68 300 72 324 78C352 84 368 102 366 128C364 150 352 164 346 184L340 258C338 288 336 306 334 318L212 318Z" class="skin"/><path d="M212 30V318" class="midline"/><path d="M268 92L350 98L342 130L300 214L266 170Z" class="scapula"/>`,
+    geo: {
+      delt_sd: {
+        shapes: [
+          { d: 'M40 106C50 90 66 84 80 84L84 98C84 114 84 126 88 136C70 146 52 148 42 138C38 126 38 114 40 106Z' },
+          { d: 'M352 100C362 108 368 120 366 134C358 146 350 150 344 144L348 116Z' },
+        ],
+        label: [62, 118],
+      },
+      trap: {
+        shapes: [
+          { d: 'M151 56C130 67 104 73 80 79L82 88C108 82 134 76 153 68Z' },
+          { d: 'M214 40L248 40L250 58C272 68 300 72 326 80L330 92C300 90 268 90 250 86L214 84Z' },
+        ],
+        label: [262, 70],
+      },
+      pm_clav: { shapes: [{ d: 'M86 96C116 90 150 84 182 78L185 112C152 116 118 122 94 128C88 118 86 106 86 96Z' }], label: [138, 105] },
+      pm_stern: { shapes: [{ d: 'M95 133C118 127 152 121 185 117L187 192C160 198 128 192 106 178C94 166 87 150 95 133Z' }], label: [142, 158] },
+      lat: {
+        shapes: [{ d: 'M56 190L76 184C80 220 84 248 84 280L64 280L60 246Z' }, { d: 'M216 220C260 214 306 218 344 204L340 268C318 280 276 294 216 306Z' }],
+        label: [278, 262],
+      },
+      infra: { shapes: [{ d: 'M272 120L344 110L338 132L300 204L272 168Z' }], label: [302, 150] },
+      teres: { shapes: [{ d: 'M304 208L338 140L350 152C346 174 330 198 314 214Z' }], label: [334, 182] },
+      clav: { shapes: [{ d: 'M80 88C110 84 150 78 180 70L181 75C150 83 110 89 81 93Z' }], label: [160, 66] },
+      scap: { shapes: [{ d: 'M268 110L352 100L352 105L268 115Z' }], label: [352, 94] },
+    },
+  },
+};
+
+const LEVEL_IDS = ['ph', 'tr', 'th', 'sd'] as const;
+const MODE_IDS = ['direct', 'pr', 'tmr'] as const;
+const levels = data.levels as Record<string, any>;
+const roles = data.roles as Record<string, L10n>;
+const modes = data.modes as Record<string, { label: L10n; desc: L10n }>;
+const systems = data.systems as Record<string, { name: string; note: L10n; url: string }[]>;
+
+const ringDots = (F: Frame) =>
+  Array.from({ length: 8 }, (_, k) => {
+    const [x, y] = pt(F, 90 + k * 45, 1.075);
+    return { x: R(x), y: R(y), n: k + 1 };
+  });
+
+const fmtDate = new Intl.DateTimeFormat(lang === 'uk' ? 'uk-UA' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(
+  new Date(data.meta.updated),
+);
+---
+
+<Base lang={lang} title={ui.title} description={ui.lead} altLangHref={localePath(other, 'tools/myotesting-map/')}>
+  <div class="container page" data-pagefind-body>
+    <nav class="crumbs" aria-label={ui.crumbs}><a href={localePath(lang, 'tools/')}>← {ui.crumbs}</a></nav>
+    <p class="eyebrow">{ui.eyebrow}</p>
+    <h1 class="h-page">{ui.title}</h1>
+    <p class="lead-muted">{ui.lead}</p>
+
+    <div class="meta-row">
+      <span class="badge-ev" title={ui.evidenceHint}><span class="dot" aria-hidden="true"></span>{ui.evidenceBadge}</span>
+      <span class="mono small">{ui.version} {data.meta.version} · {ui.updated} {fmtDate}</span>
+    </div>
+
+    <aside class="warn" role="note" aria-label={ui.warnTitle}>
+      <strong>{ui.warnTitle}.</strong>{' '}{ui.warn}
+    </aside>
+
+    <details class="how">
+      <summary>{ui.howTitle}</summary>
+      <ol>{ui.how.map((h) => <li>{h}</li>)}</ol>
+    </details>
+
+    <div class="mm" data-level="tr" data-mode="direct">
+      <div class="controls">
+        <div class="ctl">
+          <span class="ctl-label mono" id="lvl-label">{ui.levelLabel}</span>
+          <div class="seg" role="tablist" aria-labelledby="lvl-label">
+            {
+              LEVEL_IDS.map((id) => (
+                <button type="button" role="tab" class="seg-btn" data-level={id} id={`tab-${id}`} aria-controls={`panel-${id}`} aria-selected={id === 'tr' ? 'true' : 'false'}>
+                  {tx(levels[id].title)}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+        <div class="ctl">
+          <span class="ctl-label mono" id="mode-label">{ui.modeLabel}</span>
+          <div class="seg" role="group" aria-labelledby="mode-label">
+            {
+              MODE_IDS.map((m) => (
+                <button type="button" class="seg-btn" data-mode={m} aria-pressed={m === 'direct' ? 'true' : 'false'}>
+                  {m === 'tmr' ? 'TMR' : tx(modes[m].label)}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      {
+        LEVEL_IDS.map((id) => {
+          const lv = levels[id];
+          const lay = LAYOUT[id];
+          return (
+            <section class="panel" id={`panel-${id}`} role="tabpanel" aria-labelledby={`tab-${id}`} data-level={id} hidden={id !== 'tr'}>
+              <div class="grid">
+                <figure class="fig">
+                  <svg viewBox="0 0 400 330" class="map" role="group" aria-label={`${tx(lv.title)}: ${tx(lv.section)}`}>
+                    <defs>
+                      <pattern id={`hatch-${id}`} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                        <rect width="6" height="6" class="hatch-bg" />
+                        <line x1="0" y1="0" x2="0" y2="6" class="hatch-line" />
+                      </pattern>
+                    </defs>
+                    <g set:html={lay.outline} />
+                    {lay.under && <g set:html={lay.under} />}
+                    {lv.muscles.map((m: any) => {
+                      const g = lay.geo[m.id];
+                      if (!g) return null;
+                      const label = `${tx(m.name)} (${m.latin})`;
+                      return (
+                        <g class="m" tabindex="0" role="button" aria-pressed="false" aria-label={label} data-m={m.id} data-role={m.role} data-tmr={m.tmr ? 'true' : undefined}>
+                          {g.shapes.map((s: any) =>
+                            'd' in s ? (
+                              <path d={s.d} class="shape" />
+                            ) : (
+                              <ellipse cx={s.cx} cy={s.cy} rx={s.rx} ry={s.ry} transform={s.rot ? `rotate(${s.rot} ${s.cx} ${s.cy})` : undefined} class="shape" />
+                            ),
+                          )}
+                          {m.tmr &&
+                            g.shapes.map((s: any) =>
+                              'd' in s ? (
+                                <path d={s.d} class="hatch" fill={`url(#hatch-${id})`} />
+                              ) : (
+                                <ellipse cx={s.cx} cy={s.cy} rx={s.rx} ry={s.ry} transform={s.rot ? `rotate(${s.rot} ${s.cx} ${s.cy})` : undefined} class="hatch" fill={`url(#hatch-${id})`} />
+                              ),
+                            )}
+                        </g>
+                      );
+                    })}
+                    <g class="sel-ov" aria-hidden="true" />
+                    {lay.over && <g set:html={lay.over} class="over" />}
+                    <g class="labels" aria-hidden="true">
+                      {lv.muscles.map((m: any) => {
+                        const g = lay.geo[m.id];
+                        return g?.label ? (
+                          <text x={g.label[0]} y={g.label[1]} class="lbl" data-role={m.role}>
+                            {tx(m.abbr)}
+                          </text>
+                        ) : null;
+                      })}
+                    </g>
+                    {lay.ring && lay.frame && (
+                      <g class="ring" aria-hidden="true">
+                        {ringDots(lay.frame).map((p) => (
+                          <g>
+                            <circle cx={p.x} cy={p.y} r="8" class="el" />
+                            <text x={p.x} y={p.y + 3.5} class="el-n">
+                              {p.n}
+                            </text>
+                          </g>
+                        ))}
+                      </g>
+                    )}
+                    {id === 'sd' ? (
+                      <g class="orient" aria-hidden="true">
+                        <text x="100" y="18">{tx(lv.orient.top)}</text>
+                        <text x="306" y="18">{tx(lv.orient.bottom)}</text>
+                      </g>
+                    ) : (
+                      <g class="orient" aria-hidden="true">
+                        <text x="200" y="18">{tx(lv.orient.top)}</text>
+                        <text x="200" y="322">{tx(lv.orient.bottom)}</text>
+                        <text x="6" y="40" class="start">← {tx(lv.orient.left)}</text>
+                        <text x="394" y="40" class="end">{tx(lv.orient.right)} →</text>
+                      </g>
+                    )}
+                  </svg>
+                  <figcaption>
+                    <span class="fig-title">{tx(lv.section)}.</span> {ui.schematic}
+                  </figcaption>
+                  <div class="legend" aria-label={ui.legend}>
+                    <ul class="lg lg-direct">
+                      {['primary', 'secondary', 'caution', 'conditional', 'deep', 'landmark'].map((r) => (
+                        <li>
+                          <span class={`sw sw-${r}`} aria-hidden="true" />
+                          {tx(roles[r])}
+                        </li>
+                      ))}
+                    </ul>
+                    <p class="lg lg-pr">
+                      <span class="sw sw-el" aria-hidden="true" />
+                      {id === 'ph' ? ui.prSites : ui.prLegend}
+                    </p>
+                    <p class="lg lg-tmr">
+                      <span class="sw sw-tmr" aria-hidden="true" />
+                      {ui.tmrLegend}
+                    </p>
+                  </div>
+                </figure>
+
+                <div class="cards" aria-live="polite">
+                  <article class="card-x card-intro">
+                    <h2 class="card-h">{tx(lv.title)}</h2>
+                    <p>{tx(lv.intro)}</p>
+                    {MODE_IDS.map((m) => (
+                      <p class="note" data-for={m}>
+                        <span class="mono note-k">{m === 'tmr' ? 'TMR' : tx(modes[m].label)}</span>
+                        {tx(lv.modeNotes[m])}
+                      </p>
+                    ))}
+                    {id === 'ph' && (
+                      <button type="button" class="btn btn-secondary btn-sm go-tr">
+                        {ui.toForearm}
+                      </button>
+                    )}
+                    <p class="pick">{ui.pick}</p>
+                  </article>
+                  {lv.muscles.map((m: any) => (
+                    <article class="card-x card-m" data-m={m.id} hidden>
+                      <p class={`role role-${m.role}`}>{tx(roles[m.role])}</p>
+                      <h2 class="card-h">{tx(m.name)}</h2>
+                      <p class="latin">{m.latin}</p>
+                      <h3>{ui.why}</h3>
+                      <p>{tx(m.why)}</p>
+                      {m.commands && (
+                        <>
+                          <h3>{ui.commands}</h3>
+                          <p>{tx(m.commands)}</p>
+                        </>
+                      )}
+                      {m.crosstalk && (
+                        <>
+                          <h3>{ui.crosstalk}</h3>
+                          <p>{tx(m.crosstalk)}</p>
+                        </>
+                      )}
+                      <button type="button" class="back text-link">
+                        {ui.back}
+                      </button>
+                    </article>
+                  ))}
+                  <div class="lv-pit">
+                    <h3 class="mono">{ui.levelPitfalls}</h3>
+                    <ul>
+                      {lv.pitfalls.map((p: L10n) => (
+                        <li>{tx(p)}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+          );
+        })
+      }
+
+      <section class="mode-box">
+        {
+          MODE_IDS.map((m) => (
+            <div class="mode-desc" data-for={m}>
+              <h2 class="h-sub">{tx(modes[m].label)}</h2>
+              <p>{tx(modes[m].desc)}</p>
+              <h3 class="mono sys-h">{ui.systemsTitle}</h3>
+              {systems[m].length ? (
+                <>
+                  <ul class="sys">
+                    {systems[m].map((s) => (
+                      <li>
+                        <strong>{s.name}.</strong> {tx(s.note)}{' '}
+                        <a href={s.url} rel="noopener" class="src">
+                          {ui.source}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  <p class="small muted">{ui.systemsNote}</p>
+                </>
+              ) : (
+                <p class="small muted">{ui.systemsNone}</p>
+              )}
+            </div>
+          ))
+        }
+      </section>
+    </div>
+
+    <section class="block">
+      <h2 class="h-sub">{ui.pitfallsTitle}</h2>
+      <ul class="pits">
+        {
+          data.pitfalls.map((p) => (
+            <li>
+              <h3>
+                {tx(p.title)} <span class={`basis basis-${p.basis}`}>{ui.basis[p.basis as 'evidence' | 'mechanistic']}</span>
+              </h3>
+              <p>{tx(p.text)}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="block">
+      <h2 class="h-sub">{ui.evidenceTitle}</h2>
+      <dl class="ev">
+        {
+          ui.evidenceRows.map(([k, v]) => (
+            <>
+              <dt>{k}</dt>
+              <dd>{v}</dd>
+            </>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="block">
+      <h2 class="h-sub">{ui.refsTitle}</h2>
+      <ol class="refs">
+        {
+          data.references.map((r) => (
+            <li>
+              {r.text}{' '}
+              <a href={`https://doi.org/${r.doi}`} rel="noopener">
+                doi:{r.doi}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+      <h3 class="mono cite-h">{ui.citeTitle}</h3>
+      <p class="cite">{ui.cite} {lang === 'uk' ? 'Доступно за посиланням:' : 'Available from:'} {new URL(localePath(lang, 'tools/myotesting-map/'), Astro.site).href}</p>
+      <p class="small muted coi">{ui.coi}</p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.mm');
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const modeBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-mode]')].filter((b) => b.tagName === 'BUTTON');
+    const panels = [...root.querySelectorAll<HTMLElement>('.panel')];
+
+    const select = (panel: HTMLElement, id: string | null) => {
+      const ov = panel.querySelector('.sel-ov');
+      ov?.replaceChildren();
+      panel.querySelectorAll<SVGGElement>('.m').forEach((g) => {
+        const on = g.dataset.m === id;
+        g.classList.toggle('sel', on);
+        g.setAttribute('aria-pressed', on ? 'true' : 'false');
+        if (on && ov) g.querySelectorAll('.shape').forEach((sh) => ov.appendChild(sh.cloneNode(true)));
+      });
+      panel.querySelectorAll<HTMLElement>('.card-m').forEach((c) => (c.hidden = c.dataset.m !== id));
+      const intro = panel.querySelector<HTMLElement>('.card-intro');
+      if (intro) intro.hidden = !!id;
+    };
+
+    const setLevel = (id: string, updateHash = true) => {
+      if (!panels.some((p) => p.dataset.level === id)) return;
+      root.dataset.level = id;
+      tabs.forEach((t) => t.setAttribute('aria-selected', t.dataset.level === id ? 'true' : 'false'));
+      panels.forEach((p) => (p.hidden = p.dataset.level !== id));
+      if (updateHash) history.replaceState(null, '', `#${id}`);
+    };
+
+    const setMode = (m: string) => {
+      root.dataset.mode = m;
+      modeBtns.forEach((b) => b.setAttribute('aria-pressed', b.dataset.mode === m ? 'true' : 'false'));
+    };
+
+    tabs.forEach((t) => t.addEventListener('click', () => setLevel(t.dataset.level!)));
+    tabs.forEach((t, i) =>
+      t.addEventListener('keydown', (ev) => {
+        if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+        const next = tabs[(i + (ev.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+        next.focus();
+        setLevel(next.dataset.level!);
+      }),
+    );
+    modeBtns.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode!)));
+
+    panels.forEach((panel) => {
+      panel.querySelectorAll<SVGGElement>('.m').forEach((g) => {
+        const act = () => select(panel, g.classList.contains('sel') ? null : g.dataset.m!);
+        g.addEventListener('click', act);
+        g.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter' || ev.key === ' ') {
+            ev.preventDefault();
+            act();
+          }
+        });
+      });
+      panel.querySelectorAll('.back').forEach((b) => b.addEventListener('click', () => select(panel, null)));
+      panel.querySelector('.go-tr')?.addEventListener('click', () => {
+        setLevel('tr');
+        document.getElementById('tab-tr')?.focus();
+      });
+    });
+
+    const fromHash = () => {
+      const h = location.hash.replace('#', '');
+      if (h) setLevel(h, false);
+    };
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+  }
+</script>
+
+<style>
+  .page {
+    padding-block: 32px 80px;
+  }
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .h-page {
+    margin: 6px 0 0;
+    font-size: clamp(32px, 4vw, 46px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .lead-muted {
+    max-width: 760px;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+    margin-top: 18px;
+  }
+  .badge-ev {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #fbf3e4;
+    border: 1px solid #ecd6ad;
+    color: #6b4a12;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .badge-ev .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c98a1b;
+  }
+  .small {
+    font-size: 13.5px;
+  }
+  .muted {
+    color: var(--muted);
+  }
+  .warn {
+    margin-top: 20px;
+    padding: 16px 18px;
+    border-left: 4px solid #c98a1b;
+    background: #fffaf1;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    color: var(--ink-2);
+    max-width: 880px;
+    line-height: 1.55;
+  }
+  .how {
+    margin-top: 16px;
+    max-width: 880px;
+  }
+  .how summary {
+    cursor: pointer;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .how ol {
+    margin: 0 0 8px;
+    padding-left: 22px;
+    color: var(--text-2);
+  }
+
+  .mm {
+    margin-top: 24px;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 28px;
+    margin-bottom: 18px;
+  }
+  .ctl {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .ctl-label {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .seg {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+    background: var(--chip);
+    border-radius: 10px;
+  }
+  .seg-btn {
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text-2);
+    font: 500 14.5px var(--font-sans);
+    cursor: pointer;
+  }
+  .seg-btn:hover {
+    color: var(--ink);
+  }
+  .seg-btn[aria-selected='true'],
+  .seg-btn[aria-pressed='true'] {
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 1px 2px rgba(22, 27, 34, 0.12);
+  }
+  .seg-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .fig {
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px 12px 14px;
+  }
+  .map {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: var(--font-sans);
+  }
+  figcaption {
+    margin: 6px 4px 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .fig-title {
+    color: var(--text-2);
+    font-weight: 500;
+  }
+
+  /* --- SVG --- */
+  .map :global(.skin) {
+    fill: #f8f9fb;
+    stroke: #8a93a3;
+    stroke-width: 1.5;
+  }
+  .map :global(.skin-stroke) {
+    fill: none;
+    stroke: #8a93a3;
+    stroke-width: 3;
+  }
+  .map :global(.skin-fill) {
+    fill: #f8f9fb;
+  }
+  .map :global(.deeptissue) {
+    fill: #eceff3;
+  }
+  .map :global(.midline) {
+    stroke: #b6bdc8;
+    stroke-dasharray: 4 4;
+    fill: none;
+  }
+  .map :global(.scapula) {
+    fill: none;
+    stroke: #b6bdc8;
+    stroke-dasharray: 3 3;
+  }
+  .map :global(.bone) {
+    fill: #f3efe4;
+    stroke: #b3a888;
+    stroke-width: 1.2;
+  }
+  .map :global(.bonelbl) {
+    font-size: 9px;
+    text-anchor: middle;
+    fill: #7d7357;
+    font-family: var(--font-mono);
+  }
+  .map :global(.membrane) {
+    stroke: #b3a888;
+    stroke-width: 1;
+    stroke-dasharray: 2 2;
+  }
+  .map :global(.artery) {
+    fill: #d8a3a3;
+    stroke: #a46666;
+  }
+  .map :global(.nerve) {
+    fill: #f0e3a8;
+    stroke: #a8964a;
+  }
+  .map .over {
+    pointer-events: none;
+  }
+  .m {
+    cursor: pointer;
+    outline: none;
+  }
+  .m .shape {
+    stroke: #ffffff;
+    stroke-width: 1.4;
+    transition: fill 0.15s, opacity 0.15s;
+  }
+  /* Ролі (пряме керування) */
+  .mm[data-mode='direct'] .m[data-role='primary'] .shape {
+    fill: #2f62c7;
+  }
+  .mm[data-mode='direct'] .m[data-role='secondary'] .shape {
+    fill: #a9c0ee;
+  }
+  .mm[data-mode='direct'] .m[data-role='caution'] .shape {
+    fill: #e4b866;
+  }
+  .mm[data-mode='direct'] .m[data-role='conditional'] .shape {
+    fill: #d4def4;
+    stroke: #2f62c7;
+    stroke-dasharray: 4 3;
+  }
+  .m[data-role='deep'] .shape {
+    fill: #c9cfd8;
+  }
+  .m[data-role='landmark'] .shape {
+    fill: #eef1f5;
+    stroke: #8a93a3;
+    stroke-dasharray: 3 3;
+  }
+  /* Нейтральний стан для PR і TMR */
+  .mm[data-mode='pr'] .m:not([data-role='deep']):not([data-role='landmark']) .shape,
+  .mm[data-mode='tmr'] .m:not([data-role='deep']):not([data-role='landmark']) .shape {
+    fill: #dfe4ec;
+  }
+  .mm[data-mode='pr'] .panel[data-level='ph'] .m[data-role='conditional'] .shape {
+    fill: #2f62c7;
+  }
+  .hatch {
+    display: none;
+    pointer-events: none;
+    stroke: #2f62c7;
+    stroke-width: 1.6;
+    stroke-dasharray: 5 3;
+  }
+  .mm[data-mode='tmr'] .hatch {
+    display: inline;
+  }
+  .sel-ov .shape {
+    fill: none;
+    stroke: #161b22;
+    stroke-width: 2.6;
+    stroke-dasharray: none;
+    pointer-events: none;
+  }
+  .map :global(.hatch-bg) {
+    fill: #dfe7f8;
+  }
+  .map :global(.hatch-line) {
+    stroke: #2f62c7;
+    stroke-width: 2;
+  }
+  .m:hover .shape,
+  .m:focus-visible .shape {
+    opacity: 0.82;
+  }
+  .m:focus-visible .shape {
+    stroke: #161b22;
+    stroke-width: 2;
+    stroke-dasharray: none;
+  }
+  .m.sel .shape {
+    stroke: #161b22;
+    stroke-width: 2.6;
+    stroke-dasharray: none;
+  }
+  .lbl {
+    font-size: 10.5px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+    fill: var(--ink);
+    paint-order: stroke;
+    stroke: rgba(255, 255, 255, 0.85);
+    stroke-width: 2.5px;
+    stroke-linejoin: round;
+  }
+  .mm[data-mode='direct'] .lbl[data-role='primary'] {
+    fill: #ffffff;
+    stroke: rgba(22, 46, 110, 0.55);
+  }
+  .mm[data-mode='pr'] .panel[data-level='ph'] .lbl[data-role='conditional'] {
+    fill: #ffffff;
+    stroke: rgba(22, 46, 110, 0.55);
+  }
+  .orient text {
+    font-size: 11px;
+    fill: var(--muted);
+    text-anchor: middle;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+  .orient .start {
+    text-anchor: start;
+  }
+  .orient .end {
+    text-anchor: end;
+  }
+  .ring {
+    display: none;
+    pointer-events: none;
+  }
+  .mm[data-mode='pr'] .ring {
+    display: inline;
+  }
+  .el {
+    fill: #2756b8;
+    stroke: #ffffff;
+    stroke-width: 1.5;
+  }
+  .el-n {
+    font-size: 9.5px;
+    font-weight: 600;
+    fill: #ffffff;
+    text-anchor: middle;
+    font-family: var(--font-mono);
+  }
+
+  /* --- Легенда --- */
+  .legend {
+    margin: 10px 4px 0;
+    font-size: 13px;
+    color: var(--text-2);
+  }
+  .lg {
+    display: none;
+    margin: 0;
+  }
+  .mm[data-mode='direct'] .lg-direct,
+  .mm[data-mode='pr'] .lg-pr,
+  .mm[data-mode='tmr'] .lg-tmr {
+    display: flex;
+  }
+  .lg-direct {
+    list-style: none;
+    padding: 0;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+  }
+  .lg-direct li {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .lg-pr,
+  .lg-tmr {
+    align-items: flex-start;
+    gap: 7px;
+  }
+  .sw {
+    flex: 0 0 auto;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+  .lg-pr .sw,
+  .lg-tmr .sw {
+    margin-top: 2px;
+  }
+  .sw-primary {
+    background: #2f62c7;
+  }
+  .sw-secondary {
+    background: #a9c0ee;
+  }
+  .sw-caution {
+    background: #e4b866;
+  }
+  .sw-conditional {
+    background: #d4def4;
+    border: 1.5px dashed #2f62c7;
+  }
+  .sw-deep {
+    background: #c9cfd8;
+  }
+  .sw-landmark {
+    background: #eef1f5;
+    border: 1.5px dashed #8a93a3;
+  }
+  .sw-el {
+    background: #2756b8;
+    border-radius: 50%;
+  }
+  .sw-tmr {
+    background: repeating-linear-gradient(45deg, #2f62c7 0 2px, #dfe7f8 2px 6px);
+    border: 1.5px dashed #2f62c7;
+  }
+
+  /* --- Картки --- */
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .card-x {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+  .card-x p {
+    margin: 0 0 10px;
+  }
+  .card-h {
+    margin: 0 0 8px;
+    font-size: 21px;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .card-x h3 {
+    margin: 14px 0 4px;
+    font: 600 13px var(--font-sans);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .latin {
+    font-style: italic;
+    font-family: var(--font-serif);
+    color: var(--muted);
+  }
+  .role {
+    display: inline-block;
+    margin: 0 0 10px !important;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    background: var(--chip);
+    color: var(--text-2);
+  }
+  .role-primary {
+    background: #2f62c7;
+    color: #fff;
+  }
+  .role-secondary {
+    background: #dbe5f8;
+    color: #1d4496;
+  }
+  .role-caution {
+    background: #f6e3bd;
+    color: #6b4a12;
+  }
+  .role-conditional {
+    background: #e7eefb;
+    color: #1d4496;
+    outline: 1.5px dashed #2f62c7;
+  }
+  .back {
+    margin-top: 4px;
+    padding: 0;
+    min-height: 44px;
+    border: 0;
+    background: none;
+    font: 500 14.5px var(--font-sans);
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .note {
+    display: none;
+    padding: 10px 12px;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    font-size: 14.5px;
+  }
+  .mm[data-mode='direct'] .note[data-for='direct'],
+  .mm[data-mode='pr'] .note[data-for='pr'],
+  .mm[data-mode='tmr'] .note[data-for='tmr'] {
+    display: block;
+  }
+  .note-k {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 11.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pick {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .go-tr {
+    margin: 2px 0 12px;
+  }
+  .lv-pit {
+    padding: 14px 18px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    font-size: 14.5px;
+    color: var(--text-2);
+  }
+  .lv-pit h3 {
+    margin: 0 0 6px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .lv-pit ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  /* --- Режим і системи --- */
+  .mode-box {
+    margin-top: 22px;
+    padding: 20px 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    max-width: 980px;
+  }
+  .mode-desc {
+    display: none;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+  .mm[data-mode='direct'] .mode-desc[data-for='direct'],
+  .mm[data-mode='pr'] .mode-desc[data-for='pr'],
+  .mm[data-mode='tmr'] .mode-desc[data-for='tmr'] {
+    display: block;
+  }
+  .h-sub {
+    margin: 0 0 10px;
+    font-size: 24px;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .sys-h,
+  .cite-h {
+    margin: 16px 0 6px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .sys {
+    margin: 0 0 8px;
+    padding-left: 18px;
+  }
+  .sys li {
+    margin-bottom: 5px;
+  }
+  .src {
+    font-size: 13px;
+  }
+
+  .block {
+    margin-top: 40px;
+    max-width: 980px;
+  }
+  .pits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .pits li {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+  .pits h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .pits p {
+    margin: 0;
+    font-size: 14.5px;
+  }
+  .basis {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font: 500 11.5px var(--font-mono);
+    vertical-align: 2px;
+  }
+  .basis-evidence {
+    background: #e2f0e6;
+    color: #1f5a32;
+  }
+  .basis-mechanistic {
+    background: var(--chip);
+    color: var(--text-2);
+  }
+  .ev {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 8px 20px;
+    margin: 0;
+    color: var(--text-2);
+  }
+  .ev dt {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .ev dd {
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .ev {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2px;
+    }
+    .ev dd {
+      margin-bottom: 10px;
+    }
+  }
+  .refs {
+    padding-left: 22px;
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .refs li {
+    margin-bottom: 6px;
+    overflow-wrap: anywhere;
+  }
+  .cite {
+    font-size: 14.5px;
+    color: var(--text-2);
+    overflow-wrap: anywhere;
+  }
+  .coi {
+    margin-top: 10px;
+  }
+</style>

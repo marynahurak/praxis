@@ -105,7 +105,7 @@ export const t = {
     homeLabel: 'Praxis — на головну',
     langLabel: 'Мова сайту',
     searchLabel: 'Пошук',
-    nav: { label: 'Основна навігація', library: 'Бібліотека', sections: 'Розділи', method: 'Методологія', about: 'Про Praxis' },
+    nav: { label: 'Основна навігація', library: 'Бібліотека', sections: 'Розділи', tools: 'Інструменти', method: 'Методологія', about: 'Про Praxis' },
     siteTitle: 'доказова практика та інновації в протезуванні й реабілітації',
     siteDescription:
       'Незалежна науково-освітня ініціатива з доказової практики та інновацій у протезуванні, ортезуванні й реабілітації: трансляційні дослідження, біомеханіка, об\'єктивне оцінювання протезних технологій і систематизація рецензованої літератури.',
@@ -207,7 +207,7 @@ export const t = {
     homeLabel: 'Praxis — home',
     langLabel: 'Site language',
     searchLabel: 'Search',
-    nav: { label: 'Main navigation', library: 'Library', sections: 'Sections', method: 'Methodology', about: 'About Praxis' },
+    nav: { label: 'Main navigation', library: 'Library', sections: 'Sections', tools: 'Tools', method: 'Methodology', about: 'About Praxis' },
     siteTitle: 'evidence-based practice and innovation in prosthetics and rehabilitation',
     siteDescription:
       'An independent scientific and educational initiative on evidence-based practice and innovation in prosthetics, orthotics and rehabilitation: translational research, biomechanics, objective evaluation of prosthetic technologies and synthesis of peer-reviewed literature.',

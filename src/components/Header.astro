@@ -16,6 +16,7 @@ const enHref = lang === 'en' ? path : (altLangHref ?? localePath('en'));
 const nav = [
   { href: localePath(lang, 'library/'), label: s.nav.library },
   { href: `${localePath(lang)}#sections`, label: s.nav.sections },
+  { href: localePath(lang, 'tools/'), label: s.nav.tools },
   { href: `${localePath(lang, 'about/')}#evidence`, label: s.nav.method },
   { href: localePath(lang, 'about/'), label: s.nav.about },
 ];
@@ -28,7 +29,7 @@ const nav = [
       <span>Praxis</span>
     </a>
     <nav aria-label={s.nav.label} class="nav">
-      {nav.map((n) => <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>)}
+      {nav.map((n) => <a href={n.href} aria-current={path === n.href || (n.href.endsWith('tools/') && path.startsWith(n.href)) ? 'page' : undefined}>{n.label}</a>)}
     </nav>
     <div class="tools">
       <div class="lang" role="group" aria-label={s.langLabel}>
@@ -160,12 +161,9 @@ const nav = [
     .nav {
       grid-column: 1 / -1;
       grid-row: 2;
-      gap: 0 18px;
+      gap: 0 16px;
       font-size: 14px;
-      overflow-x: auto;
-      flex-wrap: nowrap;
-      white-space: nowrap;
-      scrollbar-width: none;
+      flex-wrap: wrap;
     }
     .tg span {
       display: none;
