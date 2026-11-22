@@ -25,6 +25,9 @@ const c = {
   uk: {
     title: 'Про Praxis',
     lead: 'Praxis — незалежна науково-освітня ініціатива, присвячена розвитку доказової практики (evidence-based practice, EBP) та інновацій у протезуванні, ортезуванні й реабілітації. У центрі уваги — трансляційні дослідження, біомеханіка ходи та рухів верхньої кінцівки, об\'єктивне оцінювання ефективності протезних технологій і систематизація рецензованої фахової літератури. Мета Praxis — створити спільний дослідницький простір для фахівців-практиків, науковців, R&D-інженерів та академічної спільноти в Україні й світі.',
+    whyTitle: 'Чому Praxis',
+    why: 'Слово «праксис» можна трактувати по-різному. У неврології це вища кіркова функція: здатність спланувати й виконати цілеспрямований рух. Для мене Praxis — це усвідомлена дія, у якій теорія нерозривно втілюється в практику заради конкретного результату: момент, коли сухі наукові знання стають реальною клінічною дією, а не сліпим копіюванням чужих шаблонів.',
+    whyBy: 'Марина Гурак, засновниця Praxis',
     aimsTitle: 'Мета і завдання',
     aimsIntro: 'Praxis прагне скоротити розрив між опублікованими доказами, інженерними розробками та щоденними клінічними рішеннями. Для цього ініціатива:',
     aims: [
@@ -103,6 +106,9 @@ const c = {
   en: {
     title: 'About Praxis',
     lead: 'Praxis is an independent scientific and educational initiative dedicated to advancing evidence-based practice (EBP) and innovation in prosthetics, orthotics and rehabilitation. It focuses on translational research, the biomechanics of gait and upper-limb movement, the objective evaluation of prosthetic technologies and the structured synthesis of peer-reviewed literature. Its mission is to foster a shared research environment for clinicians, academic researchers, R&D engineers and the international rehabilitation community.',
+    whyTitle: 'Why Praxis',
+    why: 'The word praxis can be read in many ways. In neurology, it is a higher cortical function: the ability to plan and carry out purposeful movement. To me, Praxis is deliberate action in which theory is inseparably carried into practice for the sake of a concrete result: the moment when dry scientific knowledge becomes real clinical action rather than the blind copying of other people’s templates.',
+    whyBy: 'Maryna Hurak, founder of Praxis',
     aimsTitle: 'Aims and scope',
     aimsIntro: 'Praxis aims to narrow the gap between published evidence, engineering development and everyday clinical decision-making. To this end, it:',
     aims: [
@@ -187,6 +193,14 @@ const c = {
       <h1>{c.title}</h1>
       <p class="lead">{c.lead}</p>
     </header>
+
+    <section id="why-praxis" class="why" aria-labelledby="why-h">
+      <h2 id="why-h" class="why-h">{c.whyTitle}</h2>
+      <blockquote class="why-q">
+        <p>{c.why}</p>
+        <footer>— {c.whyBy}</footer>
+      </blockquote>
+    </section>
 
     <div class="grid">
       <div class="col-main">
@@ -364,6 +378,35 @@ const c = {
     font-size: 20px;
     line-height: 1.6;
     color: var(--text-2);
+  }
+  .why {
+    margin-top: 40px;
+    max-width: 860px;
+    padding: 26px 30px;
+    background: var(--graphite-900);
+    border-radius: var(--radius);
+    color: var(--on-dark);
+  }
+  .why-h {
+    margin: 0 0 12px;
+    font: 500 12px var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--on-dark-accent);
+  }
+  .why-q {
+    margin: 0;
+  }
+  .why-q p {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(19px, 2vw, 22px);
+    line-height: 1.6;
+  }
+  .why-q footer {
+    margin-top: 14px;
+    font-size: 14.5px;
+    color: var(--on-dark-2);
   }
   .grid {
     margin-top: 48px;

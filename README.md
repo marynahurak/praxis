@@ -14,6 +14,12 @@
 
 Praxis is an independent scientific and educational initiative dedicated to advancing evidence-based practice (EBP) and innovation in prosthetics, orthotics and rehabilitation. It focuses on translational research, the biomechanics of gait and upper-limb movement, the objective evaluation of prosthetic technologies and the structured synthesis of peer-reviewed literature. Its mission is to foster a shared research environment for clinicians, academic researchers, R&D engineers and the international rehabilitation community, with particular attention to the Ukrainian clinical context, including combat-related limb loss.
 
+### Why Praxis
+
+> The word praxis can be read in many ways. In neurology, it is a higher cortical function: the ability to plan and carry out purposeful movement. To me, Praxis is deliberate action in which theory is inseparably carried into practice for the sake of a concrete result: the moment when dry scientific knowledge becomes real clinical action rather than the blind copying of other people’s templates.
+>
+> — Maryna Hurak, founder of Praxis
+
 ### Editorial principles
 
 - **Synthesis, not summary.** Every article is an original clinical analysis, never a translated abstract.
@@ -62,6 +68,12 @@ Content is educational and does not replace individual clinical advice.
 ### Місія
 
 Praxis — незалежна науково-освітня ініціатива, присвячена розвитку доказової практики (evidence-based practice, EBP) та інновацій у протезуванні, ортезуванні й реабілітації. У центрі уваги — трансляційні дослідження, біомеханіка ходи та рухів верхньої кінцівки, об'єктивне оцінювання ефективності протезних технологій і систематизація рецензованої фахової літератури. Мета Praxis — створити спільний дослідницький простір для фахівців-практиків, науковців, R&D-інженерів та академічної спільноти в Україні й світі. Окрему увагу приділено українському клінічному контексту, зокрема реабілітації осіб із втратою кінцівки внаслідок бойової травми.
+
+### Чому Praxis
+
+> Слово «праксис» можна трактувати по-різному. У неврології це вища кіркова функція: здатність спланувати й виконати цілеспрямований рух. Для мене Praxis — це усвідомлена дія, у якій теорія нерозривно втілюється в практику заради конкретного результату: момент, коли сухі наукові знання стають реальною клінічною дією, а не сліпим копіюванням чужих шаблонів.
+>
+> — Марина Гурак, засновниця Praxis
 
 ### Редакційні принципи
 
