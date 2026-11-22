@@ -64,6 +64,14 @@
  },
  "changelog": [
   {
+   "v": "2.1.1",
+   "date": "2026-11-22",
+   "text": {
+    "uk": "Виправлення даних: у 3D-моделі сітка довгого долонного м'яза містить і долонний апоневроз, який раніше враховувався як черевце. Апоневроз позначено як сухожилкову зону (зону слабкого сигналу), а рекомендоване місце на передній поверхні передпліччя перенесено з долоні на черевце м'яза в проксимальній третині передпліччя. Логіка вибору місць і критерії оцінки не змінилися.",
+    "en": "Data correction: in the 3D model, the palmaris longus mesh also contains the palmar aponeurosis, which had been treated as muscle belly. The aponeurosis is now marked as a tendinous (weak-signal) zone, and the recommended site on the anterior forearm has moved from the palm to the muscle belly in the proximal third of the forearm. The site-selection logic and evaluation criteria are unchanged."
+   }
+  },
+  {
    "v": "2.1.0",
    "date": "2026-11-22",
    "text": {
@@ -89,7 +97,7 @@
   }
  ],
  "meta": {
-  "version": "2.1.0",
+  "version": "2.1.1",
   "updated": "2026-11-22"
  },
  "roles": {
