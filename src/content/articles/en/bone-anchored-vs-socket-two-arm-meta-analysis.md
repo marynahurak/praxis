@@ -184,39 +184,16 @@ These deserve to be named as well:
 
 The underlying idea — comparing independent groups rather than before-and-after states — is sound and much needed.
 
-## Implications for the MDT
+## Implications for the MDT: my personal view
 
-**For prosthetists and orthotists:**
+*This is my personal interpretation of the data, not a clinical guideline.*
 
-- **Position.** The available data support the following working position: osseointegration is a solution for people for whom a socket does not work, not an "upgrade" for a successful socket user. Before referral, it is worth documenting that socket options have genuinely been exhausted; I proposed a minimum documentation set in [my analysis of the state pilot project](../state-funded-osseointegration-ukraine/).
-- **Patient expectations.** During counselling, it helps to separate expectations clearly. These data do not promise better TUG or gait speed than with a well-fitted socket. The potential gains lie elsewhere: hip range of motion, sitting, osseoperception, and freedom from socket–skin interface problems. They are weighed against a permanent stoma and the risk of infection.
-- **Workload.** Fewer service visits (3.1 vs 7.2 per year in one Swedish study) change the nature of the work: fewer socket refits, more attention to component set-up.
+In my personal view, this review does not diminish osseointegration; it clarifies where it belongs. I see it as a solution for people for whom a socket does not work, not an "upgrade" for someone who already walks well with one. Before referral, therefore, the team should document that socket options have genuinely been exhausted; I proposed a minimum documentation set in [my analysis of the state pilot project](../state-funded-osseointegration-ukraine/).
 
-**For physical therapists:**
+It is just as important to be honest with the patient about expectations. These data do not promise better TUG or gait speed than with a well-fitted socket. As I see it, the possible gains lie elsewhere: greater hip range of motion, more comfortable sitting, osseoperception and freedom from socket–skin interface problems. They have to be weighed against a permanent stoma and the risk of infection.
 
-- **What to measure.** Assessing bone-anchored prosthesis users only with TUG and gait speed may miss exactly what the method changes. Add hip goniometry and step width during gait analysis.
-- **The stoma.** Supplement the Q-TFA with structured documentation of the stoma and of infection episodes: the scale does not capture infection after surgery.
-- **Essential variables.** Always record functional level and knee type: their absence from the primary studies became one of the limitations of this review.
+This also shapes my view of assessment. If bone-anchored prosthesis users are assessed only with TUG and gait speed, we may miss exactly what the method changes. I would add hip goniometry, step width during gait analysis and structured documentation of the stoma and of infection episodes. I would also always record functional level and knee type — precisely the data missing from the primary studies. Fewer service visits (3.1 vs 7.2 per year in one Swedish study) also change the nature of the team's work: fewer socket refits, more attention to component set-up.
 
-**For the health system:**
+Finally, the Ukrainian context. Participants in these studies were civilian users many years after amputation. In Ukraine, by contrast, a substantial share of candidates are service members and veterans with combat injuries, who undergo surgery much earlier: in [the first Ukrainian OPRA cohort](https://doi.org/10.1007/s00264-026-07054-0), the median time from amputation to surgery was seven months ([according to the manufacturer's press release](https://www.placera.se/pressmeddelanden/integrum-new-clinical-study-shows-high-implant-survival-with-the-opra-implant-system-in-war-injured-veterans-in-ukraine-20261014)). I would therefore be in no hurry to extrapolate these results to our patients.
 
-- **A different population.** Participants in these studies were civilian users many years after amputation. In Ukraine, a substantial share of candidates are service members and veterans with combat injuries, who undergo surgery much earlier. In [the first Ukrainian OPRA cohort](https://doi.org/10.1007/s00264-026-07054-0), the median time from amputation to surgery was seven months ([according to the manufacturer's press release](https://www.placera.se/pressmeddelanden/integrum-new-clinical-study-shows-high-implant-survival-with-the-opra-implant-system-in-war-injured-veterans-in-ukraine-20261014)). The review's findings can be extrapolated to them only with great caution.
-- **An opportunity for the pilot project.** The state pilot project could provide what the international literature lacks — prospective comparative data. That would require:
-  - a parallel group of patients with the same indications who remain on a socket;
-  - identical assessment instruments in both groups;
-  - standardised recording of infections;
-  - follow-up beyond 12 months.
-
-## Questions for the community
-
-1. If osseointegration "only" brings a person for whom a socket failed up to the level of a successful socket user, is that a disappointment — or exactly the result we should honestly prepare patients for?
-2. Who should be the comparison group in a Ukrainian osseointegration registry: patients with the same indications who remain on a socket, or all users of transfemoral prostheses?
-
-## Dilemma for the community
-
-**Dilemma (simulated teaching case).** A 34-year-old man with a transfemoral amputation three years ago. He uses a socket with vacuum suspension, has no skin problems and walks without walking aids. He asks for osseointegration "to walk better". What is your next step?
-
-- Explain that an advantage over a working socket is unproven, and do not refer.
-- Find out what he wants to improve: sitting, hip movement, feeling the prosthesis.
-- Refer to the OI team for a consultation with a detailed discussion of risks.
-- Optimise the current prosthesis and revisit the question in 6 months.
+At the same time, I believe the state pilot project could provide what the international literature lacks — prospective comparative data. That would require a parallel group of patients with the same indications who remain on a socket, identical assessment instruments, standardised recording of infections and follow-up beyond 12 months.
