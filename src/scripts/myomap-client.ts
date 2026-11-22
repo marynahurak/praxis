@@ -56,6 +56,18 @@ export function initMyoMap() {
   const hint = root.querySelector<HTMLElement>('.armed-hint')!;
   const fbBox = root.querySelector<HTMLElement>('.fb')!;
   const fbTitle = fbBox.querySelector('.fb-title')?.textContent ?? '';
+  // bottom sheet (phones): the panel opens when there is something to read
+  const panel = root.querySelector<HTMLElement>('.panel');
+  const handle = root.querySelector<HTMLButtonElement>('.sheet-handle');
+  const sheetSum = root.querySelector<HTMLElement>('.sheet-sum');
+  const mqSheet = window.matchMedia('(max-width: 899px)');
+  const setSheet = (open: boolean) => {
+    if (!panel || !handle) return;
+    panel.dataset.open = String(open); handle.setAttribute('aria-expanded', String(open));
+  };
+  handle?.addEventListener('click', () => setSheet(panel?.dataset.open !== 'true'));
+  const openSheet = () => { if (mqSheet.matches) setSheet(true); };
+  const setSum = (t: string) => { if (sheetSum) sheetSum.textContent = t; };
 
   // ---------------------------------------------------------------- geometry
   function getStage(id: string): Stage {
@@ -130,6 +142,7 @@ export function initMyoMap() {
   const mName = (k: string) => D.muscles[k]?.n ?? k;
   const sName = (k: string, kind: string) => (kind === 'bone' ? D.bones[k] ?? k : mName(k));
   const roleOf = (k: string) => D.roles[st.level]?.[k] ?? 'context';
+  const levelTitle = () => root!.querySelector<HTMLElement>(`.card-intro[data-intro="${st.level}"] .card-h`)?.textContent ?? '';
 
   // ---------------------------------------------------------------- electrodes: drawing
   function svgEl(tag: string, attrs: Record<string, any>, parent?: Element) {
@@ -271,7 +284,7 @@ export function initMyoMap() {
     fbRaf = requestAnimationFrame(() => {
       const list = placed[st.view] ?? [];
       const P = list.find((p) => p.uid === st.selEl) ?? list[list.length - 1];
-      if (!P) { fbBox.hidden = true; return; }
+      if (!P) { fbBox.hidden = true; setSum(st.selKey ? sName(st.selKey.replace('bone:', ''), st.selKey.startsWith('bone:') ? 'bone' : 'muscle') : levelTitle()); return; }
       fbBox.hidden = false;
       const S = getStage(st.view); const r: any = (P as any).r ?? {};
       const n = list.indexOf(P) + 1;
@@ -318,6 +331,7 @@ export function initMyoMap() {
       const badge = fbBox.querySelector<HTMLElement>('.fb-badge')!;
       badge.className = `fb-badge ${P.q}`; badge.textContent = FB[P.q ?? 'fair'];
       fbBox.querySelector('.fb-title')!.textContent = `${fbTitle} · ${D.ui.ch} ${n}`;
+      setSum(`${D.ui.ch} ${n} · ${FB[P.q ?? 'fair']}`);
       fbBox.querySelectorAll<HTMLElement>('[data-el-act="rotl"],[data-el-act="rotr"],[data-el-act="align"]').forEach((b) => (b.hidden = S.kind !== 'view'));
       // pair (direct control): channels 1 and 2
       let pair = '';
@@ -341,6 +355,7 @@ export function initMyoMap() {
     st.selEl = p.uid;
     evaluate(S, p);
     renderStage(viewId);
+    openSheet();
     return p;
   }
   function recommendedPose(S: Stage, key: string, type: string) {
@@ -372,6 +387,25 @@ export function initMyoMap() {
 
   // ---------------------------------------------------------------- level / view / mode / cards
   const viewsOf = (lv: string) => Object.keys(D.views).filter((k) => D.views[k].level === lv);
+  // phone toolbar: native selects mirror the segmented controls
+  const selLevel = root.querySelector<HTMLSelectElement>('select[data-m="level"]');
+  const selView = root.querySelector<HTMLSelectElement>('select[data-m="view"]');
+  const selMode = root.querySelector<HTMLSelectElement>('select[data-m="mode"]');
+  function syncSelects() {
+    if (selLevel) selLevel.value = st.level;
+    if (selMode) selMode.value = st.mode;
+    if (!selView) return;
+    const opts: [string, string][] = [];
+    root!.querySelectorAll<HTMLElement>(`.vbtn[data-lv="${st.level}"]:not([data-sec-btn])`).forEach((b) => opts.push([b.dataset.setView!, b.textContent!.trim()]));
+    const secBtn = root!.querySelector<HTMLElement>(`.vbtn[data-lv="${st.level}"][data-sec-btn]`);
+    root!.querySelectorAll<HTMLElement>(`.chip-btn[data-lv="${st.level}"]`).forEach((b) => opts.push([b.dataset.setView!, `${secBtn?.textContent?.trim() ?? ''}: ${b.textContent!.trim().toLowerCase()}`]));
+    selView.replaceChildren(...opts.map(([v, t]) => { const o = document.createElement('option'); o.value = v; o.textContent = t; return o; }));
+    selView.value = st.view;
+  }
+  selLevel?.addEventListener('change', () => { st.selKey = ''; showCard('', false); setView(viewsOf(selLevel.value)[0]); });
+  selView?.addEventListener('change', () => setView(selView.value));
+  selMode?.addEventListener('change', () => setMode(selMode.value));
+
   function setView(id: string, push = true) {
     if (!D.views[id]) return;
     st.view = id; st.level = D.views[id].level;
@@ -384,12 +418,16 @@ export function initMyoMap() {
     root!.querySelectorAll<HTMLElement>('.chip-btn').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.setView === id)));
     root!.querySelectorAll<HTMLElement>('.card-intro').forEach((c) => (c.hidden = c.dataset.intro !== st.level || !!st.selKey));
     st.selEl = 0;
+    syncSelects();
     renderStage(id);
     if (st.selKey) showCard(st.selKey, false);
     if (push) history.replaceState(null, '', `#${id}${st.selKey && !st.selKey.startsWith('bone:') ? `/${st.selKey}` : ''}`);
   }
   function showCard(key: string | '', push = true) {
     st.selKey = key;
+    if (key) { openSheet(); if (!(placed[st.view] ?? []).length) setSum(sName(key.replace('bone:', ''), key.startsWith('bone:') ? 'bone' : 'muscle')); }
+    else if (!(placed[st.view] ?? []).length) setSum(levelTitle());
+    const pb = root!.querySelector<HTMLElement>('.panel-body'); if (pb && key) pb.scrollTop = 0;
     root!.querySelectorAll<HTMLElement>('.card-m').forEach((c) => (c.hidden = c.dataset.card !== key));
     root!.querySelectorAll<HTMLElement>('.card-intro').forEach((c) => (c.hidden = !!key || c.dataset.intro !== st.level));
     root!.querySelectorAll('.stage .mus.is-sel').forEach((p) => p.classList.remove('is-sel'));
@@ -413,6 +451,7 @@ export function initMyoMap() {
   function setMode(m: string) {
     st.mode = m; root!.dataset.mode = m;
     root!.querySelectorAll<HTMLElement>('[data-set-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.setMode === m)));
+    if (selMode) selMode.value = m;
     renderStage(st.view);
   }
 
@@ -423,10 +462,10 @@ export function initMyoMap() {
     const k = c.dataset.toggle!;
     if (k === 'align') st.align = c.checked; else root!.dataset[k] = c.checked ? 'on' : 'off';
   }));
-  root.querySelectorAll<HTMLElement>('.back').forEach((b) => b.addEventListener('click', () => showCard('')));
+  root.querySelectorAll<HTMLElement>('.back-btn').forEach((b) => b.addEventListener('click', () => showCard('')));
   root.querySelectorAll<HTMLElement>('.place-here').forEach((b) => b.addEventListener('click', () => {
     const S = getStage(st.view); const pose = recommendedPose(S, b.dataset.place!, st.type);
-    if (pose) { addElectrode(st.view, pose); S.svg.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+    if (pose) addElectrode(st.view, pose);
   }));
 
   // ---------------------------------------------------------------- stage interactions
@@ -609,17 +648,15 @@ export function initMyoMap() {
   };
   window.addEventListener('hashchange', fromHash);
   if (location.hash) fromHash(); else setView(st.view, false);
-
-  initSim();
 }
 
-// ---------------------------------------------------------------- EMG simulator
-function initSim() {
+// ---------------------------------------------------------------- EMG simulator (guide page)
+export function initSim() {
   const box = document.querySelector<HTMLElement>('.sim');
   const cv = box?.querySelector<HTMLCanvasElement>('.sim-cv');
-  const data = document.getElementById('mm-data');
+  const data = document.getElementById('mm-sim-data');
   if (!box || !cv || !data) return;
-  const D = JSON.parse(data.textContent || '{}');
+  const D = { ui: JSON.parse(data.textContent || '{}') };
   const c = cv.getContext('2d')!;
   const inp = (k: string) => box.querySelector<HTMLInputElement>(`[data-sim="${k}"]`)!;
   const stateEl = box.querySelector<HTMLElement>('.sim-state')!;

@@ -21,9 +21,11 @@ interface Props {
   altLangHref?: string;
   ogType?: 'website' | 'article';
   noindex?: boolean;
+  /** Без шапки й підвалу сайту — для повноекранних інструментів. */
+  bare?: boolean;
 }
 
-const { lang, title, description, altLangHref, ogType = 'website', noindex = false } = Astro.props;
+const { lang, title, description, altLangHref, ogType = 'website', noindex = false, bare = false } = Astro.props;
 const s = t[lang];
 const fullTitle = title ? `${title} — ${SITE.name}` : `${SITE.name} — ${s.siteTitle}`;
 const desc = description ?? s.siteDescription;
@@ -70,12 +72,12 @@ const ICON_V = '?v=2';
     <meta name="twitter:card" content="summary_large_image" />
     <slot name="head" />
   </head>
-  <body>
+  <body class={bare ? 'bare' : undefined}>
     <a class="skip-link" href="#main">{s.skip}</a>
-    <Header lang={lang} altLangHref={altLangHref} />
+    {!bare && <Header lang={lang} altLangHref={altLangHref} />}
     <main id="main">
       <slot />
     </main>
-    <Footer lang={lang} />
+    {!bare && <Footer lang={lang} />}
   </body>
 </html>
