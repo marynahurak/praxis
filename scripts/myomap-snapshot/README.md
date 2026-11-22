@@ -11,6 +11,8 @@ sEMG-електродів» (українською та англійською)
 3. Запустіть із кореня репозиторію (після `npm install`):
    `MYOMAP_DOI=10.5281/zenodo.NNNNNNN scripts/myomap-snapshot/make.sh`
 4. Завантажте обидва PDF із `scripts/myomap-snapshot/build/out/` у чернетку Zenodo, оновіть поле «Version» і опублікуйте.
+   Перевірте ліцензію в метаданих: CC BY-NC-ND 4.0 (за замовчуванням Zenodo пропонує CC BY 4.0).
+5. Додайте DOI версії в `meta.doi.versions` у `src/data/myomap.json`.
 
 Що робить збирання: растрові шари проєкцій (затінення + м'язи за роллю, змішування multiply) готуються
 заздалегідь (`raster.cjs`), бо Chromium розтеризує змішування у PDF фрагментами; решта — вектор.

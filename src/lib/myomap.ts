@@ -10,6 +10,10 @@ const geoMods = import.meta.glob('../data/myomap-geo/*_*.json', { eager: true })
 export const GEO: Record<string, any> = {};
 for (const m of Object.values(geoMods)) GEO[m.default.id] = m.default;
 
+// DOI записів Zenodo: concept — усі версії (завжди найновіша); versions — DOI окремих версій технічної записки.
+export const DOI_CONCEPT: string | undefined = D.meta.doi?.concept;
+export const DOI_VERSION: string | undefined = D.meta.doi?.versions?.[D.meta.version];
+
 export const LEVELS = ['ph', 'tr', 'th', 'sd'] as const;
 export const MODES = ['direct', 'pr', 'tmr'] as const;
 export const START_LEVEL = 'tr';
@@ -43,6 +47,7 @@ export const ABBR: Record<string, string> = {
 
 export function getUi(lang: Lang) {
   const author = SITE.author[lang];
+  const doiVersion = DOI_VERSION;
   const all = {
   uk: {
     title: 'Атлас локалізації міоточок та конфігурації sEMG-електродів',
@@ -125,6 +130,8 @@ export function getUi(lang: Lang) {
     source: 'Анатомічні зображення та зрізи згенеровано з 3D-моделі BodyParts3D © The Database Center for Life Science (DBCLS), ліцензія CC BY 4.0, у підготовці Human Atlas та Dagno. Зміни Praxis: ортографічна візуалізація, виділення видимих меж м\'язів, автоматичне визначення сухожилкових зон за товщиною тканини, поперечні зрізи, схематичний контур найширшого м\'яза спини, кольорове оформлення. Контури електродів намальовано Praxis; фотографії виробників не використовуються.',
     refsTitle: 'Джерела', mfrTitle: 'Дані виробників', citeTitle: 'Як цитувати', source2: 'джерело',
     cite: `${author.short} Атлас локалізації міоточок та конфігурації sEMG-електродів (версія ${D.meta.version}) [інтерактивний інструмент]. Praxis. 2026.`,
+    citeDoc: doiVersion ? `${author.short} Атлас локалізації міоточок та конфігурації sEMG-електродів (версія ${D.meta.version}) [технічна записка]. Zenodo; 2026. doi:${doiVersion}` : '',
+    onlineAt: 'Інтерактивна версія:', doiThis: 'ця версія', doiAll: 'усі версії, завжди найновіша',
     coi: 'Конфлікт інтересів: авторка заявляє про відсутність конфлікту інтересів. Комерційні електроди й системи наведено лише як приклади типів.',
     avail: 'Доступно за посиланням:',
     credit: 'Анатомія: BodyParts3D © DBCLS, CC BY 4.0',
@@ -213,6 +220,8 @@ export function getUi(lang: Lang) {
     source: 'Anatomical images and sections were generated from the BodyParts3D model © The Database Center for Life Science (DBCLS), licensed under CC BY 4.0, as prepared by Human Atlas and Dagno. Changes by Praxis: orthographic rendering, extraction of visible muscle boundaries, automatic detection of tendinous zones from tissue thickness, cross-sections, a schematic outline of latissimus dorsi, colour styling. Electrode outlines are drawn by Praxis; no manufacturer photographs are used.',
     refsTitle: 'References', mfrTitle: 'Manufacturer data', citeTitle: 'How to cite', source2: 'source',
     cite: `${author.short} Myosite localisation and sEMG electrode configuration atlas (version ${D.meta.version}) [interactive tool]. Praxis. 2026.`,
+    citeDoc: doiVersion ? `${author.short} Myosite localisation and sEMG electrode configuration atlas (version ${D.meta.version}) [technical note]. Zenodo; 2026. doi:${doiVersion}` : '',
+    onlineAt: 'Interactive version:', doiThis: 'this version', doiAll: 'all versions, always the latest',
     coi: 'Conflict of interest: the author declares no conflict of interest. Commercial electrodes and systems are listed only as examples of types.',
     avail: 'Available from:',
     credit: 'Anatomy: BodyParts3D © DBCLS, CC BY 4.0',

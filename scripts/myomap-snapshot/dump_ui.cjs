@@ -8,7 +8,7 @@ function grab(fn){
   body=body.replace(/\s+as\s+Record<string,\s*string>/g,'');
   return body;
 }
-const author={short:'Гурак М.'}; const D=JSON.parse(fs.readFileSync(path.join(ROOT,'src/data/myomap.json'),'utf8'));
+const author={short:'Гурак М.'}; const D=JSON.parse(fs.readFileSync(path.join(ROOT,'src/data/myomap.json'),'utf8')); const doiVersion=(D.meta.doi&&D.meta.doi.versions||{})[D.meta.version];
 const ui=eval('('+grab('getUi')+')');
 const aen={short:'Hurak M.'};
 const uiEn=(function(){const author=aen;return eval('('+grab('getUi')+')');})();

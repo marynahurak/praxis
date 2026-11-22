@@ -5,7 +5,7 @@
 import Base from '../layouts/Base.astro';
 import { SITE, type Lang } from '../config';
 import { localePath, url } from '../utils';
-import { D, LEVELS, MODES, VIEW_SHORT, SEC_SHORT_L, tr, getUi, simData, fmtUpdated } from '../lib/myomap';
+import { D, DOI_CONCEPT, DOI_VERSION, LEVELS, MODES, VIEW_SHORT, SEC_SHORT_L, tr, getUi, simData, fmtUpdated } from '../lib/myomap';
 
 interface Props {
   lang: Lang;
@@ -128,6 +128,7 @@ const GRIPS = ['power', 'tripod', 'key', 'point'] as const;
           <p class="hero-meta">
             <span class="pill pill-ev"><span class="dot" aria-hidden="true"></span>{ui.evidenceBadge}</span>
             <span class="pill">{ui.version} {D.meta.version} · {fmtDate}</span>
+            {DOI_CONCEPT && <a class="pill pill-doi" href={`https://doi.org/${DOI_CONCEPT}`} rel="noopener">DOI {DOI_CONCEPT}</a>}
           </p>
         </div>
         <a class="hero-vis" href={atlasHref} aria-label={ui.openAtlas}>
@@ -394,13 +395,14 @@ const GRIPS = ['power', 'tripod', 'key', 'point'] as const;
           <dl class="pass">
             <div><dt>{ui.pass.name}</dt><dd>{ui.title} <span class="dim">({otherTitle})</span></dd></div>
             <div><dt>{ui.pass.version}</dt><dd><span class="ver">v{D.meta.version}</span> · {fmtDate}</dd></div>
+            {(DOI_VERSION || DOI_CONCEPT) && <div><dt>DOI</dt><dd>{DOI_VERSION && <><a href={`https://doi.org/${DOI_VERSION}`} rel="noopener">{DOI_VERSION}</a> <span class="dim">({ui.doiThis})</span></>}{DOI_VERSION && DOI_CONCEPT && ' · '}{DOI_CONCEPT && <><a href={`https://doi.org/${DOI_CONCEPT}`} rel="noopener">{DOI_CONCEPT}</a> <span class="dim">({ui.doiAll})</span></>}</dd></div>}
             <div><dt>{ui.pass.status}</dt><dd>{ui.passStatus}</dd></div>
             <div><dt>{ui.pass.purpose}</dt><dd>{ui.passPurpose}</dd></div>
             <div><dt>{ui.pass.evidence}</dt><dd>{ui.passEvidence}</dd></div>
             <div><dt>{ui.pass.repro}</dt><dd>{ui.passRepro} <a href={`${repo}/tree/main/scripts/myomap-pipeline`} rel="noopener">{ui.passLinks.pipeline}</a> · <a href={`${repo}/blob/main/docs/myomap-design-log.md`} rel="noopener">{ui.passLinks.log}</a> · <a href={`${repo}/commits/main`} rel="noopener">{ui.passLinks.history}</a></dd></div>
             <div><dt>{ui.pass.author}</dt><dd>{SITE.author[lang].name} · <a href={SITE.orcidUrl} rel="noopener">ORCID {SITE.orcid}</a></dd></div>
             <div><dt>{ui.pass.rights}</dt><dd>{ui.passRights} <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license noopener">CC BY-NC-ND 4.0</a></dd></div>
-            <div><dt>{ui.pass.cite}</dt><dd class="cite">{ui.cite} {ui.avail} {pageUrl}</dd></div>
+            <div><dt>{ui.pass.cite}</dt><dd class="cite">{ui.citeDoc ? <>{ui.citeDoc} {ui.onlineAt} {pageUrl}</> : <>{ui.cite} {ui.avail} {pageUrl}</>}</dd></div>
           </dl>
           <div class="pass-side">
             <h3 class="sub-k">{ui.changelogTitle}</h3>
@@ -462,6 +464,8 @@ const GRIPS = ['power', 'tripod', 'key', 'point'] as const;
   .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; }
   .pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 11px; border: 1px solid var(--dark-line); border-radius: 999px; font: 500 12.5px var(--font-mono); color: var(--on-dark-2); background: rgba(14, 18, 24, 0.5); }
   .pill-ev { color: #f0d39a; border-color: rgba(227, 180, 98, 0.35); }
+  a.pill-doi { color: var(--on-dark-accent); border-color: rgba(141, 176, 255, 0.35); text-decoration: none; }
+  a.pill-doi:hover { border-color: var(--on-dark-accent); color: #fff; }
   .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #e3b462; box-shadow: 0 0 8px #e3b462; }
   .hero-vis { display: block; text-decoration: none; perspective: 1600px; }
   .frame { position: relative; display: block; padding: 10px; border-radius: 16px; background: linear-gradient(140deg, rgba(141, 176, 255, 0.18), rgba(141, 176, 255, 0.02)); box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55); transform: rotateY(-7deg) rotateX(3deg); transition: transform 0.4s ease; }

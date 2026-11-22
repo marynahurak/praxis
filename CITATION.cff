@@ -14,6 +14,13 @@ authors:
     given-names: Maryna
     orcid: "https://orcid.org/0009-0008-7275-8079"
 url: "https://marynahurak.github.io/praxis/"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24449468
+    description: "Myosite localisation and sEMG electrode configuration atlas: technical note on Zenodo, all versions"
+  - type: doi
+    value: 10.5281/zenodo.24449469
+    description: "Myosite localisation and sEMG electrode configuration atlas, version 2.1.1"
 repository-code: "https://github.com/marynahurak/praxis"
 license:
   - CC-BY-NC-4.0

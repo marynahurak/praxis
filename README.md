@@ -6,6 +6,8 @@
 
 🌐 Website: https://marynahurak.github.io/praxis/ · [English](https://marynahurak.github.io/praxis/en/)
 
+[![DOI: Myosite atlas](https://zenodo.org/badge/DOI/10.5281/zenodo.24449468.svg)](https://doi.org/10.5281/zenodo.24449468) — Myosite localisation and sEMG electrode configuration atlas (Zenodo, all versions)
+
 ---
 
 ## English
@@ -53,6 +55,12 @@ Praxis follows the principles of the Committee on Publication Ethics (COPE), the
 
 Use the **“Cite this repository”** button on GitHub (generated from [`CITATION.cff`](CITATION.cff)), or cite an individual article as shown at the end of each article page.
 
+The myosite atlas is deposited on Zenodo as a versioned technical note (PDF, Ukrainian and English). Cite the version you used:
+
+> Hurak M. Myosite localisation and sEMG electrode configuration atlas (version 2.1.1) [technical note]. Zenodo; 2026. doi:[10.5281/zenodo.24449469](https://doi.org/10.5281/zenodo.24449469)
+
+All versions (always resolves to the latest): doi:[10.5281/zenodo.24449468](https://doi.org/10.5281/zenodo.24449468).
+
 ### Licence
 
 © 2026 Maryna Hurak.
@@ -90,6 +98,14 @@ Praxis — незалежна науково-освітня ініціатива
 ### Ліцензія
 
 © 2026 Марина Гурак. Тексти статей — CC BY-NC 4.0; інструменти Praxis — зміст CC BY-NC-ND 4.0, код — усі права захищено ([LICENSE-TOOLS.md](LICENSE-TOOLS.md)); решта коду сайту — MIT. Матеріали мають освітній характер і не замінюють індивідуальної клінічної консультації.
+
+### Цитування атласу міоточок
+
+Атлас депоновано в Zenodo як технічну записку з версіями (PDF українською та англійською). Цитуйте версію, з якою працювали:
+
+> Гурак М. Атлас локалізації міоточок та конфігурації sEMG-електродів (версія 2.1.1) [технічна записка]. Zenodo; 2026. doi:[10.5281/zenodo.24449469](https://doi.org/10.5281/zenodo.24449469)
+
+Усі версії (завжди найновіша): doi:[10.5281/zenodo.24449468](https://doi.org/10.5281/zenodo.24449468).
 
 ### Для редакторки
 

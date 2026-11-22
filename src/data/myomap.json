@@ -98,7 +98,13 @@
  ],
  "meta": {
   "version": "2.1.1",
-  "updated": "2026-11-22"
+  "updated": "2026-11-22",
+  "doi": {
+   "concept": "10.5281/zenodo.24449468",
+   "versions": {
+    "2.1.1": "10.5281/zenodo.24449469"
+   }
+  }
  },
  "roles": {
   "primary": {
