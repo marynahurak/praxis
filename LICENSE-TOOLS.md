@@ -24,6 +24,7 @@ The source code of the tools
 - `src/scripts/myomap-client.ts`
 - `src/lib/myomap.ts`
 - `scripts/myomap-pipeline/`
+- `scripts/myomap-snapshot/` (PDF snapshots for Zenodo)
 
 is published for methodological transparency and reproducibility. It is **not** licensed for copying, modification, redistribution or use in other products without the author's written permission. Viewing the code, and forking it on GitHub as permitted by the GitHub Terms of Service, is allowed.
 
