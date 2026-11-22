@@ -41,11 +41,13 @@ const ABBR: Record<string, string> = {
 
 const ui = {
   uk: {
-    title: 'Анатомічні орієнтири для міотестингу',
+    title: 'Атлас локалізації міоточок та конфігурації sEMG-електродів',
+    scopeTitle: 'Призначення та межі застосування',
+    scope: 'Інструмент призначений для навчальної та методичної підтримки етапу пошуку міоточок (міотестингу) під час первинного та повторного міоелектричного протезування верхньої кінцівки. Він поєднує анатомо-топографічні орієнтири цільових м\'язових черевців, фізіологічно конгруентні рухові команди для інтуїтивного керування протезом, схеми позиціонування sEMG-електродів у масштабі та дані виробників щодо окремих електродів. Атлас є навчальним довідковим ресурсом, а не засобом підтримки клінічних рішень щодо конкретного пацієнта: анатомічна карта задає лише початкову гіпотезу розміщення. Остаточне положення електродів визначає інструментальна верифікація sEMG-сигналу (амплітуда, співвідношення сигнал/шум, відсутність перехресних наводок) з урахуванням індивідуальних анатомічних і посттравматичних особливостей залишкової кінцівки.',
     lead: 'Інтерактивний анатомічний атлас для пошуку місць міоелектричних електродів: реальна анатомія м\'язів і кісток, зони слабкого сигналу, розміщення електродів у масштабі з миттєвою оцінкою та пояснення того, як працює міоелектрична кисть.',
     crumbs: 'Інструменти', eyebrow: 'Інструмент · Протезування верхньої кінцівки',
     warnTitle: 'Важливо',
-    warn: 'Після бойової, мінно-вибухової чи вогнепальної травми анатомія залишкової кінцівки часто нетипова: м\'язові черевця зміщені, виконано міодез або міопластику, є дефекти тканин. Атлас показує типову анатомію однієї референтної моделі дорослої людини й слугує лише відправною точкою. Остаточне розміщення електродів завжди визначає інструментальний міотест.',
+    warn: 'Після бойової, мінно-вибухової чи вогнепальної травми анатомія залишкової кінцівки часто нетипова: м\'язові черевця зміщені, виконано міодез або міопластику, є дефекти тканин. Атлас показує типову анатомію однієї референтної моделі дорослої людини.',
     evidenceBadge: 'Рівень доказів: низька–помірна впевненість', version: 'Версія', updated: 'оновлено',
     howTitle: 'Як користуватися',
     how: [
@@ -83,7 +85,7 @@ const ui = {
     sourceTitle: 'Джерело анатомії та ліцензія',
     source: 'Анатомічні зображення та зрізи згенеровано з 3D-моделі BodyParts3D © The Database Center for Life Science (DBCLS), ліцензія CC BY 4.0, у підготовці Human Atlas та Dagno. Зміни Praxis: ортографічна візуалізація, виділення видимих меж м\'язів, автоматичне визначення сухожилкових зон за товщиною тканини, поперечні зрізи, схематичний контур найширшого м\'яза спини, кольорове оформлення. Контури електродів намальовано Praxis; фотографії виробників не використовуються.',
     refsTitle: 'Джерела', mfrTitle: 'Дані виробників', citeTitle: 'Як цитувати', source2: 'джерело',
-    cite: `${author.short} Анатомічні орієнтири для міотестингу [інтерактивний інструмент]. Praxis. 2026.`,
+    cite: `${author.short} Атлас локалізації міоточок та конфігурації sEMG-електродів [інтерактивний інструмент]. Praxis. 2026.`,
     coi: 'Конфлікт інтересів: авторка заявляє про відсутність конфлікту інтересів. Комерційні електроди й системи наведено лише як приклади типів.',
     avail: 'Доступно за посиланням:',
     credit: 'Анатомія: BodyParts3D © DBCLS, CC BY 4.0',
@@ -92,11 +94,13 @@ const ui = {
     tmrHatch: 'можливі м\'язи-мішені', noscript: 'Для розміщення електродів потрібен JavaScript; анатомічні описи доступні й без нього.',
   },
   en: {
-    title: 'Anatomical landmarks for myotesting',
+    title: 'Myosite localisation and sEMG electrode configuration atlas',
+    scopeTitle: 'Scope and intended use',
+    scope: 'The tool provides educational and methodological support for myosite localisation (myotesting) in primary and repeat upper-limb myoelectric prosthetic fitting. It brings together anatomical and topographic landmarks of target muscle bellies, physiologically congruent movement commands for intuitive prosthesis control, true-scale sEMG electrode positioning, and manufacturer data for selected electrodes. The atlas is an educational reference, not a decision-support tool for individual patients: the anatomical map provides only an initial placement hypothesis. Final electrode positions are determined by instrumented verification of the sEMG signal (amplitude, signal-to-noise ratio, absence of crosstalk), taking into account the individual anatomical and post-traumatic features of the residual limb.',
     lead: 'An interactive anatomical atlas for finding myoelectric electrode sites: real muscle and bone anatomy, weak-signal zones, true-scale electrode placement with instant feedback, and an explanation of how a myoelectric hand works.',
     crumbs: 'Tools', eyebrow: 'Tool · Upper limb prosthetics',
     warnTitle: 'Important',
-    warn: 'After combat, blast or gunshot injuries, residual limb anatomy is often atypical: muscle bellies are displaced, myodesis or myoplasty has been performed, or tissue is missing. The atlas shows the typical anatomy of a single reference adult model and is only a starting point. Final electrode placement is always determined by instrumented myotesting.',
+    warn: 'After combat, blast or gunshot injuries, residual limb anatomy is often atypical: muscle bellies are displaced, myodesis or myoplasty has been performed, or tissue is missing. The atlas shows the typical anatomy of a single reference adult model.',
     evidenceBadge: 'Level of evidence: low to moderate confidence', version: 'Version', updated: 'updated',
     howTitle: 'How to use',
     how: [
@@ -134,7 +138,7 @@ const ui = {
     sourceTitle: 'Anatomy source and licence',
     source: 'Anatomical images and sections were generated from the BodyParts3D model © The Database Center for Life Science (DBCLS), licensed under CC BY 4.0, as prepared by Human Atlas and Dagno. Changes by Praxis: orthographic rendering, extraction of visible muscle boundaries, automatic detection of tendinous zones from tissue thickness, cross-sections, a schematic outline of latissimus dorsi, colour styling. Electrode outlines are drawn by Praxis; no manufacturer photographs are used.',
     refsTitle: 'References', mfrTitle: 'Manufacturer data', citeTitle: 'How to cite', source2: 'source',
-    cite: `${author.short} Anatomical landmarks for myotesting [interactive tool]. Praxis. 2026.`,
+    cite: `${author.short} Myosite localisation and sEMG electrode configuration atlas [interactive tool]. Praxis. 2026.`,
     coi: 'Conflict of interest: the author declares no conflict of interest. Commercial electrodes and systems are listed only as examples of types.',
     avail: 'Available from:',
     credit: 'Anatomy: BodyParts3D © DBCLS, CC BY 4.0',
@@ -240,6 +244,10 @@ const modeKeys = ['direct', 'pr', 'tmr'];
       <span class="mono small">{ui.version} {D.meta.version} · {ui.updated} {fmtDate}</span>
       <a class="small text-link" href="#how-it-works">{ui.howWorksTitle} ↓</a>
     </div>
+    <section class="scope" aria-labelledby="scope-h">
+      <h2 id="scope-h" class="scope-h">{ui.scopeTitle}</h2>
+      <p>{ui.scope}</p>
+    </section>
     <aside class="warn" role="note"><strong>{ui.warnTitle}.</strong>{' '}{ui.warn}</aside>
     <details class="how">
       <summary>{ui.howTitle}</summary>
@@ -565,7 +573,10 @@ const modeKeys = ['direct', 'pr', 'tmr'];
   .mono { font-family: var(--font-mono); }
   .small { font-size: 13.5px; }
   .muted { color: var(--muted); }
-  .warn { margin-top: 20px; padding: 16px 18px; border-left: 4px solid #c98a1b; background: #fffaf1; border-radius: 0 var(--radius) var(--radius) 0; color: var(--ink-2); max-width: 900px; line-height: 1.55; }
+  .scope { margin-top: 22px; max-width: 900px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  .scope-h { margin: 0 0 6px; font: 500 12px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+  .scope p { margin: 0; color: var(--text-2); line-height: 1.6; }
+  .warn { margin-top: 14px; padding: 16px 18px; border-left: 4px solid #c98a1b; background: #fffaf1; border-radius: 0 var(--radius) var(--radius) 0; color: var(--ink-2); max-width: 900px; line-height: 1.55; }
   .how { margin-top: 14px; max-width: 900px; }
   .how summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 600; color: var(--accent); }
   .how ol { margin: 0 0 8px; padding-left: 22px; color: var(--text-2); line-height: 1.55; }
