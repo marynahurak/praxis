@@ -1,1370 +1,2941 @@
 {
-  "meta": {
-    "version": "1.0",
-    "updated": "2026-11-22"
+ "systems": {
+  "direct": [
+   {
+    "name": "Ottobock myosmart (13E522)",
+    "note": {
+     "uk": "До 4 сигнальних входів; налаштування через застосунок connectgrip.",
+     "en": "Up to 4 signal inputs; configured with the connectgrip app."
+    },
+    "url": "https://www.ottobock.com/en-gb/product/13E522-61672"
+   },
+   {
+    "name": "Fillauer Motion Control ProControl 2",
+    "note": {
+     "uk": "Одно- або двоканальне ЕМГ-керування; використовує електроди Triad.",
+     "en": "Single- or dual-channel EMG control; uses Triad electrodes."
+    },
+    "url": "https://fillauer.com/wp-content/uploads/2020/07/ProControl-2-Brochure-07-28-2020.pdf"
+   },
+   {
+    "name": "Fillauer Myo/One",
+    "note": {
+     "uk": "Двоканальна електродна система (куполи ControlSeal від Coapt або Snap-електроди на лайнері). За даними виробника, несумісна з ProControl 2.",
+     "en": "Dual-channel electrode system (Coapt ControlSeal domes or liner-mounted Snap electrodes). According to the manufacturer, not compatible with ProControl 2."
+    },
+    "url": "https://fillauer.com/products/myo-one-with-controlseal-electrode-domes/"
+   },
+   {
+    "name": "Esper Hand",
+    "note": {
+     "uk": "Поріг і підсилення сенсорів та пресети керування налаштовують у застосунку Esper+.",
+     "en": "Sensor threshold, gain and control presets are adjusted in the Esper+ app."
+    },
+    "url": "https://apps.apple.com/us/app/-/id1597426532"
+   }
+  ],
+  "pr": [
+   {
+    "name": "Ottobock Myo Plus TR (13E520)",
+    "note": {
+     "uk": "Розпізнавання патернів для трансрадіального рівня; вісім електродів на передпліччі.",
+     "en": "Pattern recognition for the transradial level; eight electrodes on the forearm."
+    },
+    "url": "https://corporate.ottobock.com/en/media/newsroom/artificial-intelligence-allows-prostheses-to-learn-from-the-user"
+   },
+   {
+    "name": "Ottobock myosmart plus (13E523)",
+    "note": {
+     "uk": "Контролер із розпізнаванням патернів для багатосуглобових кистей та ліктьових модулів Ottobock.",
+     "en": "Pattern recognition controller for Ottobock multi-articulating hands and elbows."
+    },
+    "url": "https://www.ottobock.com/en-hk/product/13E523-61673"
+   },
+   {
+    "name": "Coapt Complete Control Gen2",
+    "note": {
+     "uk": "Вбудована система розпізнавання патернів для компонентів більшості провідних виробників.",
+     "en": "Embedded pattern recognition system for components from most major manufacturers."
+    },
+    "url": "https://fda.innolitics.com/device/K191083"
+   }
+  ],
+  "tmr": []
+ },
+ "meta": {
+  "version": "2.0",
+  "updated": "2026-11-22"
+ },
+ "roles": {
+  "primary": {
+   "uk": "Типове стартове місце",
+   "en": "Typical starting site"
   },
-  "roles": {
-    "primary": {
-      "uk": "Типовий стартовий орієнтир",
-      "en": "Typical starting landmark"
+  "secondary": {
+   "uk": "Додаткове місце",
+   "en": "Additional site"
+  },
+  "caution": {
+   "uk": "Місце із застереженням",
+   "en": "Site with caveats"
+  },
+  "conditional": {
+   "uk": "Залежить від збереженої анатомії",
+   "en": "Depends on preserved anatomy"
+  },
+  "deep": {
+   "uk": "Глибокий шар або малодоступний м'яз",
+   "en": "Deep or poorly accessible muscle"
+  },
+  "context": {
+   "uk": "Сусідня ділянка",
+   "en": "Neighbouring region"
+  }
+ },
+ "modes": {
+  "direct": {
+   "label": {
+    "uk": "Пряме керування",
+    "en": "Direct control"
+   },
+   "desc": {
+    "uk": "Кожен канал зчитує окремий м'яз або групу, а амплітуда керує швидкістю чи силою руху. Шукайте ізольоване, відтворюване скорочення з мінімальною коактивацією антагоністів; два канали розміщуйте над антагоністами якомога далі один від одного.",
+    "en": "Each channel reads a single muscle or group, and amplitude drives speed or force. Look for an isolated, reproducible contraction with minimal antagonist co-activation; place the two channels over antagonists as far apart as possible."
+   }
+  },
+  "pr": {
+   "label": {
+    "uk": "Розпізнавання патернів",
+    "en": "Pattern recognition"
+   },
+   "desc": {
+    "uk": "Електроди розміщують по колу залишкової кінцівки, і алгоритм розпізнає загальну картину активності, а не амплітуду одного м'яза (Scheme & Englehart, 2011). Вирішальне значення має здатність пацієнта стабільно відтворювати різні, добре розрізнювані патерни скорочення. На поперечному зрізі можна розмістити 8 каналів по колу.",
+    "en": "Electrodes go around the circumference of the residual limb, and the algorithm recognises the overall pattern of activity rather than one muscle's amplitude (Scheme & Englehart, 2011). What matters most is the patient's ability to reproduce distinct, clearly distinguishable contraction patterns consistently. On the cross-section you can place 8 channels around the circumference."
+   }
+  },
+  "tmr": {
+   "label": {
+    "uk": "TMR",
+    "en": "TMR"
+   },
+   "desc": {
+    "uk": "Цілеспрямована реіннервація м'язів (targeted muscle reinnervation, TMR): нерви залишкової кінцівки переносять на м'язи-мішені, які після реіннервації генерують ЕМГ-сигнал для керування протезом (Kuiken et al., 2009). Класичні орієнтири тут напряму не застосовуються: зони міотестингу визначає операційний протокол, і кожен реіннервований сегмент картують окремо. Штрихуванням позначено можливі м'язи-мішені.",
+    "en": "Targeted muscle reinnervation (TMR): residual nerves are transferred to target muscles, which after reinnervation produce EMG for prosthesis control (Kuiken et al., 2009). Classic landmarks do not apply directly: the operative protocol defines myotesting zones, and each reinnervated segment is mapped separately. Hatching marks possible target muscles."
+   }
+  }
+ },
+ "levels": {
+  "ph": {
+   "title": {
+    "uk": "Часткова кисть",
+    "en": "Partial hand"
+   },
+   "views": [
+    {
+     "id": "ph_palm",
+     "label": {
+      "uk": "Долонна поверхня",
+      "en": "Palmar"
+     }
     },
-    "secondary": {
-      "uk": "Додатковий орієнтир",
-      "en": "Additional landmark"
-    },
-    "caution": {
-      "uk": "Орієнтир із застереженням",
-      "en": "Landmark with caveats"
-    },
-    "conditional": {
-      "uk": "Залежить від збереженої анатомії",
-      "en": "Depends on preserved anatomy"
-    },
-    "deep": {
-      "uk": "Глибокий шар: джерело перехресних наводок",
-      "en": "Deep layer: source of crosstalk"
-    },
-    "landmark": {
-      "uk": "Не м'язова структура",
-      "en": "Non-muscular structure"
+    {
+     "id": "ph_dors",
+     "label": {
+      "uk": "Тильна поверхня",
+      "en": "Dorsal"
+     }
     }
-  },
-  "modes": {
+   ],
+   "sections": [
+    {
+     "id": "ph_s1",
+     "label": {
+      "uk": "Проксимальна частина п'ясткових кісток",
+      "en": "Proximal metacarpal level"
+     }
+    }
+   ],
+   "roles": {
+    "apb": "conditional",
+    "fpb": "conditional",
+    "op": "conditional",
+    "adm": "conditional",
+    "fdmb": "conditional",
+    "odm": "conditional",
+    "dio": "conditional",
+    "adp": "deep",
+    "pio": "deep",
+    "lumb": "deep"
+   },
+   "intro": {
+    "uk": "Залежно від рівня ампутації та збережених структур сигнали знімають із власних м'язів кисті (тенар, гіпотенар, перший тильний міжкістковий) або з м'язів передпліччя. Черевця м'язів передпліччя лежать у його проксимальній і середній третинах; дистальніше переважають сухожилки, тож сигнал там слабший (див. трансрадіальний рівень).",
+    "en": "Depending on the amputation level and preserved structures, signals are recorded from the intrinsic hand muscles (thenar, hypothenar, first dorsal interosseous) or from the forearm muscles. Forearm muscle bellies lie in the proximal and middle thirds; distally, tendons predominate and the signal is weaker (see the transradial level)."
+   },
+   "modeNotes": {
     "direct": {
-      "label": {
-        "uk": "Пряме керування (1–2 канали)",
-        "en": "Direct control (1–2 channels)"
-      },
-      "desc": {
-        "uk": "Кожен канал зчитує окремий м'яз або групу м'язів, а амплітуда сигналу керує швидкістю чи силою руху. Під час міотесту шукайте ізольовані, відтворювані скорочення з мінімальною коактивацією антагоністів.",
-        "en": "Each channel reads a single muscle or muscle group, and signal amplitude drives the speed or force of movement. During myotesting, look for isolated, reproducible contractions with minimal co-activation of antagonists."
-      }
+     "uk": "Якщо власні м'язи кисті не дають придатного сигналу, використовують м'язи передпліччя. Кріплення електродів на передпліччі може обмежити рухи збереженого зап'ястка; цей компроміс варто обговорити з пацієнтом.",
+     "en": "If the intrinsic hand muscles do not provide a usable signal, the forearm muscles are used. Mounting electrodes on the forearm may restrict a preserved wrist; discuss this trade-off with the patient."
     },
     "pr": {
-      "label": {
-        "uk": "Розпізнавання патернів",
-        "en": "Pattern recognition"
-      },
-      "desc": {
-        "uk": "Електроди розміщують по колу залишкової кінцівки: алгоритм розпізнає загальну картину активності кількох каналів, а не амплітуду одного м'яза (Scheme & Englehart, 2011). Вирішальне значення має здатність пацієнта відтворювати різні, добре розрізнювані скорочення (Adewuyi et al., 2017).",
-        "en": "Electrodes are placed around the circumference of the residual limb: the algorithm recognises the overall pattern of activity across several channels rather than the amplitude of a single muscle (Scheme & Englehart, 2011). What matters most is the user's ability to produce repeatable, clearly distinguishable contractions (Adewuyi et al., 2017)."
-      }
+     "uk": "Поєднання сигналів власних м'язів кисті та м'язів передпліччя з тренуванням у різних положеннях зап'ястка підвищило частоту виконання завдань у людей із частковою ампутацією кисті з 73% до 96% (Adewuyi et al., 2016).",
+     "en": "Combining intrinsic and extrinsic muscle EMG, with training across wrist positions, increased task completion rates in partial-hand amputees from 73% to 96% (Adewuyi et al., 2016)."
     },
     "tmr": {
-      "label": {
-        "uk": "Цілеспрямована реіннервація м'язів (TMR)",
-        "en": "Targeted muscle reinnervation (TMR)"
-      },
-      "desc": {
-        "uk": "Класичні орієнтири тут напряму не застосовуються. Нерви залишкової кінцівки переносять на м'язи-мішені, які після реіннервації генерують ЕМГ-сигнал, придатний для керування протезом (Kuiken et al., 2009). Зони міотестингу залежать від конкретного операційного протоколу: отримайте схему перенесення нервів і картуйте кожен реіннервований сегмент окремо.",
-        "en": "Classic landmarks do not apply directly. Residual nerves are transferred to target muscles, which after reinnervation produce EMG signals that can be used for prosthesis control (Kuiken et al., 2009). Myotesting zones depend on the specific operative protocol: obtain the nerve transfer scheme and map each reinnervated segment separately."
-      }
+     "uk": "Для цього рівня карту TMR не наведено.",
+     "en": "No TMR map is given for this level."
     }
-  },
-  "systems": {
-    "direct": [
-      {
-        "name": "Ottobock myosmart (13E522)",
-        "note": {
-          "uk": "До 4 сигнальних входів; налаштування через застосунок connectgrip.",
-          "en": "Up to 4 signal inputs; configured with the connectgrip app."
-        },
-        "url": "https://www.ottobock.com/en-gb/product/13E522-61672"
-      },
-      {
-        "name": "Fillauer Motion Control ProControl 2",
-        "note": {
-          "uk": "Одно- або двоканальне ЕМГ-керування; використовує електроди Triad.",
-          "en": "Single- or dual-channel EMG control; uses Triad electrodes."
-        },
-        "url": "https://fillauer.com/wp-content/uploads/2020/07/ProControl-2-Brochure-07-28-2020.pdf"
-      },
-      {
-        "name": "Fillauer Myo/One",
-        "note": {
-          "uk": "Двоканальна електродна система (куполи ControlSeal від Coapt або Snap-електроди на лайнері). За даними виробника, несумісна з ProControl 2.",
-          "en": "Dual-channel electrode system (Coapt ControlSeal domes or liner-mounted Snap electrodes). According to the manufacturer, not compatible with ProControl 2."
-        },
-        "url": "https://fillauer.com/products/myo-one-with-controlseal-electrode-domes/"
-      },
-      {
-        "name": "Esper Hand",
-        "note": {
-          "uk": "Поріг і підсилення сенсорів та пресети керування налаштовують у застосунку Esper+.",
-          "en": "Sensor threshold, gain and control presets are adjusted in the Esper+ app."
-        },
-        "url": "https://apps.apple.com/us/app/-/id1597426532"
-      }
-    ],
-    "pr": [
-      {
-        "name": "Ottobock Myo Plus TR (13E520)",
-        "note": {
-          "uk": "Розпізнавання патернів для трансрадіального рівня; вісім електродів на передпліччі.",
-          "en": "Pattern recognition for the transradial level; eight electrodes on the forearm."
-        },
-        "url": "https://corporate.ottobock.com/en/media/newsroom/artificial-intelligence-allows-prostheses-to-learn-from-the-user"
-      },
-      {
-        "name": "Ottobock myosmart plus (13E523)",
-        "note": {
-          "uk": "Контролер із розпізнаванням патернів для багатосуглобових кистей та ліктьових модулів Ottobock.",
-          "en": "Pattern recognition controller for Ottobock multi-articulating hands and elbows."
-        },
-        "url": "https://www.ottobock.com/en-hk/product/13E523-61673"
-      },
-      {
-        "name": "Coapt Complete Control Gen2",
-        "note": {
-          "uk": "Вбудована система розпізнавання патернів для компонентів більшості провідних виробників.",
-          "en": "Embedded pattern recognition system for components from most major manufacturers."
-        },
-        "url": "https://fda.innolitics.com/device/K191083"
-      }
-    ],
-    "tmr": []
-  },
-  "pitfalls": [
+   },
+   "pitfalls": [
     {
-      "title": {
-        "uk": "Перехресні наводки (crosstalk)",
-        "en": "Crosstalk"
-      },
-      "text": {
-        "uk": "Тканини проводять сигнал сусідніх м'язів-синергістів та антагоністів. Розміщуйте електрод над черевцем м'яза, подалі від його країв і сухожилків, і перевіряйте ізольованість сигналу під час міотесту (De Luca, 1997; Hermens et al., 2000).",
-        "en": "Tissue conducts signals from neighbouring synergists and antagonists. Place the electrode over the muscle belly, away from its edges and tendons, and check signal isolation during myotesting (De Luca, 1997; Hermens et al., 2000)."
-      },
-      "basis": "evidence"
+     "uk": "Рухи зап'ястка змінюють сигнал м'язів передпліччя; тренування в різних положеннях зап'ястка покращує керування (Adewuyi et al., 2017).",
+     "en": "Wrist motion alters forearm muscle EMG; training across wrist positions improves control (Adewuyi et al., 2017)."
     },
     {
-      "title": {
-        "uk": "Рубці, спайки та шкірні трансплантати",
-        "en": "Scars, adhesions and skin grafts"
-      },
-      "text": {
-        "uk": "Погіршують контакт і стабільність сигналу; рухливі рубці зміщують електрод відносно м'яза під ним.",
-        "en": "They impair contact and signal stability; mobile scars shift the electrode relative to the underlying muscle."
-      },
-      "basis": "mechanistic"
-    },
-    {
-      "title": {
-        "uk": "Піт і вологість у лайнері чи куксоприймачі",
-        "en": "Sweat and moisture in the liner or socket"
-      },
-      "text": {
-        "uk": "Змінюють імпеданс контакту шкіра–електрод: можливі артефакти, втрата контакту й замикання між полюсами.",
-        "en": "They change skin–electrode contact impedance, causing artefacts, loss of contact or bridging between poles."
-      },
-      "basis": "mechanistic"
-    },
-    {
-      "title": {
-        "uk": "Зміщення куксоприймача (socket shift)",
-        "en": "Socket shift"
-      },
-      "text": {
-        "uk": "Під час надягання та зняття протеза зміщення електродів неминуче й знижує точність розпізнавання патернів (Young et al., 2011).",
-        "en": "Electrode shift is inevitable during donning and doffing and reduces pattern recognition accuracy (Young et al., 2011)."
-      },
-      "basis": "evidence"
-    },
-    {
-      "title": {
-        "uk": "Ефект положення кінцівки",
-        "en": "Limb position effect"
-      },
-      "text": {
-        "uk": "Зміна положення кінцівки під час щоденного використання збільшила середню похибку класифікації з 3,8% до 18%. Тренування алгоритму в кількох положеннях зменшує цей ефект (Fougner et al., 2011).",
-        "en": "Changes in limb position during everyday use increased the mean classification error from 3.8% to 18%. Training the classifier in several positions reduces this effect (Fougner et al., 2011)."
-      },
-      "basis": "evidence"
+     "uk": "Електроди на долоні зазнають тиску під час хвату: перевіряйте сигнал і під навантаженням.",
+     "en": "Palmar electrodes are compressed during grasping: check the signal under load as well."
     }
+   ]
+  },
+  "tr": {
+   "title": {
+    "uk": "Трансрадіальний рівень",
+    "en": "Transradial"
+   },
+   "views": [
+    {
+     "id": "tr_ant",
+     "label": {
+      "uk": "Передня (долонна) поверхня",
+      "en": "Anterior (volar)"
+     }
+    },
+    {
+     "id": "tr_post",
+     "label": {
+      "uk": "Задня (тильна) поверхня",
+      "en": "Posterior (dorsal)"
+     }
+    }
+   ],
+   "sections": [
+    {
+     "id": "tr_s1",
+     "label": {
+      "uk": "Проксимальна третина",
+      "en": "Proximal third"
+     }
+    },
+    {
+     "id": "tr_s2",
+     "label": {
+      "uk": "Середина передпліччя",
+      "en": "Mid-forearm"
+     }
+    },
+    {
+     "id": "tr_s3",
+     "label": {
+      "uk": "Дистальна третина",
+      "en": "Distal third"
+     }
+    }
+   ],
+   "roles": {
+    "fcu": "primary",
+    "fds": "primary",
+    "fcr": "primary",
+    "ecrl": "primary",
+    "ecrb": "primary",
+    "ed": "primary",
+    "pl": "secondary",
+    "edm": "secondary",
+    "ecu": "secondary",
+    "pt": "caution",
+    "br": "caution",
+    "anc": "caution",
+    "apl": "secondary",
+    "epb": "secondary",
+    "epl": "deep",
+    "ei": "deep",
+    "fdp": "deep",
+    "fpl": "deep",
+    "sup": "deep",
+    "pq": "deep"
+   },
+   "intro": {
+    "uk": "Класична пара — група м'язів-розгиначів на тильно-променевій поверхні та група м'язів-згиначів на долонній; фізіологічно вони відповідають розкриттю та закриттю кисті. Електрод розміщують над черевцем у проксимальній і середній третинах: дистальніше м'язи переходять у сухожилки (De Luca, 1997). Перемкніть на поперечний зріз, щоб побачити, як змінюється співвідношення м'язів і сухожилків.",
+    "en": "The classic pair is the extensor group on the dorsoradial surface and the flexor group on the volar surface, physiologically corresponding to opening and closing the hand. Electrodes go over the bellies in the proximal and middle thirds: distally the muscles become tendons (De Luca, 1997). Switch to the cross-section to see how the muscle-to-tendon ratio changes."
+   },
+   "modeNotes": {
+    "direct": {
+     "uk": "Для двоканальної схеми зазвичай обирають по одній зоні у групі м'язів-розгиначів і в групі м'язів-згиначів, з максимальною відстанню між ними, щоб зменшити перехресні наводки.",
+     "en": "For a two-channel set-up, one site is usually chosen in the extensor group and one in the flexor group, as far apart as possible to reduce crosstalk."
+    },
+    "pr": {
+     "uk": "Масив електродів охоплює і м'язи-згиначі, і м'язи-розгиначі; для цього рівня доступні комерційні системи з розпізнаванням патернів.",
+     "en": "The electrode array covers both flexors and extensors; commercial pattern recognition systems are available for this level."
+    },
+    "tmr": {
+     "uk": "Для цього рівня карту TMR не наведено: дані обмежені.",
+     "en": "No TMR map is given for this level: evidence is limited."
+    }
+   },
+   "pitfalls": [
+    {
+     "uk": "Плечо-променевий м'яз і довгий променевий м'яз-розгинач зап'ястка активні під час згинання ліктя: перевірте сигнал, коли пацієнт піднімає предмет.",
+     "en": "Brachioradialis and extensor carpi radialis longus are active during elbow flexion: check the signal while the patient lifts an object."
+    }
+   ]
+  },
+  "th": {
+   "title": {
+    "uk": "Трансгумеральний рівень",
+    "en": "Transhumeral"
+   },
+   "views": [
+    {
+     "id": "th_ant",
+     "label": {
+      "uk": "Передня поверхня",
+      "en": "Anterior"
+     }
+    },
+    {
+     "id": "th_post",
+     "label": {
+      "uk": "Задня поверхня",
+      "en": "Posterior"
+     }
+    }
+   ],
+   "sections": [
+    {
+     "id": "th_s1",
+     "label": {
+      "uk": "Межа проксимальної та середньої третин",
+      "en": "Proximal-middle third"
+     }
+    },
+    {
+     "id": "th_s2",
+     "label": {
+      "uk": "Дистальна третина плеча",
+      "en": "Distal third"
+     }
+    }
+   ],
+   "roles": {
+    "bb_long": "primary",
+    "bb_short": "primary",
+    "tb_long": "primary",
+    "tb_lat": "primary",
+    "brachialis": "secondary",
+    "tb_med": "secondary",
+    "delt_clav": "caution",
+    "delt_acro": "caution",
+    "delt_spin": "caution",
+    "coraco": "deep"
+   },
+   "intro": {
+    "uk": "Класичні місця — двоголовий м'яз (згинання ліктя) і триголовий м'яз (розгинання). Що коротша залишкова кінцівка, то більшу роль відіграють м'язи плечового суглоба й тим вищий ризик артефактів від рухів плеча. Для багатофункціонального керування на цьому рівні застосовують TMR (Kuiken et al., 2009).",
+    "en": "The classic sites are biceps (elbow flexion) and triceps (extension). The shorter the residual limb, the greater the role of the shoulder muscles and the higher the risk of artefacts from shoulder movement. For multifunction control at this level, TMR is used (Kuiken et al., 2009)."
+   },
+   "modeNotes": {
+    "direct": {
+     "uk": "Для двоканальної схеми зазвичай використовують двоголовий і триголовий м'язи; перемикання між кистю та ліктем потребує додаткової стратегії (наприклад, коскорочення).",
+     "en": "A two-channel set-up usually uses biceps and triceps; switching between hand and elbow requires an additional strategy (for example, co-contraction)."
+    },
+    "pr": {
+     "uk": "Без TMR кількість незалежних сигналів обмежена. TMR створює додаткові джерела сигналу, придатні для розпізнавання патернів (Kuiken et al., 2009).",
+     "en": "Without TMR the number of independent signals is limited. TMR creates additional signal sources suitable for pattern recognition (Kuiken et al., 2009)."
+    },
+    "tmr": {
+     "uk": "М'язами-мішенями слугують м'язи плеча (Kuiken et al., 2009); конкретні сегменти визначає операційний протокол. Пунктиром позначено зони, які потребують окремого картування.",
+     "en": "The target muscles are those of the upper arm (Kuiken et al., 2009); the specific segments are defined by the operative protocol. Dashed outlines mark zones that need separate mapping."
+    }
+   },
+   "pitfalls": [
+    {
+     "uk": "Рухи плечового суглоба змінюють сигнал дельтоподібного м'яза й довгої голівки триголового; ротація плеча зміщує м'язи під шкірою.",
+     "en": "Shoulder movement alters the deltoid and triceps long head signals; humeral rotation shifts the muscles beneath the skin."
+    }
+   ]
+  },
+  "sd": {
+   "title": {
+    "uk": "Плечова дезартикуляція",
+    "en": "Shoulder disarticulation"
+   },
+   "views": [
+    {
+     "id": "sd_ant",
+     "label": {
+      "uk": "Спереду",
+      "en": "Anterior"
+     }
+    },
+    {
+     "id": "sd_post",
+     "label": {
+      "uk": "Ззаду",
+      "en": "Posterior"
+     }
+    }
+   ],
+   "sections": [],
+   "roles": {
+    "pm_clav": "primary",
+    "pm_stern": "primary",
+    "pm_abd": "secondary",
+    "lat": "secondary",
+    "infra": "secondary",
+    "teres_maj": "secondary",
+    "serr": "secondary",
+    "delt_clav": "conditional",
+    "delt_acro": "conditional",
+    "delt_spin": "conditional",
+    "trap_desc": "caution",
+    "trap_trans": "caution",
+    "trap_asc": "caution",
+    "teres_min": "deep",
+    "supra": "deep",
+    "rhomb_maj": "deep",
+    "rhomb_min": "deep"
+   },
+   "intro": {
+    "uk": "Після дезартикуляції м'язи, що кріпилися до плечової кістки (великий грудний, найширший м'яз спини, великий круглий, підостьовий, дельтоподібний), втрачають прикріплення: сигнал можна отримати за фантомних команд, але його амплітуда залежить від міопластики чи міодезу та атрофії. Саме тому, що ці м'язи більше не виконують біомеханічної функції, їх використовують як мішені для TMR (Kuiken et al., 2009).",
+    "en": "After disarticulation, muscles that inserted on the humerus (pectoralis major, latissimus dorsi, teres major, infraspinatus, deltoid) lose their insertion: signals can be obtained with phantom commands, but amplitude depends on myoplasty or myodesis and on atrophy. Precisely because these muscles are no longer biomechanically functional, they are used as TMR targets (Kuiken et al., 2009)."
+   },
+   "modeNotes": {
+    "direct": {
+     "uk": "Найчастіше розглядають дві частини великого грудного м'яза спереду та м'язи лопаткової ділянки ззаду; кожну зону перевіряйте міотестом окремо.",
+     "en": "The two heads of pectoralis major anteriorly and the scapular muscles posteriorly are most often considered; test each zone separately."
+    },
+    "pr": {
+     "uk": "Без TMR кількість незалежних сигналів обмежена. TMR створює додаткові джерела сигналу, придатні для розпізнавання патернів (Kuiken et al., 2009).",
+     "en": "Without TMR the number of independent signals is limited. TMR creates additional signal sources suitable for pattern recognition (Kuiken et al., 2009)."
+    },
+    "tmr": {
+     "uk": "М'язами-мішенями слугують м'язи грудної стінки (Kuiken et al., 2009); конкретні сегменти визначає операційний протокол. Пунктиром позначено зони, які потребують окремого картування.",
+     "en": "The target muscles are those of the chest wall (Kuiken et al., 2009); the specific segments are defined by the operative protocol. Dashed outlines mark zones that need separate mapping."
+    }
+   },
+   "pitfalls": [
+    {
+     "uk": "Рухи лопатки та тулуба, тиск обв'язки й ременів; на лівому боці грудні м'язи можуть уловлювати наводки ЕКГ.",
+     "en": "Scapular and trunk movement, pressure from harnesses and straps; on the left side the pectoral sites may pick up ECG interference."
+    }
+   ]
+  }
+ },
+ "muscles": {
+  "fcu": {
+   "name": {
+    "uk": "Ліктьовий м'яз-згинач зап'ястка",
+    "en": "Flexor carpi ulnaris"
+   },
+   "latin": "m. flexor carpi ulnaris",
+   "origin": {
+    "uk": "Плечова голівка — присередній надвиросток плечової кістки; ліктьова голівка — ліктьовий відросток і задній край ліктьової кістки.",
+    "en": "Humeral head: medial epicondyle of the humerus; ulnar head: olecranon and posterior border of the ulna."
+   },
+   "insertion": {
+    "uk": "Горохоподібна кістка, гачок гачкуватої кістки, основа V п'ясткової кістки.",
+    "en": "Pisiform, hook of the hamate, base of the fifth metacarpal."
+   },
+   "nerve": {
+    "uk": "Ліктьовий нерв.",
+    "en": "Ulnar nerve."
+   },
+   "action": {
+    "uk": "Згинання та приведення (ліктьове відведення) кисті.",
+    "en": "Flexion and adduction (ulnar deviation) of the wrist."
+   },
+   "why": {
+    "uk": "Поверхневий м'яз уздовж долонно-ліктьового краю з великим черевцем у проксимальній половині передпліччя.",
+    "en": "Superficial along the volar-ulnar border, with a large belly in the proximal half of the forearm."
+   },
+   "cmd": {
+    "uk": "Зігнути кисть у зап'ясті з відведенням у ліктьовий бік (фантомно).",
+    "en": "Flex the wrist with ulnar deviation (phantom movement)."
+   },
+   "xt": {
+    "uk": "Поверхневий і глибокий м'язи-згиначі пальців; ліктьовий м'яз-розгинач зап'ястка біля заднього краю ліктьової кістки.",
+    "en": "Flexor digitorum superficialis and profundus; extensor carpi ulnaris near the posterior border of the ulna."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз: поріг керування досягається за невеликої частки максимального зусилля.",
+     "en": "A large superficial muscle: the control threshold is reached at a small fraction of maximal effort."
+    }
+   },
+   "grp": "flex"
+  },
+  "fds": {
+   "name": {
+    "uk": "Поверхневий м'яз-згинач пальців",
+    "en": "Flexor digitorum superficialis"
+   },
+   "latin": "m. flexor digitorum superficialis",
+   "origin": {
+    "uk": "Плечо-ліктьова голівка — присередній надвиросток і вінцевий відросток; променева голівка — передня поверхня променевої кістки.",
+    "en": "Humero-ulnar head: medial epicondyle and coronoid process; radial head: anterior surface of the radius."
+   },
+   "insertion": {
+    "uk": "Бічні поверхні середніх фаланг II–V пальців.",
+    "en": "Sides of the middle phalanges of digits II–V."
+   },
+   "nerve": {
+    "uk": "Серединний нерв.",
+    "en": "Median nerve."
+   },
+   "action": {
+    "uk": "Згинання середніх фаланг II–V пальців; допомагає згинати кисть.",
+    "en": "Flexion of the middle phalanges of digits II–V; assists wrist flexion."
+   },
+   "why": {
+    "uk": "Займає центр долонної поверхні та в середній третині частково виходить на поверхню між іншими м'язами-згиначами. Фантомне стискання пальців — інтуїтивна команда «закрити».",
+    "en": "Occupies the centre of the volar surface and partly surfaces between the other flexors in the middle third. Phantom finger flexion is an intuitive 'close' command."
+   },
+   "cmd": {
+    "uk": "Стиснути пальці в кулак (фантомно).",
+    "en": "Make a fist (phantom movement)."
+   },
+   "xt": {
+    "uk": "Глибокий м'яз-згинач пальців під ним; сусідні м'язи-згиначі зап'ястка.",
+    "en": "Flexor digitorum profundus beneath it; adjacent wrist flexors."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Один із найбільших м'язів передньої групи передпліччя.",
+     "en": "One of the largest muscles of the anterior forearm."
+    }
+   },
+   "grp": "flex"
+  },
+  "pl": {
+   "name": {
+    "uk": "Довгий долонний м'яз",
+    "en": "Palmaris longus"
+   },
+   "latin": "m. palmaris longus",
+   "origin": {
+    "uk": "Присередній надвиросток плечової кістки.",
+    "en": "Medial epicondyle of the humerus."
+   },
+   "insertion": {
+    "uk": "Тримач м'язів-згиначів і долонний апоневроз.",
+    "en": "Flexor retinaculum and palmar aponeurosis."
+   },
+   "nerve": {
+    "uk": "Серединний нерв.",
+    "en": "Median nerve."
+   },
+   "action": {
+    "uk": "Згинання кисті; натягує долонний апоневроз.",
+    "en": "Wrist flexion; tenses the palmar aponeurosis."
+   },
+   "why": {
+    "uk": "Тонкий поверхневий м'яз з коротким черевцем і довгим сухожилком; у частини людей відсутній. Самостійним місцем для електрода слугує рідко.",
+    "en": "A thin superficial muscle with a short belly and long tendon; absent in some people. Rarely used as a stand-alone site."
+   },
+   "cmd": {
+    "uk": "Зігнути кисть у зап'ясті, напружуючи долоню (фантомно).",
+    "en": "Flex the wrist while tensing the palm (phantom movement)."
+   },
+   "xt": {
+    "uk": "Променевий м'яз-згинач зап'ястка та поверхневий м'яз-згинач пальців.",
+    "en": "Flexor carpi radialis and flexor digitorum superficialis."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Мала площа поперечного перерізу черевця.",
+     "en": "Small cross-sectional area of the belly."
+    }
+   },
+   "grp": "flex"
+  },
+  "fcr": {
+   "name": {
+    "uk": "Променевий м'яз-згинач зап'ястка",
+    "en": "Flexor carpi radialis"
+   },
+   "latin": "m. flexor carpi radialis",
+   "origin": {
+    "uk": "Присередній надвиросток плечової кістки.",
+    "en": "Medial epicondyle of the humerus."
+   },
+   "insertion": {
+    "uk": "Основа II (і III) п'ясткової кістки.",
+    "en": "Base of the second (and third) metacarpal."
+   },
+   "nerve": {
+    "uk": "Серединний нерв.",
+    "en": "Median nerve."
+   },
+   "action": {
+    "uk": "Згинання та відведення (променеве відведення) кисті.",
+    "en": "Flexion and abduction (radial deviation) of the wrist."
+   },
+   "why": {
+    "uk": "Поверхневий м'яз-згинач у долонно-променевій зоні; добре пальпується в проксимальній третині.",
+    "en": "A superficial flexor in the volar-radial zone; easy to palpate in the proximal third."
+   },
+   "cmd": {
+    "uk": "Зігнути кисть у зап'ясті з відведенням у променевий бік (фантомно).",
+    "en": "Flex the wrist with radial deviation (phantom movement)."
+   },
+   "xt": {
+    "uk": "Круглий м'яз-привертач (проксимально), поверхневий м'яз-згинач пальців.",
+    "en": "Pronator teres (proximally), flexor digitorum superficialis."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Черевце середнього розміру; дистальна половина переходить у сухожилок.",
+     "en": "A medium-sized belly; the distal half becomes tendon."
+    }
+   },
+   "grp": "flex"
+  },
+  "pt": {
+   "name": {
+    "uk": "Круглий м'яз-привертач",
+    "en": "Pronator teres"
+   },
+   "latin": "m. pronator teres",
+   "origin": {
+    "uk": "Плечова голівка — присередній надвиросток; ліктьова голівка — вінцевий відросток ліктьової кістки.",
+    "en": "Humeral head: medial epicondyle; ulnar head: coronoid process of the ulna."
+   },
+   "insertion": {
+    "uk": "Середина бічної поверхні променевої кістки.",
+    "en": "Middle of the lateral surface of the radius."
+   },
+   "nerve": {
+    "uk": "Серединний нерв.",
+    "en": "Median nerve."
+   },
+   "action": {
+    "uk": "Привертання (пронація) передпліччя; допомагає згинати лікоть.",
+    "en": "Pronation of the forearm; assists elbow flexion."
+   },
+   "syn": {
+    "uk": "круглий пронатор",
+    "en": "round pronator"
+   },
+   "why": {
+    "uk": "Лежить лише в проксимальній третині передпліччя, косо до променевої кістки; у короткій залишковій кінцівці опиняється біля краю куксоприймача. Як основне місце для керування в клінічній практиці його використовують рідко.",
+    "en": "Present only in the proximal third, running obliquely to the radius; in a short residual limb it lies near the socket trim line. In clinical practice it is rarely used as a primary control site."
+   },
+   "cmd": {
+    "uk": "Повернути долоню донизу (фантомна пронація).",
+    "en": "Turn the palm down (phantom pronation)."
+   },
+   "xt": {
+    "uk": "Променевий м'яз-згинач зап'ястка; плечо-променевий м'яз; активність під час згинання ліктя.",
+    "en": "Flexor carpi radialis; brachioradialis; activity during elbow flexion."
+   },
+   "effort": {
+    "level": "high",
+    "text": {
+     "uk": "Клінічна практика: пацієнти швидко втомлюються, використовуючи цей м'яз для керування. Механістичне пояснення: невеликий об'єм черевця потребує більшої частки максимального зусилля; спроба пронації в куксоприймачі стає ізометричним зусиллям проти його стінок і може зміщувати куксоприймач разом з електродом.",
+     "en": "Clinical practice: patients tire quickly when this muscle is used for control. Mechanistic explanation: the small belly requires a larger fraction of maximal effort; attempted pronation inside the socket becomes an isometric effort against its walls and may rotate the socket together with the electrode."
+    }
+   },
+   "grp": "flex"
+  },
+  "br": {
+   "name": {
+    "uk": "Плечо-променевий м'яз",
+    "en": "Brachioradialis"
+   },
+   "latin": "m. brachioradialis",
+   "origin": {
+    "uk": "Бічний надвиростковий гребінь плечової кістки (проксимальні дві третини).",
+    "en": "Proximal two-thirds of the lateral supracondylar ridge of the humerus."
+   },
+   "insertion": {
+    "uk": "Бічна поверхня дистального кінця променевої кістки, над шилоподібним відростком.",
+    "en": "Lateral surface of the distal radius, proximal to the styloid process."
+   },
+   "nerve": {
+    "uk": "Променевий нерв.",
+    "en": "Radial nerve."
+   },
+   "action": {
+    "uk": "Згинання ліктя, особливо в середньому положенні передпліччя.",
+    "en": "Elbow flexion, especially with the forearm in mid-pronation."
+   },
+   "why": {
+    "uk": "Лежить поверхнево на променевому краї, але передусім згинає лікоть: його сигнал з'являється під час піднімання предметів. Ризик перехресних наводок від сусідніх м'язів-розгиначів зап'ястка високий (Merlo et al., 2021).",
+    "en": "Superficial on the radial border but primarily an elbow flexor: its signal appears when lifting objects. Crosstalk from the adjacent radial wrist extensors is likely (Merlo et al., 2021)."
+   },
+   "cmd": {
+    "uk": "Зігнути лікоть у середньому положенні передпліччя.",
+    "en": "Flex the elbow with the forearm in mid-pronation."
+   },
+   "xt": {
+    "uk": "Довгий і короткий променеві м'язи-розгиначі зап'ястка; будь-яке згинання ліктя.",
+    "en": "Extensor carpi radialis longus and brevis; any elbow flexion."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Великий м'яз, але навантажений у повсякденних рухах: небажана активація під час піднімання предметів.",
+     "en": "A large muscle, but loaded in everyday movement: unwanted activation when lifting objects."
+    }
+   },
+   "grp": "ext"
+  },
+  "ecrl": {
+   "name": {
+    "uk": "Довгий променевий м'яз-розгинач зап'ястка",
+    "en": "Extensor carpi radialis longus"
+   },
+   "latin": "m. extensor carpi radialis longus",
+   "origin": {
+    "uk": "Бічний надвиростковий гребінь плечової кістки (дистальна третина).",
+    "en": "Distal third of the lateral supracondylar ridge of the humerus."
+   },
+   "insertion": {
+    "uk": "Тильна поверхня основи II п'ясткової кістки.",
+    "en": "Dorsal base of the second metacarpal."
+   },
+   "nerve": {
+    "uk": "Променевий нерв.",
+    "en": "Radial nerve."
+   },
+   "action": {
+    "uk": "Розгинання та відведення кисті; допомагає згинати лікоть.",
+    "en": "Wrist extension and abduction; assists elbow flexion."
+   },
+   "why": {
+    "uk": "Разом із коротким променевим м'язом-розгиначем утворює тильно-променеву групу. Фантомне розгинання зап'ястка — інтуїтивна команда «розкрити».",
+    "en": "With ECRB it forms the dorsoradial group. Phantom wrist extension is an intuitive 'open' command."
+   },
+   "cmd": {
+    "uk": "Розігнути кисть у зап'ясті з відведенням у променевий бік (фантомно).",
+    "en": "Extend the wrist with radial deviation (phantom movement)."
+   },
+   "xt": {
+    "uk": "Плечо-променевий м'яз; сам бере участь у згинанні ліктя.",
+    "en": "Brachioradialis; it also assists elbow flexion itself."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз.",
+     "en": "A large superficial muscle."
+    }
+   },
+   "grp": "ext"
+  },
+  "ecrb": {
+   "name": {
+    "uk": "Короткий променевий м'яз-розгинач зап'ястка",
+    "en": "Extensor carpi radialis brevis"
+   },
+   "latin": "m. extensor carpi radialis brevis",
+   "origin": {
+    "uk": "Бічний надвиросток плечової кістки (спільне сухожилля м'язів-розгиначів).",
+    "en": "Lateral epicondyle of the humerus (common extensor origin)."
+   },
+   "insertion": {
+    "uk": "Тильна поверхня основи III п'ясткової кістки.",
+    "en": "Dorsal base of the third metacarpal."
+   },
+   "nerve": {
+    "uk": "Глибока гілка променевого нерва.",
+    "en": "Deep branch of the radial nerve."
+   },
+   "action": {
+    "uk": "Розгинання та відведення кисті.",
+    "en": "Wrist extension and abduction."
+   },
+   "why": {
+    "uk": "Лежить поруч із довгим променевим м'язом-розгиначем і глибше від нього; разом вони утворюють надійну зону сигналу розгинання.",
+    "en": "Beside and deep to ECRL; together they form a reliable extension signal zone."
+   },
+   "cmd": {
+    "uk": "Розігнути кисть у зап'ясті (фантомно).",
+    "en": "Extend the wrist (phantom movement)."
+   },
+   "xt": {
+    "uk": "Довгий променевий м'яз-розгинач зап'ястка, м'яз-розгинач пальців.",
+    "en": "ECRL, extensor digitorum."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Черевце достатнього розміру в проксимальній половині.",
+     "en": "An adequately sized belly in the proximal half."
+    }
+   },
+   "grp": "ext"
+  },
+  "ed": {
+   "name": {
+    "uk": "М'яз-розгинач пальців",
+    "en": "Extensor digitorum"
+   },
+   "latin": "m. extensor digitorum",
+   "origin": {
+    "uk": "Бічний надвиросток плечової кістки.",
+    "en": "Lateral epicondyle of the humerus."
+   },
+   "insertion": {
+    "uk": "Тильні апоневрози (розгинальні розширення) II–V пальців.",
+    "en": "Extensor expansions of digits II–V."
+   },
+   "nerve": {
+    "uk": "Глибока гілка променевого нерва (задній міжкістковий нерв).",
+    "en": "Deep branch of the radial nerve (posterior interosseous nerve)."
+   },
+   "action": {
+    "uk": "Розгинання II–V пальців і кисті.",
+    "en": "Extension of digits II–V and of the wrist."
+   },
+   "why": {
+    "uk": "Центр тильної поверхні. Фантомне розкриття кисті дає виразний сигнал; це класичне місце для команди «розкрити».",
+    "en": "Centre of the dorsal surface. Phantom hand opening produces a distinct signal; a classic site for the 'open' command."
+   },
+   "cmd": {
+    "uk": "Розкрити кисть і випрямити пальці (фантомно).",
+    "en": "Open the hand and straighten the fingers (phantom movement)."
+   },
+   "xt": {
+    "uk": "Променеві м'язи-розгиначі зап'ястка, м'яз-розгинач мізинця; глибокі м'язи-розгиначі.",
+    "en": "Radial wrist extensors, extensor digiti minimi; deep extensors."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз із чіткою фантомною командою.",
+     "en": "A large superficial muscle with a clear phantom command."
+    }
+   },
+   "grp": "ext"
+  },
+  "edm": {
+   "name": {
+    "uk": "М'яз-розгинач мізинця",
+    "en": "Extensor digiti minimi"
+   },
+   "latin": "m. extensor digiti minimi",
+   "origin": {
+    "uk": "Бічний надвиросток плечової кістки.",
+    "en": "Lateral epicondyle of the humerus."
+   },
+   "insertion": {
+    "uk": "Тильний апоневроз V пальця.",
+    "en": "Extensor expansion of the fifth digit."
+   },
+   "nerve": {
+    "uk": "Задній міжкістковий нерв.",
+    "en": "Posterior interosseous nerve."
+   },
+   "action": {
+    "uk": "Розгинання мізинця.",
+    "en": "Extension of the little finger."
+   },
+   "why": {
+    "uk": "Вузький м'яз між м'язом-розгиначем пальців і ліктьовим м'язом-розгиначем зап'ястка; ізольований сигнал отримати складно.",
+    "en": "A narrow muscle between extensor digitorum and ECU; an isolated signal is hard to obtain."
+   },
+   "cmd": {
+    "uk": "Розігнути мізинець (фантомно).",
+    "en": "Extend the little finger (phantom movement)."
+   },
+   "xt": {
+    "uk": "М'яз-розгинач пальців, ліктьовий м'яз-розгинач зап'ястка.",
+    "en": "Extensor digitorum, ECU."
+   },
+   "effort": {
+    "level": "high",
+    "text": {
+     "uk": "Дуже мала площа поперечного перерізу.",
+     "en": "A very small cross-sectional area."
+    }
+   },
+   "grp": "ext"
+  },
+  "ecu": {
+   "name": {
+    "uk": "Ліктьовий м'яз-розгинач зап'ястка",
+    "en": "Extensor carpi ulnaris"
+   },
+   "latin": "m. extensor carpi ulnaris",
+   "origin": {
+    "uk": "Бічний надвиросток плечової кістки та задній край ліктьової кістки.",
+    "en": "Lateral epicondyle of the humerus and posterior border of the ulna."
+   },
+   "insertion": {
+    "uk": "Основа V п'ясткової кістки.",
+    "en": "Base of the fifth metacarpal."
+   },
+   "nerve": {
+    "uk": "Задній міжкістковий нерв.",
+    "en": "Posterior interosseous nerve."
+   },
+   "action": {
+    "uk": "Розгинання та приведення кисті.",
+    "en": "Wrist extension and adduction."
+   },
+   "why": {
+    "uk": "Тильно-ліктьова поверхня поруч із підшкірним краєм ліктьової кістки; альтернативна зона сигналу розгинання, якщо променеву групу ушкоджено.",
+    "en": "Dorsal-ulnar surface next to the subcutaneous border of the ulna; an alternative extension site if the radial group is damaged."
+   },
+   "cmd": {
+    "uk": "Розігнути кисть у зап'ясті з відведенням у ліктьовий бік (фантомно).",
+    "en": "Extend the wrist with ulnar deviation (phantom movement)."
+   },
+   "xt": {
+    "uk": "М'яз-розгинач мізинця; ліктьовий м'яз-згинач зап'ястка.",
+    "en": "Extensor digiti minimi; FCU."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Черевце середнього розміру, вузьке.",
+     "en": "A medium, narrow belly."
+    }
+   },
+   "grp": "ext"
+  },
+  "anc": {
+   "name": {
+    "uk": "Ліктьовий м'яз",
+    "en": "Anconeus"
+   },
+   "latin": "m. anconeus",
+   "origin": {
+    "uk": "Бічний надвиросток плечової кістки.",
+    "en": "Lateral epicondyle of the humerus."
+   },
+   "insertion": {
+    "uk": "Бічна поверхня ліктьового відростка та проксимальна частина задньої поверхні ліктьової кістки.",
+    "en": "Lateral olecranon and proximal posterior ulna."
+   },
+   "nerve": {
+    "uk": "Променевий нерв.",
+    "en": "Radial nerve."
+   },
+   "action": {
+    "uk": "Допомагає розгинати лікоть; стабілізує ліктьовий суглоб.",
+    "en": "Assists elbow extension; stabilises the elbow."
+   },
+   "why": {
+    "uk": "Малий трикутний м'яз біля ліктьового відростка; активний під час розгинання ліктя, тож для керування кистю небажаний.",
+    "en": "A small triangular muscle by the olecranon; active during elbow extension, so undesirable for hand control."
+   },
+   "effort": {
+    "level": "high",
+    "text": {
+     "uk": "Малий м'яз-стабілізатор.",
+     "en": "A small stabilising muscle."
+    }
+   }
+  },
+  "apl": {
+   "name": {
+    "uk": "Довгий м'яз-відвідник великого пальця кисті",
+    "en": "Abductor pollicis longus"
+   },
+   "latin": "m. abductor pollicis longus",
+   "origin": {
+    "uk": "Задні поверхні ліктьової та променевої кісток і міжкісткова перетинка.",
+    "en": "Posterior surfaces of the ulna and radius and the interosseous membrane."
+   },
+   "insertion": {
+    "uk": "Основа I п'ясткової кістки.",
+    "en": "Base of the first metacarpal."
+   },
+   "nerve": {
+    "uk": "Задній міжкістковий нерв.",
+    "en": "Posterior interosseous nerve."
+   },
+   "action": {
+    "uk": "Відведення великого пальця в зап'ястково-п'ястковому суглобі.",
+    "en": "Abduction of the thumb at the carpometacarpal joint."
+   },
+   "why": {
+    "uk": "Лежить глибоко, але в дистальній третині виходить на поверхню між м'язами-розгиначами; там він переважно сухожилковий.",
+    "en": "Deep, but emerges superficially between the extensors in the distal third, where it is largely tendinous."
+   },
+   "effort": {
+    "level": "high",
+    "text": {
+     "uk": "Мала доступна площа черевця.",
+     "en": "Small accessible belly area."
+    }
+   }
+  },
+  "epb": {
+   "name": {
+    "uk": "Короткий м'яз-розгинач великого пальця кисті",
+    "en": "Extensor pollicis brevis"
+   },
+   "latin": "m. extensor pollicis brevis",
+   "origin": {
+    "uk": "Задня поверхня променевої кістки та міжкісткова перетинка.",
+    "en": "Posterior surface of the radius and interosseous membrane."
+   },
+   "insertion": {
+    "uk": "Основа проксимальної фаланги великого пальця.",
+    "en": "Base of the proximal phalanx of the thumb."
+   },
+   "nerve": {
+    "uk": "Задній міжкістковий нерв.",
+    "en": "Posterior interosseous nerve."
+   },
+   "action": {
+    "uk": "Розгинання великого пальця в п'ястково-фаланговому суглобі.",
+    "en": "Extension of the thumb at the metacarpophalangeal joint."
+   }
+  },
+  "epl": {
+   "name": {
+    "uk": "Довгий м'яз-розгинач великого пальця кисті",
+    "en": "Extensor pollicis longus"
+   },
+   "latin": "m. extensor pollicis longus",
+   "origin": {
+    "uk": "Середня третина задньої поверхні ліктьової кістки та міжкісткова перетинка.",
+    "en": "Middle third of the posterior ulna and interosseous membrane."
+   },
+   "insertion": {
+    "uk": "Основа дистальної фаланги великого пальця.",
+    "en": "Base of the distal phalanx of the thumb."
+   },
+   "nerve": {
+    "uk": "Задній міжкістковий нерв.",
+    "en": "Posterior interosseous nerve."
+   },
+   "action": {
+    "uk": "Розгинання дистальної фаланги великого пальця.",
+    "en": "Extension of the distal phalanx of the thumb."
+   }
+  },
+  "ei": {
+   "name": {
+    "uk": "М'яз-розгинач вказівного пальця",
+    "en": "Extensor indicis"
+   },
+   "latin": "m. extensor indicis",
+   "origin": {
+    "uk": "Задня поверхня ліктьової кістки та міжкісткова перетинка.",
+    "en": "Posterior ulna and interosseous membrane."
+   },
+   "insertion": {
+    "uk": "Тильний апоневроз II пальця.",
+    "en": "Extensor expansion of the index finger."
+   },
+   "nerve": {
+    "uk": "Задній міжкістковий нерв.",
+    "en": "Posterior interosseous nerve."
+   },
+   "action": {
+    "uk": "Розгинання вказівного пальця.",
+    "en": "Extension of the index finger."
+   }
+  },
+  "fdp": {
+   "name": {
+    "uk": "Глибокий м'яз-згинач пальців",
+    "en": "Flexor digitorum profundus"
+   },
+   "latin": "m. flexor digitorum profundus",
+   "origin": {
+    "uk": "Передня та присередня поверхні ліктьової кістки (проксимальні три чверті) і міжкісткова перетинка.",
+    "en": "Anterior and medial ulna (proximal three-quarters) and interosseous membrane."
+   },
+   "insertion": {
+    "uk": "Основи дистальних фаланг II–V пальців.",
+    "en": "Bases of the distal phalanges of digits II–V."
+   },
+   "nerve": {
+    "uk": "Присередня частина — ліктьовий нерв; бічна частина — передній міжкістковий нерв (гілка серединного).",
+    "en": "Medial part: ulnar nerve; lateral part: anterior interosseous nerve (median)."
+   },
+   "action": {
+    "uk": "Згинання дистальних фаланг II–V пальців.",
+    "en": "Flexion of the distal phalanges of digits II–V."
+   },
+   "why": {
+    "uk": "Глибокий шар над ліктьовою кісткою; під час стискання його активність потрапляє в сигнал поверхневих м'язів-згиначів.",
+    "en": "Deep layer over the ulna; during grasping its activity contaminates the superficial flexor signals."
+   }
+  },
+  "fpl": {
+   "name": {
+    "uk": "Довгий м'яз-згинач великого пальця кисті",
+    "en": "Flexor pollicis longus"
+   },
+   "latin": "m. flexor pollicis longus",
+   "origin": {
+    "uk": "Передня поверхня променевої кістки та міжкісткова перетинка.",
+    "en": "Anterior radius and interosseous membrane."
+   },
+   "insertion": {
+    "uk": "Основа дистальної фаланги великого пальця.",
+    "en": "Base of the distal phalanx of the thumb."
+   },
+   "nerve": {
+    "uk": "Передній міжкістковий нерв.",
+    "en": "Anterior interosseous nerve."
+   },
+   "action": {
+    "uk": "Згинання дистальної фаланги великого пальця.",
+    "en": "Flexion of the distal phalanx of the thumb."
+   },
+   "why": {
+    "uk": "Глибоко на долонній поверхні променевої кістки; ізольований поверхневий сигнал малоймовірний.",
+    "en": "Deep on the volar surface of the radius; an isolated surface signal is unlikely."
+   }
+  },
+  "sup": {
+   "name": {
+    "uk": "М'яз-відвертач",
+    "en": "Supinator"
+   },
+   "latin": "m. supinator",
+   "origin": {
+    "uk": "Бічний надвиросток плечової кістки, променева обхідна та кільцева зв'язки, гребінь м'яза-відвертача ліктьової кістки.",
+    "en": "Lateral epicondyle, radial collateral and annular ligaments, supinator crest of the ulna."
+   },
+   "insertion": {
+    "uk": "Бічна, задня та передня поверхні проксимальної третини променевої кістки.",
+    "en": "Lateral, posterior and anterior surfaces of the proximal third of the radius."
+   },
+   "nerve": {
+    "uk": "Глибока гілка променевого нерва.",
+    "en": "Deep branch of the radial nerve."
+   },
+   "action": {
+    "uk": "Відвертання (супінація) передпліччя.",
+    "en": "Supination of the forearm."
+   },
+   "syn": {
+    "uk": "супінатор",
+    "en": "supinator"
+   },
+   "why": {
+    "uk": "Лише в проксимальній третині, глибоко навколо променевої кістки; ізольований поверхневий сигнал малоймовірний.",
+    "en": "Only in the proximal third, deep around the radius; an isolated surface signal is unlikely."
+   }
+  },
+  "pq": {
+   "name": {
+    "uk": "Квадратний м'яз-привертач",
+    "en": "Pronator quadratus"
+   },
+   "latin": "m. pronator quadratus",
+   "origin": {
+    "uk": "Дистальна чверть передньої поверхні ліктьової кістки.",
+    "en": "Distal quarter of the anterior ulna."
+   },
+   "insertion": {
+    "uk": "Дистальна чверть передньої поверхні променевої кістки.",
+    "en": "Distal quarter of the anterior radius."
+   },
+   "nerve": {
+    "uk": "Передній міжкістковий нерв.",
+    "en": "Anterior interosseous nerve."
+   },
+   "action": {
+    "uk": "Привертання передпліччя.",
+    "en": "Pronation of the forearm."
+   },
+   "syn": {
+    "uk": "квадратний пронатор",
+    "en": "square pronator"
+   },
+   "why": {
+    "uk": "Найглибший м'яз дистальної чверті передпліччя, вкритий сухожилками; для поверхневої ЕМГ недоступний.",
+    "en": "The deepest muscle of the distal quarter, covered by tendons; inaccessible to surface EMG."
+   }
+  },
+  "bb_long": {
+   "name": {
+    "uk": "Двоголовий м'яз плеча, довга голівка",
+    "en": "Biceps brachii, long head"
+   },
+   "latin": "m. biceps brachii, caput longum",
+   "origin": {
+    "uk": "Надсуглобовий горбок лопатки.",
+    "en": "Supraglenoid tubercle of the scapula."
+   },
+   "insertion": {
+    "uk": "Горбистість променевої кістки та апоневроз двоголового м'яза.",
+    "en": "Radial tuberosity and bicipital aponeurosis."
+   },
+   "nerve": {
+    "uk": "М'язово-шкірний нерв.",
+    "en": "Musculocutaneous nerve."
+   },
+   "action": {
+    "uk": "Згинання ліктя, відвертання передпліччя; допомагає згинати плече.",
+    "en": "Elbow flexion, forearm supination; assists shoulder flexion."
+   },
+   "why": {
+    "uk": "Поверхневий на передньо-бічній поверхні плеча; контрольоване фантомне згинання ліктя дає сильний сигнал.",
+    "en": "Superficial on the anterolateral arm; a controlled phantom elbow flexion produces a strong signal."
+   },
+   "cmd": {
+    "uk": "Зігнути лікоть (фантомно).",
+    "en": "Flex the elbow (phantom movement)."
+   },
+   "xt": {
+    "uk": "Коротка голівка; плечовий м'яз під ним; ключична частина дельтоподібного м'яза проксимально.",
+    "en": "Short head; brachialis beneath; clavicular deltoid proximally."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз.",
+     "en": "A large superficial muscle."
+    }
+   },
+   "grp": "flex",
+   "tmr": [
+    "th"
+   ]
+  },
+  "bb_short": {
+   "name": {
+    "uk": "Двоголовий м'яз плеча, коротка голівка",
+    "en": "Biceps brachii, short head"
+   },
+   "latin": "m. biceps brachii, caput breve",
+   "origin": {
+    "uk": "Верхівка дзьобоподібного відростка лопатки.",
+    "en": "Tip of the coracoid process of the scapula."
+   },
+   "insertion": {
+    "uk": "Горбистість променевої кістки та апоневроз двоголового м'яза.",
+    "en": "Radial tuberosity and bicipital aponeurosis."
+   },
+   "nerve": {
+    "uk": "М'язово-шкірний нерв.",
+    "en": "Musculocutaneous nerve."
+   },
+   "action": {
+    "uk": "Згинання ліктя, відвертання передпліччя.",
+    "en": "Elbow flexion, forearm supination."
+   },
+   "why": {
+    "uk": "Поверхневий на передньо-присередній поверхні плеча, поруч із судинно-нервовим пучком.",
+    "en": "Superficial on the anteromedial arm, next to the neurovascular bundle."
+   },
+   "cmd": {
+    "uk": "Зігнути лікоть (фантомно).",
+    "en": "Flex the elbow (phantom movement)."
+   },
+   "xt": {
+    "uk": "Довга голівка; дзьобо-плечовий м'яз проксимально.",
+    "en": "Long head; coracobrachialis proximally."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз.",
+     "en": "A large superficial muscle."
+    }
+   },
+   "grp": "flex",
+   "tmr": [
+    "th"
+   ]
+  },
+  "brachialis": {
+   "name": {
+    "uk": "Плечовий м'яз",
+    "en": "Brachialis"
+   },
+   "latin": "m. brachialis",
+   "origin": {
+    "uk": "Дистальна половина передньої поверхні плечової кістки.",
+    "en": "Distal half of the anterior humerus."
+   },
+   "insertion": {
+    "uk": "Вінцевий відросток і горбистість ліктьової кістки.",
+    "en": "Coronoid process and tuberosity of the ulna."
+   },
+   "nerve": {
+    "uk": "М'язово-шкірний нерв (частково — променевий).",
+    "en": "Musculocutaneous nerve (partly radial)."
+   },
+   "action": {
+    "uk": "Згинання ліктя.",
+    "en": "Elbow flexion."
+   },
+   "why": {
+    "uk": "Переважно під двоголовим м'язом, але з боків дистальної половини плеча підходить до поверхні.",
+    "en": "Mostly beneath biceps, but reaches the surface on both sides of the distal arm."
+   },
+   "cmd": {
+    "uk": "Зігнути лікоть у положенні привертання (фантомно).",
+    "en": "Flex the elbow in pronation (phantom movement)."
+   },
+   "xt": {
+    "uk": "Двоголовий м'яз; плечо-променевий м'яз дистально.",
+    "en": "Biceps; brachioradialis distally."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Значною мірою вкритий двоголовим м'язом.",
+     "en": "Largely covered by biceps."
+    }
+   },
+   "grp": "flex",
+   "tmr": [
+    "th"
+   ]
+  },
+  "tb_long": {
+   "name": {
+    "uk": "Триголовий м'яз плеча, довга голівка",
+    "en": "Triceps brachii, long head"
+   },
+   "latin": "m. triceps brachii, caput longum",
+   "origin": {
+    "uk": "Підсуглобовий горбок лопатки.",
+    "en": "Infraglenoid tubercle of the scapula."
+   },
+   "insertion": {
+    "uk": "Ліктьовий відросток.",
+    "en": "Olecranon."
+   },
+   "nerve": {
+    "uk": "Променевий нерв.",
+    "en": "Radial nerve."
+   },
+   "action": {
+    "uk": "Розгинання ліктя; розгинання та приведення плеча.",
+    "en": "Elbow extension; shoulder extension and adduction."
+   },
+   "why": {
+    "uk": "Поверхнева на задньо-присередній поверхні. Бере участь і в рухах плеча, тож вони можуть давати небажаний сигнал.",
+    "en": "Superficial on the posteromedial surface. It also acts at the shoulder, so shoulder movements may produce unwanted signals."
+   },
+   "cmd": {
+    "uk": "Розігнути лікоть (фантомно), не рухаючи плечем.",
+    "en": "Extend the elbow (phantom movement) without moving the shoulder."
+   },
+   "xt": {
+    "uk": "Бічна голівка; великий круглий м'яз проксимально.",
+    "en": "Lateral head; teres major proximally."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз.",
+     "en": "A large superficial muscle."
+    }
+   },
+   "grp": "ext",
+   "tmr": [
+    "th"
+   ]
+  },
+  "tb_lat": {
+   "name": {
+    "uk": "Триголовий м'яз плеча, бічна голівка",
+    "en": "Triceps brachii, lateral head"
+   },
+   "latin": "m. triceps brachii, caput laterale",
+   "origin": {
+    "uk": "Задня поверхня плечової кістки вище борозни променевого нерва.",
+    "en": "Posterior humerus above the radial groove."
+   },
+   "insertion": {
+    "uk": "Ліктьовий відросток.",
+    "en": "Olecranon."
+   },
+   "nerve": {
+    "uk": "Променевий нерв.",
+    "en": "Radial nerve."
+   },
+   "action": {
+    "uk": "Розгинання ліктя.",
+    "en": "Elbow extension."
+   },
+   "why": {
+    "uk": "Поверхнева на задньо-бічній поверхні; стабільний сигнал фантомного розгинання ліктя.",
+    "en": "Superficial on the posterolateral surface; a stable phantom elbow-extension signal."
+   },
+   "cmd": {
+    "uk": "Розігнути лікоть (фантомно).",
+    "en": "Extend the elbow (phantom movement)."
+   },
+   "xt": {
+    "uk": "Остьова частина дельтоподібного м'яза проксимально; довга голівка.",
+    "en": "Spinal deltoid proximally; long head."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз.",
+     "en": "A large superficial muscle."
+    }
+   },
+   "grp": "ext",
+   "tmr": [
+    "th"
+   ]
+  },
+  "tb_med": {
+   "name": {
+    "uk": "Триголовий м'яз плеча, присередня голівка",
+    "en": "Triceps brachii, medial head"
+   },
+   "latin": "m. triceps brachii, caput mediale",
+   "origin": {
+    "uk": "Задня поверхня плечової кістки нижче борозни променевого нерва.",
+    "en": "Posterior humerus below the radial groove."
+   },
+   "insertion": {
+    "uk": "Ліктьовий відросток.",
+    "en": "Olecranon."
+   },
+   "nerve": {
+    "uk": "Променевий нерв.",
+    "en": "Radial nerve."
+   },
+   "action": {
+    "uk": "Розгинання ліктя.",
+    "en": "Elbow extension."
+   },
+   "why": {
+    "uk": "Переважно глибоко під іншими голівками; ближче до ліктя виходить на поверхню з обох боків.",
+    "en": "Mostly deep to the other heads; near the elbow it surfaces on both sides."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Значною мірою вкрита іншими голівками.",
+     "en": "Largely covered by the other heads."
+    }
+   },
+   "grp": "ext"
+  },
+  "coraco": {
+   "name": {
+    "uk": "Дзьобо-плечовий м'яз",
+    "en": "Coracobrachialis"
+   },
+   "latin": "m. coracobrachialis",
+   "origin": {
+    "uk": "Верхівка дзьобоподібного відростка лопатки.",
+    "en": "Tip of the coracoid process."
+   },
+   "insertion": {
+    "uk": "Середня третина присередньої поверхні плечової кістки.",
+    "en": "Middle third of the medial humerus."
+   },
+   "nerve": {
+    "uk": "М'язово-шкірний нерв.",
+    "en": "Musculocutaneous nerve."
+   },
+   "action": {
+    "uk": "Згинання та приведення плеча.",
+    "en": "Shoulder flexion and adduction."
+   },
+   "why": {
+    "uk": "Проксимально на присередній поверхні, поруч із судинно-нервовим пучком; як місце для електрода зазвичай не використовується.",
+    "en": "Proximal medial arm next to the neurovascular bundle; not usually used as a site."
+   }
+  },
+  "delt_clav": {
+   "name": {
+    "uk": "Дельтоподібний м'яз, ключична частина",
+    "en": "Deltoid, clavicular part"
+   },
+   "latin": "m. deltoideus, pars clavicularis",
+   "origin": {
+    "uk": "Бічна третина ключиці.",
+    "en": "Lateral third of the clavicle."
+   },
+   "insertion": {
+    "uk": "Дельтоподібна горбистість плечової кістки.",
+    "en": "Deltoid tuberosity of the humerus."
+   },
+   "nerve": {
+    "uk": "Пахвовий нерв.",
+    "en": "Axillary nerve."
+   },
+   "action": {
+    "uk": "Згинання та внутрішнє обертання плеча.",
+    "en": "Shoulder flexion and internal rotation."
+   },
+   "why": {
+    "uk": "Поверхнева, але будь-який рух плечового суглоба змінює її сигнал; після дезартикуляції — лише за умови збереження та іннервації.",
+    "en": "Superficial, but any shoulder movement alters its signal; after disarticulation only if preserved and innervated."
+   },
+   "cmd": {
+    "uk": "Підняти руку вперед (фантомно чи реально).",
+    "en": "Raise the arm forwards (phantom or real)."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Великий м'яз, але залучений у постуральні рухи плеча.",
+     "en": "A large muscle, but involved in postural shoulder movement."
+    }
+   }
+  },
+  "delt_acro": {
+   "name": {
+    "uk": "Дельтоподібний м'яз, акроміальна частина",
+    "en": "Deltoid, acromial part"
+   },
+   "latin": "m. deltoideus, pars acromialis",
+   "origin": {
+    "uk": "Акроміон.",
+    "en": "Acromion."
+   },
+   "insertion": {
+    "uk": "Дельтоподібна горбистість плечової кістки.",
+    "en": "Deltoid tuberosity of the humerus."
+   },
+   "nerve": {
+    "uk": "Пахвовий нерв.",
+    "en": "Axillary nerve."
+   },
+   "action": {
+    "uk": "Відведення плеча.",
+    "en": "Shoulder abduction."
+   },
+   "why": {
+    "uk": "Найтовща частина дельтоподібного м'яза; для короткої залишкової кінцівки — можливе місце з урахуванням рухів плеча.",
+    "en": "The thickest part of the deltoid; a possible site for a short residual limb, allowing for shoulder movement."
+   },
+   "cmd": {
+    "uk": "Відвести руку (фантомно чи реально).",
+    "en": "Abduct the arm (phantom or real)."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Великий м'яз, але залучений у постуральні рухи плеча.",
+     "en": "A large muscle, but involved in postural shoulder movement."
+    }
+   }
+  },
+  "delt_spin": {
+   "name": {
+    "uk": "Дельтоподібний м'яз, остьова частина",
+    "en": "Deltoid, spinal part"
+   },
+   "latin": "m. deltoideus, pars spinalis",
+   "origin": {
+    "uk": "Ость лопатки.",
+    "en": "Spine of the scapula."
+   },
+   "insertion": {
+    "uk": "Дельтоподібна горбистість плечової кістки.",
+    "en": "Deltoid tuberosity of the humerus."
+   },
+   "nerve": {
+    "uk": "Пахвовий нерв.",
+    "en": "Axillary nerve."
+   },
+   "action": {
+    "uk": "Розгинання та зовнішнє обертання плеча.",
+    "en": "Shoulder extension and external rotation."
+   },
+   "cmd": {
+    "uk": "Відвести руку назад (фантомно чи реально).",
+    "en": "Move the arm backwards (phantom or real)."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Залучена в постуральні рухи плеча.",
+     "en": "Involved in postural shoulder movement."
+    }
+   }
+  },
+  "apb": {
+   "name": {
+    "uk": "Короткий м'яз-відвідник великого пальця кисті",
+    "en": "Abductor pollicis brevis"
+   },
+   "latin": "m. abductor pollicis brevis",
+   "origin": {
+    "uk": "Тримач м'язів-згиначів, горбки човноподібної кістки та кістки-трапеції.",
+    "en": "Flexor retinaculum, tubercles of the scaphoid and trapezium."
+   },
+   "insertion": {
+    "uk": "Основа проксимальної фаланги великого пальця.",
+    "en": "Base of the proximal phalanx of the thumb."
+   },
+   "nerve": {
+    "uk": "Серединний нерв (поворотна гілка).",
+    "en": "Median nerve (recurrent branch)."
+   },
+   "action": {
+    "uk": "Відведення великого пальця.",
+    "en": "Thumb abduction."
+   },
+   "why": {
+    "uk": "Найповерхневіший м'яз підвищення великого пальця (тенара); можливе місце, якщо м'яз та іннервація збережені.",
+    "en": "The most superficial thenar muscle; a possible site if the muscle and its innervation are preserved."
+   },
+   "cmd": {
+    "uk": "Відвести великий палець від долоні (фантомно чи реально).",
+    "en": "Abduct the thumb away from the palm (phantom or real)."
+   },
+   "xt": {
+    "uk": "Короткий м'яз-згинач і м'яз-протиставник великого пальця.",
+    "en": "Flexor pollicis brevis and opponens pollicis."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Малий м'яз; сигнал нижчої амплітуди, ніж у м'язів передпліччя.",
+     "en": "A small muscle; lower signal amplitude than the forearm muscles."
+    }
+   }
+  },
+  "fpb": {
+   "name": {
+    "uk": "Короткий м'яз-згинач великого пальця кисті",
+    "en": "Flexor pollicis brevis"
+   },
+   "latin": "m. flexor pollicis brevis",
+   "origin": {
+    "uk": "Тримач м'язів-згиначів і кістка-трапеція (поверхнева голівка).",
+    "en": "Flexor retinaculum and trapezium (superficial head)."
+   },
+   "insertion": {
+    "uk": "Основа проксимальної фаланги великого пальця.",
+    "en": "Base of the proximal phalanx of the thumb."
+   },
+   "nerve": {
+    "uk": "Серединний нерв (поверхнева голівка).",
+    "en": "Median nerve (superficial head)."
+   },
+   "action": {
+    "uk": "Згинання великого пальця в п'ястково-фаланговому суглобі.",
+    "en": "Flexion of the thumb at the metacarpophalangeal joint."
+   },
+   "cmd": {
+    "uk": "Зігнути великий палець (фантомно чи реально).",
+    "en": "Flex the thumb (phantom or real)."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Малий м'яз.",
+     "en": "A small muscle."
+    }
+   }
+  },
+  "op": {
+   "name": {
+    "uk": "М'яз-протиставник великого пальця кисті",
+    "en": "Opponens pollicis"
+   },
+   "latin": "m. opponens pollicis",
+   "origin": {
+    "uk": "Тримач м'язів-згиначів і горбок кістки-трапеції.",
+    "en": "Flexor retinaculum and tubercle of the trapezium."
+   },
+   "insertion": {
+    "uk": "Бічний край I п'ясткової кістки.",
+    "en": "Lateral border of the first metacarpal."
+   },
+   "nerve": {
+    "uk": "Серединний нерв (поворотна гілка).",
+    "en": "Median nerve (recurrent branch)."
+   },
+   "action": {
+    "uk": "Протиставлення великого пальця.",
+    "en": "Opposition of the thumb."
+   },
+   "why": {
+    "uk": "Лежить під коротким м'язом-відвідником; вносить свій внесок у загальний сигнал тенара.",
+    "en": "Lies beneath abductor pollicis brevis; contributes to the overall thenar signal."
+   },
+   "cmd": {
+    "uk": "Протиставити великий палець мізинцю (фантомно чи реально).",
+    "en": "Oppose the thumb to the little finger (phantom or real)."
+   }
+  },
+  "adp": {
+   "name": {
+    "uk": "М'яз-привідник великого пальця кисті",
+    "en": "Adductor pollicis"
+   },
+   "latin": "m. adductor pollicis",
+   "origin": {
+    "uk": "Коса голівка — основи II–III п'ясткових кісток і головчаста кістка; поперечна — передня поверхня III п'ясткової кістки.",
+    "en": "Oblique head: bases of metacarpals II–III and capitate; transverse head: anterior third metacarpal."
+   },
+   "insertion": {
+    "uk": "Присередня основа проксимальної фаланги великого пальця.",
+    "en": "Medial base of the proximal phalanx of the thumb."
+   },
+   "nerve": {
+    "uk": "Глибока гілка ліктьового нерва.",
+    "en": "Deep branch of the ulnar nerve."
+   },
+   "action": {
+    "uk": "Приведення великого пальця.",
+    "en": "Thumb adduction."
+   },
+   "why": {
+    "uk": "Глибокий шар долоні; його активність потрапляє в сигнал тенара та першого тильного міжкісткового м'яза.",
+    "en": "Deep palmar layer; its activity contaminates the thenar and first dorsal interosseous signals."
+   }
+  },
+  "adm": {
+   "name": {
+    "uk": "М'яз-відвідник мізинця",
+    "en": "Abductor digiti minimi"
+   },
+   "latin": "m. abductor digiti minimi",
+   "origin": {
+    "uk": "Горохоподібна кістка.",
+    "en": "Pisiform."
+   },
+   "insertion": {
+    "uk": "Присередня основа проксимальної фаланги мізинця.",
+    "en": "Medial base of the proximal phalanx of the little finger."
+   },
+   "nerve": {
+    "uk": "Глибока гілка ліктьового нерва.",
+    "en": "Deep branch of the ulnar nerve."
+   },
+   "action": {
+    "uk": "Відведення мізинця.",
+    "en": "Abduction of the little finger."
+   },
+   "why": {
+    "uk": "Найповерхневіший м'яз підвищення мізинця (гіпотенара) на ліктьовому краї кисті; може зберігатися, якщо ампутація зачепила лише променеві пальці.",
+    "en": "The most superficial hypothenar muscle on the ulnar border; may be preserved when only the radial digits were amputated."
+   },
+   "cmd": {
+    "uk": "Відвести мізинець (фантомно чи реально).",
+    "en": "Abduct the little finger (phantom or real)."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Малий м'яз.",
+     "en": "A small muscle."
+    }
+   }
+  },
+  "fdmb": {
+   "name": {
+    "uk": "Короткий м'яз-згинач мізинця",
+    "en": "Flexor digiti minimi brevis"
+   },
+   "latin": "m. flexor digiti minimi brevis",
+   "origin": {
+    "uk": "Гачок гачкуватої кістки та тримач м'язів-згиначів.",
+    "en": "Hook of the hamate and flexor retinaculum."
+   },
+   "insertion": {
+    "uk": "Основа проксимальної фаланги мізинця.",
+    "en": "Base of the proximal phalanx of the little finger."
+   },
+   "nerve": {
+    "uk": "Глибока гілка ліктьового нерва.",
+    "en": "Deep branch of the ulnar nerve."
+   },
+   "action": {
+    "uk": "Згинання мізинця в п'ястково-фаланговому суглобі.",
+    "en": "Flexion of the little finger at the metacarpophalangeal joint."
+   }
+  },
+  "odm": {
+   "name": {
+    "uk": "М'яз-протиставник мізинця",
+    "en": "Opponens digiti minimi"
+   },
+   "latin": "m. opponens digiti minimi",
+   "origin": {
+    "uk": "Гачок гачкуватої кістки та тримач м'язів-згиначів.",
+    "en": "Hook of the hamate and flexor retinaculum."
+   },
+   "insertion": {
+    "uk": "Присередній край V п'ясткової кістки.",
+    "en": "Medial border of the fifth metacarpal."
+   },
+   "nerve": {
+    "uk": "Глибока гілка ліктьового нерва.",
+    "en": "Deep branch of the ulnar nerve."
+   },
+   "action": {
+    "uk": "Підтягує V п'ясткову кістку вперед (протиставлення).",
+    "en": "Draws the fifth metacarpal forwards (opposition)."
+   }
+  },
+  "dio": {
+   "name": {
+    "uk": "Тильні міжкісткові м'язи",
+    "en": "Dorsal interossei"
+   },
+   "latin": "mm. interossei dorsales",
+   "origin": {
+    "uk": "Прилеглі поверхні сусідніх п'ясткових кісток (двоголові).",
+    "en": "Adjacent sides of neighbouring metacarpals (bipennate)."
+   },
+   "insertion": {
+    "uk": "Основи проксимальних фаланг і тильні апоневрози II–IV пальців.",
+    "en": "Bases of the proximal phalanges and extensor expansions of digits II–IV."
+   },
+   "nerve": {
+    "uk": "Глибока гілка ліктьового нерва.",
+    "en": "Deep branch of the ulnar nerve."
+   },
+   "action": {
+    "uk": "Відведення II–IV пальців від осі III пальця.",
+    "en": "Abduction of digits II–IV from the axis of the middle finger."
+   },
+   "why": {
+    "uk": "Перший тильний міжкістковий м'яз між I та II п'ястковими кістками — найбільший і поверхневий; решта лежать під сухожилками м'язів-розгиначів.",
+    "en": "The first dorsal interosseous between metacarpals I and II is the largest and superficial; the others lie under the extensor tendons."
+   },
+   "cmd": {
+    "uk": "Розвести пальці або відвести вказівний палець до великого (фантомно чи реально).",
+    "en": "Spread the fingers or abduct the index towards the thumb (phantom or real)."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Малий м'яз; найкращий кандидат — перший тильний міжкістковий.",
+     "en": "A small muscle; the first dorsal interosseous is the best candidate."
+    }
+   }
+  },
+  "pio": {
+   "name": {
+    "uk": "Долонні міжкісткові м'язи",
+    "en": "Palmar interossei"
+   },
+   "latin": "mm. interossei palmares",
+   "origin": {
+    "uk": "Долонні поверхні II, IV і V п'ясткових кісток.",
+    "en": "Palmar surfaces of metacarpals II, IV and V."
+   },
+   "insertion": {
+    "uk": "Основи проксимальних фаланг і тильні апоневрози II, IV, V пальців.",
+    "en": "Bases of the proximal phalanges and extensor expansions of digits II, IV, V."
+   },
+   "nerve": {
+    "uk": "Глибока гілка ліктьового нерва.",
+    "en": "Deep branch of the ulnar nerve."
+   },
+   "action": {
+    "uk": "Приведення пальців до осі III пальця.",
+    "en": "Adduction of the digits towards the axis of the middle finger."
+   },
+   "why": {
+    "uk": "Лежать глибоко між п'ястковими кістками; ізольований поверхневий сигнал малоймовірний.",
+    "en": "Deep between the metacarpals; an isolated surface signal is unlikely."
+   }
+  },
+  "lumb": {
+   "name": {
+    "uk": "Червоподібні м'язи",
+    "en": "Lumbricals"
+   },
+   "latin": "mm. lumbricales",
+   "origin": {
+    "uk": "Сухожилки глибокого м'яза-згинача пальців.",
+    "en": "Tendons of flexor digitorum profundus."
+   },
+   "insertion": {
+    "uk": "Бічні краї тильних апоневрозів II–V пальців.",
+    "en": "Lateral sides of the extensor expansions of digits II–V."
+   },
+   "nerve": {
+    "uk": "I–II — серединний нерв; III–IV — глибока гілка ліктьового нерва.",
+    "en": "I–II: median nerve; III–IV: deep branch of the ulnar nerve."
+   },
+   "action": {
+    "uk": "Згинання в п'ястково-фалангових і розгинання в міжфалангових суглобах.",
+    "en": "Flexion at the MCP and extension at the interphalangeal joints."
+   },
+   "why": {
+    "uk": "Малі м'язи серед сухожилків м'язів-згиначів; поверхнева ЕМГ від них практично не реєструється окремо.",
+    "en": "Small muscles among the flexor tendons; their surface EMG can hardly be recorded separately."
+   }
+  },
+  "pm_clav": {
+   "name": {
+    "uk": "Великий грудний м'яз, ключична частина",
+    "en": "Pectoralis major, clavicular part"
+   },
+   "latin": "m. pectoralis major, pars clavicularis",
+   "origin": {
+    "uk": "Присередня половина ключиці.",
+    "en": "Medial half of the clavicle."
+   },
+   "insertion": {
+    "uk": "Гребінь великого горбка плечової кістки.",
+    "en": "Crest of the greater tubercle of the humerus."
+   },
+   "nerve": {
+    "uk": "Бічний і присередній грудні нерви.",
+    "en": "Lateral and medial pectoral nerves."
+   },
+   "action": {
+    "uk": "Згинання, приведення та внутрішнє обертання плеча.",
+    "en": "Shoulder flexion, adduction and internal rotation."
+   },
+   "why": {
+    "uk": "Поверхнева під ключицею; окрема від груднинно-реберної частини зона сигналу. Після дезартикуляції втрачає прикріплення до плечової кістки, тож працює за фантомних команд.",
+    "en": "Superficial below the clavicle; a signal zone separate from the sternocostal part. After disarticulation it loses its humeral insertion and responds to phantom commands."
+   },
+   "cmd": {
+    "uk": "Підняти руку вперед (фантомне згинання плеча).",
+    "en": "Raise the arm forwards (phantom shoulder flexion)."
+   },
+   "xt": {
+    "uk": "Ключична частина дельтоподібного м'яза; груднинно-реберна частина.",
+    "en": "Clavicular deltoid; sternocostal part."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз.",
+     "en": "A large superficial muscle."
+    }
+   },
+   "tmr": [
+    "sd"
+   ]
+  },
+  "pm_stern": {
+   "name": {
+    "uk": "Великий грудний м'яз, груднинно-реберна частина",
+    "en": "Pectoralis major, sternocostal part"
+   },
+   "latin": "m. pectoralis major, pars sternocostalis",
+   "origin": {
+    "uk": "Передня поверхня груднини, хрящі I–VI ребер.",
+    "en": "Anterior sternum, costal cartilages I–VI."
+   },
+   "insertion": {
+    "uk": "Гребінь великого горбка плечової кістки.",
+    "en": "Crest of the greater tubercle of the humerus."
+   },
+   "nerve": {
+    "uk": "Присередній і бічний грудні нерви.",
+    "en": "Medial and lateral pectoral nerves."
+   },
+   "action": {
+    "uk": "Приведення та внутрішнє обертання плеча.",
+    "en": "Shoulder adduction and internal rotation."
+   },
+   "why": {
+    "uk": "Велика поверхнева площа на передній грудній стінці; добре розмежовується з ключичною частиною.",
+    "en": "A large superficial area on the anterior chest wall; well separated from the clavicular part."
+   },
+   "cmd": {
+    "uk": "Притиснути руку до тулуба й звести перед грудьми (фантомне приведення).",
+    "en": "Press the arm to the trunk and across the chest (phantom adduction)."
+   },
+   "xt": {
+    "uk": "Ключична частина; рухи грудної клітки під час дихання; зліва — наводки ЕКГ.",
+    "en": "Clavicular part; chest wall movement during breathing; ECG interference on the left."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз.",
+     "en": "A large superficial muscle."
+    }
+   },
+   "tmr": [
+    "sd"
+   ]
+  },
+  "pm_abd": {
+   "name": {
+    "uk": "Великий грудний м'яз, черевна частина",
+    "en": "Pectoralis major, abdominal part"
+   },
+   "latin": "m. pectoralis major, pars abdominalis",
+   "origin": {
+    "uk": "Передня пластинка піхви прямого м'яза живота.",
+    "en": "Anterior layer of the rectus sheath."
+   },
+   "insertion": {
+    "uk": "Гребінь великого горбка плечової кістки.",
+    "en": "Crest of the greater tubercle of the humerus."
+   },
+   "nerve": {
+    "uk": "Присередній грудний нерв.",
+    "en": "Medial pectoral nerve."
+   },
+   "action": {
+    "uk": "Приведення плеча, опускання плечового поясу.",
+    "en": "Shoulder adduction, depression of the shoulder girdle."
+   },
+   "tmr": [
+    "sd"
+   ]
+  },
+  "trap_desc": {
+   "name": {
+    "uk": "Трапецієподібний м'яз, низхідна частина",
+    "en": "Trapezius, descending part"
+   },
+   "latin": "m. trapezius, pars descendens",
+   "origin": {
+    "uk": "Верхня каркова лінія, зовнішній потиличний виступ, каркова зв'язка.",
+    "en": "Superior nuchal line, external occipital protuberance, nuchal ligament."
+   },
+   "insertion": {
+    "uk": "Бічна третина ключиці.",
+    "en": "Lateral third of the clavicle."
+   },
+   "nerve": {
+    "uk": "Додатковий нерв (XI пара черепних нервів).",
+    "en": "Accessory nerve (cranial nerve XI)."
+   },
+   "action": {
+    "uk": "Піднімання та обертання лопатки догори.",
+    "en": "Elevation and upward rotation of the scapula."
+   },
+   "why": {
+    "uk": "Зберігається незалежно від рівня ампутації, а підйом надпліччя легко виконати свідомо; але цей рух потрібен і в повсякденній діяльності, а ремені обв'язки тиснуть саме на цю зону.",
+    "en": "Preserved regardless of level, and shoulder shrug is easy to perform voluntarily; but the same movement is needed in daily activities, and harness straps press on this area."
+   },
+   "cmd": {
+    "uk": "Підняти надпліччя до вуха (реальний рух лопатки).",
+    "en": "Shrug the shoulder towards the ear (real scapular movement)."
+   },
+   "xt": {
+    "uk": "Рухи шиї та голови; м'яз-підіймач лопатки.",
+    "en": "Neck and head movement; levator scapulae."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Постійно залучений у постуральну роботу.",
+     "en": "Constantly involved in postural work."
+    }
+   }
+  },
+  "trap_trans": {
+   "name": {
+    "uk": "Трапецієподібний м'яз, поперечна частина",
+    "en": "Trapezius, transverse part"
+   },
+   "latin": "m. trapezius, pars transversa",
+   "origin": {
+    "uk": "Остисті відростки C7–T3 хребців.",
+    "en": "Spinous processes of C7–T3."
+   },
+   "insertion": {
+    "uk": "Акроміон і ость лопатки.",
+    "en": "Acromion and spine of the scapula."
+   },
+   "nerve": {
+    "uk": "Додатковий нерв.",
+    "en": "Accessory nerve."
+   },
+   "action": {
+    "uk": "Приведення лопатки до хребта.",
+    "en": "Retraction of the scapula."
+   }
+  },
+  "trap_asc": {
+   "name": {
+    "uk": "Трапецієподібний м'яз, висхідна частина",
+    "en": "Trapezius, ascending part"
+   },
+   "latin": "m. trapezius, pars ascendens",
+   "origin": {
+    "uk": "Остисті відростки T4–T12 хребців.",
+    "en": "Spinous processes of T4–T12."
+   },
+   "insertion": {
+    "uk": "Присередній кінець ості лопатки.",
+    "en": "Medial end of the scapular spine."
+   },
+   "nerve": {
+    "uk": "Додатковий нерв.",
+    "en": "Accessory nerve."
+   },
+   "action": {
+    "uk": "Опускання та обертання лопатки догори.",
+    "en": "Depression and upward rotation of the scapula."
+   }
+  },
+  "infra": {
+   "name": {
+    "uk": "Підостьовий м'яз",
+    "en": "Infraspinatus"
+   },
+   "latin": "m. infraspinatus",
+   "origin": {
+    "uk": "Підостьова ямка лопатки.",
+    "en": "Infraspinous fossa of the scapula."
+   },
+   "insertion": {
+    "uk": "Середня площадка великого горбка плечової кістки.",
+    "en": "Middle facet of the greater tubercle of the humerus."
+   },
+   "nerve": {
+    "uk": "Надлопатковий нерв.",
+    "en": "Suprascapular nerve."
+   },
+   "action": {
+    "uk": "Зовнішнє обертання плеча.",
+    "en": "External rotation of the shoulder."
+   },
+   "why": {
+    "uk": "Поверхнево в підостьовій ямці, частково під трапецієподібним і дельтоподібним м'язами. Після дезартикуляції реагує лише на фантомні команди.",
+    "en": "Superficial in the infraspinous fossa, partly beneath trapezius and deltoid. After disarticulation it responds only to phantom commands."
+   },
+   "cmd": {
+    "uk": "Повернути руку назовні (фантомне зовнішнє обертання).",
+    "en": "Rotate the arm outwards (phantom external rotation)."
+   },
+   "xt": {
+    "uk": "Малий і великий круглі м'язи; рухи лопатки.",
+    "en": "Teres minor and major; scapular movement."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Середній розмір доступної поверхні.",
+     "en": "A medium accessible surface."
+    }
+   }
+  },
+  "supra": {
+   "name": {
+    "uk": "Надостьовий м'яз",
+    "en": "Supraspinatus"
+   },
+   "latin": "m. supraspinatus",
+   "origin": {
+    "uk": "Надостьова ямка лопатки.",
+    "en": "Supraspinous fossa of the scapula."
+   },
+   "insertion": {
+    "uk": "Верхня площадка великого горбка плечової кістки.",
+    "en": "Superior facet of the greater tubercle of the humerus."
+   },
+   "nerve": {
+    "uk": "Надлопатковий нерв.",
+    "en": "Suprascapular nerve."
+   },
+   "action": {
+    "uk": "Відведення плеча (початкова фаза).",
+    "en": "Shoulder abduction (initial phase)."
+   },
+   "why": {
+    "uk": "Вкритий трапецієподібним м'язом; ізольований поверхневий сигнал малоймовірний.",
+    "en": "Covered by trapezius; an isolated surface signal is unlikely."
+   }
+  },
+  "teres_maj": {
+   "name": {
+    "uk": "Великий круглий м'яз",
+    "en": "Teres major"
+   },
+   "latin": "m. teres major",
+   "origin": {
+    "uk": "Задня поверхня нижнього кута лопатки.",
+    "en": "Posterior surface of the inferior angle of the scapula."
+   },
+   "insertion": {
+    "uk": "Гребінь малого горбка плечової кістки.",
+    "en": "Crest of the lesser tubercle of the humerus."
+   },
+   "nerve": {
+    "uk": "Нижній підлопатковий нерв.",
+    "en": "Lower subscapular nerve."
+   },
+   "action": {
+    "uk": "Приведення, розгинання та внутрішнє обертання плеча.",
+    "en": "Shoulder adduction, extension and internal rotation."
+   },
+   "why": {
+    "uk": "Біля нижнього кута лопатки; разом із найширшим м'язом спини утворює задню пахвову складку.",
+    "en": "Near the inferior angle of the scapula; with latissimus dorsi it forms the posterior axillary fold."
+   },
+   "cmd": {
+    "uk": "Відвести руку назад і всередину (фантомно).",
+    "en": "Move the arm backwards and inwards (phantom movement)."
+   },
+   "xt": {
+    "uk": "Найширший м'яз спини; рухи лопатки.",
+    "en": "Latissimus dorsi; scapular movement."
+   },
+   "effort": {
+    "level": "moderate",
+    "text": {
+     "uk": "Середній розмір.",
+     "en": "Medium size."
+    }
+   }
+  },
+  "teres_min": {
+   "name": {
+    "uk": "Малий круглий м'яз",
+    "en": "Teres minor"
+   },
+   "latin": "m. teres minor",
+   "origin": {
+    "uk": "Середня частина бічного краю лопатки.",
+    "en": "Middle part of the lateral border of the scapula."
+   },
+   "insertion": {
+    "uk": "Нижня площадка великого горбка плечової кістки.",
+    "en": "Inferior facet of the greater tubercle of the humerus."
+   },
+   "nerve": {
+    "uk": "Пахвовий нерв.",
+    "en": "Axillary nerve."
+   },
+   "action": {
+    "uk": "Зовнішнє обертання плеча.",
+    "en": "External rotation of the shoulder."
+   }
+  },
+  "rhomb_maj": {
+   "name": {
+    "uk": "Великий ромбоподібний м'яз",
+    "en": "Rhomboid major"
+   },
+   "latin": "m. rhomboideus major",
+   "origin": {
+    "uk": "Остисті відростки T2–T5 хребців.",
+    "en": "Spinous processes of T2–T5."
+   },
+   "insertion": {
+    "uk": "Присередній край лопатки нижче ості.",
+    "en": "Medial border of the scapula below the spine."
+   },
+   "nerve": {
+    "uk": "Дорсальний нерв лопатки.",
+    "en": "Dorsal scapular nerve."
+   },
+   "action": {
+    "uk": "Приведення лопатки до хребта.",
+    "en": "Retraction of the scapula."
+   },
+   "why": {
+    "uk": "Вкритий трапецієподібним м'язом; поверхнева ЕМГ значною мірою відображає трапецієподібний.",
+    "en": "Covered by trapezius; surface EMG largely reflects trapezius."
+   }
+  },
+  "rhomb_min": {
+   "name": {
+    "uk": "Малий ромбоподібний м'яз",
+    "en": "Rhomboid minor"
+   },
+   "latin": "m. rhomboideus minor",
+   "origin": {
+    "uk": "Каркова зв'язка, остисті відростки C7–T1 хребців.",
+    "en": "Nuchal ligament, spinous processes of C7–T1."
+   },
+   "insertion": {
+    "uk": "Присередній край лопатки на рівні ості.",
+    "en": "Medial border of the scapula at the root of the spine."
+   },
+   "nerve": {
+    "uk": "Дорсальний нерв лопатки.",
+    "en": "Dorsal scapular nerve."
+   },
+   "action": {
+    "uk": "Приведення лопатки до хребта.",
+    "en": "Retraction of the scapula."
+   }
+  },
+  "serr": {
+   "name": {
+    "uk": "Передній зубчастий м'яз",
+    "en": "Serratus anterior"
+   },
+   "latin": "m. serratus anterior",
+   "origin": {
+    "uk": "Зовнішні поверхні I–VIII (IX) ребер.",
+    "en": "External surfaces of ribs I–VIII (IX)."
+   },
+   "insertion": {
+    "uk": "Передня поверхня присереднього краю лопатки.",
+    "en": "Anterior surface of the medial border of the scapula."
+   },
+   "nerve": {
+    "uk": "Довгий грудний нерв.",
+    "en": "Long thoracic nerve."
+   },
+   "action": {
+    "uk": "Висування лопатки вперед і обертання догори.",
+    "en": "Protraction and upward rotation of the scapula."
+   },
+   "why": {
+    "uk": "Поверхневий лише на бічній грудній стінці між великим грудним і найширшим м'язами; рухи лопатки та дихання змінюють сигнал.",
+    "en": "Superficial only on the lateral chest wall between pectoralis major and latissimus dorsi; scapular movement and breathing alter the signal."
+   }
+  },
+  "lev": {
+   "name": {
+    "uk": "М'яз-підіймач лопатки",
+    "en": "Levator scapulae"
+   },
+   "latin": "m. levator scapulae",
+   "origin": {
+    "uk": "Поперечні відростки C1–C4 хребців.",
+    "en": "Transverse processes of C1–C4."
+   },
+   "insertion": {
+    "uk": "Присередній край лопатки вище ості.",
+    "en": "Medial border of the scapula above the spine."
+   },
+   "nerve": {
+    "uk": "Дорсальний нерв лопатки та шийні нерви.",
+    "en": "Dorsal scapular nerve and cervical nerves."
+   },
+   "action": {
+    "uk": "Піднімання лопатки.",
+    "en": "Elevation of the scapula."
+   }
+  },
+  "scm": {
+   "name": {
+    "uk": "Груднинно-ключично-соскоподібний м'яз",
+    "en": "Sternocleidomastoid"
+   },
+   "latin": "m. sternocleidomastoideus",
+   "origin": {
+    "uk": "Руків'я груднини та присередня третина ключиці.",
+    "en": "Manubrium and medial third of the clavicle."
+   },
+   "insertion": {
+    "uk": "Соскоподібний відросток і верхня каркова лінія.",
+    "en": "Mastoid process and superior nuchal line."
+   },
+   "nerve": {
+    "uk": "Додатковий нерв.",
+    "en": "Accessory nerve."
+   },
+   "action": {
+    "uk": "Обертання та згинання голови.",
+    "en": "Rotation and flexion of the head."
+   }
+  },
+  "lat": {
+   "name": {
+    "uk": "Найширший м'яз спини",
+    "en": "Latissimus dorsi"
+   },
+   "latin": "m. latissimus dorsi",
+   "origin": {
+    "uk": "Остисті відростки T7–T12 хребців, грудо-поперекова фасція, клубовий гребінь, нижні 3–4 ребра.",
+    "en": "Spinous processes of T7–T12, thoracolumbar fascia, iliac crest, lower 3–4 ribs."
+   },
+   "insertion": {
+    "uk": "Дно міжгорбкової борозни плечової кістки.",
+    "en": "Floor of the intertubercular groove of the humerus."
+   },
+   "nerve": {
+    "uk": "Грудо-спинний нерв.",
+    "en": "Thoracodorsal nerve."
+   },
+   "action": {
+    "uk": "Розгинання, приведення та внутрішнє обертання плеча.",
+    "en": "Shoulder extension, adduction and internal rotation."
+   },
+   "why": {
+    "uk": "Велика поверхнева площа на бічній і задній стінці тулуба. У 3D-моделі BodyParts3D цього м'яза немає, тому його контур показано схематично.",
+    "en": "A large superficial area on the lateral and posterior trunk wall. This muscle is missing from the BodyParts3D model, so its outline is shown schematically."
+   },
+   "cmd": {
+    "uk": "Відвести руку назад і донизу (фантомно).",
+    "en": "Move the arm backwards and downwards (phantom movement)."
+   },
+   "xt": {
+    "uk": "Великий круглий м'яз; рухи тулуба.",
+    "en": "Teres major; trunk movement."
+   },
+   "effort": {
+    "level": "low",
+    "text": {
+     "uk": "Великий поверхневий м'яз.",
+     "en": "A large superficial muscle."
+    }
+   },
+   "schematic": true
+  }
+ },
+ "bones": {
+  "humerus": {
+   "name": {
+    "uk": "Плечова кістка",
+    "en": "Humerus"
+   },
+   "latin": "humerus",
+   "note": {
+    "uk": "Присередній і бічний надвиростки — місця початку спільних сухожилків м'язів-згиначів і м'язів-розгиначів. Над ними переважає сухожилкова тканина, тому сигнал слабкий.",
+    "en": "The medial and lateral epicondyles give origin to the common flexor and extensor tendons. Tendinous tissue predominates over them, so the signal is weak."
+   }
+  },
+  "radius": {
+   "name": {
+    "uk": "Променева кістка",
+    "en": "Radius"
+   },
+   "latin": "radius",
+   "note": {
+    "uk": "Дистальний кінець і шилоподібний відросток вкриті переважно сухожилками: м'язового сигналу мало.",
+    "en": "The distal end and styloid process are covered mainly by tendons: little muscle signal."
+   }
+  },
+  "ulna": {
+   "name": {
+    "uk": "Ліктьова кістка",
+    "en": "Ulna"
+   },
+   "latin": "ulna",
+   "note": {
+    "uk": "Ліктьовий відросток і задній край лежать підшкірно: між кісткою та електродом немає м'язової тканини, тож сигналу немає. Окремий референтний електрод, якщо система його потребує, розміщують саме над такою електрично неактивною ділянкою (Hermens et al., 2000).",
+    "en": "The olecranon and posterior border are subcutaneous: there is no muscle between bone and electrode, so there is no signal. A separate reference electrode, if the system needs one, goes over such an electrically inactive area (Hermens et al., 2000)."
+   }
+  },
+  "scapula": {
+   "name": {
+    "uk": "Лопатка",
+    "en": "Scapula"
+   },
+   "latin": "scapula",
+   "note": {
+    "uk": "Ость і акроміон лежать підшкірно: м'язового сигналу немає.",
+    "en": "The spine and acromion are subcutaneous: no muscle signal."
+   }
+  },
+  "clavicle": {
+   "name": {
+    "uk": "Ключиця",
+    "en": "Clavicle"
+   },
+   "latin": "clavicula",
+   "note": {
+    "uk": "Підшкірна кістка: м'язового сигналу немає; орієнтир для ключичної частини великого грудного м'яза.",
+    "en": "A subcutaneous bone: no muscle signal; a landmark for the clavicular part of pectoralis major."
+   }
+  },
+  "carpus": {
+   "name": {
+    "uk": "Кістки зап'ястка",
+    "en": "Carpal bones"
+   },
+   "latin": "ossa carpi",
+   "note": {
+    "uk": "Зап'ясток вкритий сухожилками й тримачами: м'язового сигналу немає.",
+    "en": "The wrist is covered by tendons and retinacula: no muscle signal."
+   }
+  },
+  "metacarpus": {
+   "name": {
+    "uk": "П'ясткові кістки",
+    "en": "Metacarpals"
+   },
+   "latin": "ossa metacarpi",
+   "note": {
+    "uk": "З тильного боку вкриті переважно сухожилками м'язів-розгиначів.",
+    "en": "Dorsally covered mainly by the extensor tendons."
+   }
+  },
+  "phalanges": {
+   "name": {
+    "uk": "Фаланги пальців кисті",
+    "en": "Phalanges"
+   },
+   "latin": "phalanges",
+   "note": {
+    "uk": "М'язів на фалангах немає.",
+    "en": "There are no muscles on the phalanges."
+   }
+  },
+  "sternum": {
+   "name": {
+    "uk": "Груднина",
+    "en": "Sternum"
+   },
+   "latin": "sternum",
+   "note": {
+    "uk": "Підшкірна кістка: м'язового сигналу немає.",
+    "en": "A subcutaneous bone: no muscle signal."
+   }
+  },
+  "ribs": {
+   "name": {
+    "uk": "Ребра та реберні хрящі",
+    "en": "Ribs and costal cartilages"
+   },
+   "latin": "costae",
+   "note": {
+    "uk": "Кістковий орієнтир грудної стінки.",
+    "en": "A bony landmark of the chest wall."
+   }
+  },
+  "vertebrae": {
+   "name": {
+    "uk": "Хребці",
+    "en": "Vertebrae"
+   },
+   "latin": "vertebrae",
+   "note": {
+    "uk": "Остисті відростки лежать підшкірно.",
+    "en": "The spinous processes are subcutaneous."
+   }
+  },
+  "retinaculum": {
+   "name": {
+    "uk": "Тримач м'язів-згиначів",
+    "en": "Flexor retinaculum"
+   },
+   "latin": "retinaculum musculorum flexorum",
+   "note": {
+    "uk": "Сполучнотканинна структура: не генерує ЕМГ.",
+    "en": "A connective-tissue structure: generates no EMG."
+   }
+  },
+  "membrane": {
+   "name": {
+    "uk": "Міжкісткова перетинка передпліччя",
+    "en": "Interosseous membrane"
+   },
+   "latin": "membrana interossea antebrachii",
+   "note": {
+    "uk": "Глибока сполучнотканинна структура.",
+    "en": "A deep connective-tissue structure."
+   }
+  }
+ },
+ "electrodes": [
+  {
+   "id": "int",
+   "name": {
+    "uk": "Інтегрований електрод",
+    "en": "Integrated electrode"
+   },
+   "example": "Ottobock MyoBock 13E200",
+   "w": 27,
+   "h": 18,
+   "dims": true,
+   "contacts": [
+    {
+     "x": -8.5,
+     "w": 2.4,
+     "h": 11
+    },
+    {
+     "x": 0,
+     "w": 2.4,
+     "h": 13
+    },
+    {
+     "x": 8.5,
+     "w": 2.4,
+     "h": 11
+    }
+   ],
+   "note": {
+    "uk": "Корпус 27 × 18 × 9,5 мм, маса 4,5 г, титанові контакти, смуга пропускання 90–450 Гц (дані виробника). Положення контактів на схемі умовне.",
+    "en": "Housing 27 × 18 × 9.5 mm, 4.5 g, titanium contacts, 90–450 Hz bandwidth (manufacturer data). Contact positions in the drawing are indicative."
+   },
+   "url": "https://www.ottobock.com/en-hk/product/13E200-61664"
+  },
+  {
+   "id": "suction",
+   "name": {
+    "uk": "Електрод для вакуумного куксоприймача",
+    "en": "Suction socket electrode"
+   },
+   "example": "Ottobock 13E202",
+   "w": 27,
+   "h": 18,
+   "flange": [
+    42,
+    32
+   ],
+   "dims": false,
+   "contacts": [
+    {
+     "x": -8.5,
+     "w": 2.4,
+     "h": 11
+    },
+    {
+     "x": 0,
+     "w": 2.4,
+     "h": 13
+    },
+    {
+     "x": 8.5,
+     "w": 2.4,
+     "h": 11
+    }
+   ],
+   "note": {
+    "uk": "Електрод 13E200 у манжеті з еластичного матеріалу, яка створює герметичне з'єднання між внутрішнім і зовнішнім куксоприймачами; придатний і для вакуумних куксоприймачів (дані виробника). Розміри манжети на схемі умовні.",
+    "en": "A 13E200 electrode embedded in an elastic mounting suspension that creates an airtight seal between the inner and outer sockets; also suitable for suction sockets (manufacturer data). Flange dimensions in the drawing are indicative."
+   },
+   "url": "https://www.ottobock.com/en-gb/product/13E202-106650"
+  },
+  {
+   "id": "remote",
+   "name": {
+    "uk": "Віддалений електрод (куполи)",
+    "en": "Remote electrode (domes)"
+   },
+   "example": "Ottobock 13E400 / 13E401",
+   "w": 26,
+   "h": 10,
+   "dims": false,
+   "domes": [
+    -10,
+    10
+   ],
+   "note": {
+    "uk": "Двополюсний (13E400) або триполюсний із контактом референтного потенціалу (13E401) для системи Myo Plus; смуга пропускання 80–500 Гц (дані виробника). Відстань між куполами на схемі — 20 мм, тобто верхня межа за рекомендаціями SENIAM; розміри умовні.",
+    "en": "Double-pole (13E400) or triple-pole with a reference-potential contact (13E401) for the Myo Plus system; 80–500 Hz bandwidth (manufacturer data). Dome spacing in the drawing is 20 mm, the upper limit recommended by SENIAM; dimensions are indicative."
+   },
+   "url": "https://www.ottobock.com/en-gb/product/13E400-61075"
+  },
+  {
+   "id": "dome",
+   "name": {
+    "uk": "Купольні контакти",
+    "en": "Dome contacts"
+   },
+   "example": "Coapt ControlSeal (Fillauer Myo/One)",
+   "w": 24,
+   "h": 9,
+   "dims": false,
+   "domes": [
+    -9,
+    9
+   ],
+   "note": {
+    "uk": "Куполи ControlSeal від Coapt у двоканальній електродній системі Fillauer Myo/One (дані виробника). Розміри на схемі умовні.",
+    "en": "Coapt ControlSeal domes in the Fillauer Myo/One dual-channel electrode system (manufacturer data). Dimensions in the drawing are indicative."
+   },
+   "url": "https://fillauer.com/products/myo-one-with-controlseal-electrode-domes/"
+  }
+ ],
+ "weak": [
+  {
+   "title": {
+    "uk": "Сухожилки й апоневрози",
+    "en": "Tendons and aponeuroses"
+   },
+   "basis": "evidence",
+   "text": {
+    "uk": "У сухожилку немає м'язових волокон, тож він не генерує потенціалів дії. Електрод розміщують на середній лінії черевця між м'язово-сухожилковим переходом і найближчою зоною іннервації (De Luca, 1997). На схемі такі зони світлі, а в дистальній третині передпліччя вони переважають.",
+    "en": "Tendons contain no muscle fibres, so they generate no action potentials. The electrode belongs on the midline of the belly, between the myotendinous junction and the nearest innervation zone (De Luca, 1997). Such zones are pale in the diagram and predominate in the distal third of the forearm."
+   }
+  },
+  {
+   "title": {
+    "uk": "Кістки під шкірою",
+    "en": "Subcutaneous bone"
+   },
+   "basis": "mechanistic",
+   "text": {
+    "uk": "Над надвиростками, ліктьовим відростком, заднім краєм ліктьової кістки, остю лопатки та ключицею між кісткою й електродом немає м'язів, тож сигналу немає.",
+    "en": "Over the epicondyles, olecranon, posterior ulnar border, scapular spine and clavicle there is no muscle between bone and electrode, so there is no signal."
+   }
+  },
+  {
+   "title": {
+    "uk": "Зона іннервації",
+    "en": "Innervation zone"
+   },
+   "basis": "evidence",
+   "text": {
+    "uk": "Над зоною іннервації потенціали дії поширюються в протилежних напрямках, і в двополюсному відведенні амплітуда сигналу помітно знижується та стає нестабільною (De Luca, 1997; Merlo et al., 2021).",
+    "en": "Over the innervation zone, action potentials propagate in opposite directions, and in a bipolar recording the amplitude drops markedly and becomes unstable (De Luca, 1997; Merlo et al., 2021)."
+   }
+  },
+  {
+   "title": {
+    "uk": "Глибина та підшкірна клітковина",
+    "en": "Depth and subcutaneous tissue"
+   },
+   "basis": "mechanistic",
+   "text": {
+    "uk": "Тканини діють як об'ємний провідник: що глибше м'яз і товща підшкірна клітковина, то слабший і менш вибірковий сигнал на шкірі.",
+    "en": "Tissue acts as a volume conductor: the deeper the muscle and the thicker the subcutaneous layer, the weaker and less selective the signal at the skin."
+   }
+  },
+  {
+   "title": {
+    "uk": "Межа між м'язами",
+    "en": "Border between muscles"
+   },
+   "basis": "evidence",
+   "text": {
+    "uk": "Біля межі з сусіднім м'язом зростають перехресні наводки; SENIAM рекомендує розміщувати сенсор подалі від країв м'яза (Hermens et al., 2000).",
+    "en": "Near the border with a neighbouring muscle, crosstalk increases; SENIAM recommends placing the sensor away from muscle edges (Hermens et al., 2000)."
+   }
+  },
+  {
+   "title": {
+    "uk": "Рубці, клапті, трансплантати",
+    "en": "Scars, flaps, grafts"
+   },
+   "basis": "mechanistic",
+   "text": {
+    "uk": "Змінюють провідність і відстань до м'яза; рухливі рубці зміщують електрод відносно черевця.",
+    "en": "They change conductivity and distance to the muscle; mobile scars shift the electrode relative to the belly."
+   }
+  }
+ ],
+ "effort": {
+  "intro": {
+   "uk": "Пацієнт має керувати протезом годинами, тож важливо, щоб поріг керування досягався без великого зусилля. Що вища відносна інтенсивність статичного скорочення, то коротший час до втоми; ця залежність нелінійна та відрізняється для різних суглобів (Frey-Law & Avin, 2010).",
+   "en": "A patient must control the prosthesis for hours, so the control threshold should be reached without great effort. The higher the relative intensity of a static contraction, the shorter the time to fatigue; the relationship is non-linear and differs between joints (Frey-Law & Avin, 2010)."
+  },
+  "principles": [
+   {
+    "text": {
+     "uk": "Обирайте великий поверхневий м'яз: він дає сильніший сигнал за меншої частки максимального зусилля.",
+     "en": "Choose a large superficial muscle: it gives a stronger signal at a smaller fraction of maximal effort."
+    },
+    "basis": "mechanistic"
+   },
+   {
+    "text": {
+     "uk": "Обирайте фізіологічно інтуїтивні команди (фантомне розкриття чи стискання кисті): вони потребують менше когнітивного зусилля.",
+     "en": "Choose physiologically intuitive commands (phantom hand opening or closing): they demand less cognitive effort."
+    },
+    "basis": "expert"
+   },
+   {
+    "text": {
+     "uk": "Уникайте м'язів, навантажених у повсякденних рухах (плечо-променевий, дельтоподібний, трапецієподібний): вони дають небажані активації та втомлюються від постуральної роботи.",
+     "en": "Avoid muscles loaded in everyday movement (brachioradialis, deltoid, trapezius): they cause unwanted activations and tire from postural work."
+    },
+    "basis": "mechanistic"
+   },
+   {
+    "text": {
+     "uk": "Клінічна практика: на трансрадіальному рівні електроди зазвичай не ставлять на м'язи-привертачі, бо пацієнти швидко втомлюються.",
+     "en": "Clinical practice: at the transradial level, electrodes are usually not placed over the pronators because patients tire quickly."
+    },
+    "basis": "expert"
+   },
+   {
+    "text": {
+     "uk": "Налаштуйте підсилення так, щоб робочий діапазон керування відповідав комфортному, а не максимальному зусиллю.",
+     "en": "Set the gain so that the working control range corresponds to comfortable rather than maximal effort."
+    },
+    "basis": "expert"
+   }
   ],
   "levels": {
-    "ph": {
-      "title": {
-        "uk": "Часткова кисть",
-        "en": "Partial hand"
-      },
-      "section": {
-        "uk": "Поперечний зріз на рівні п'ясткових кісток",
-        "en": "Transverse section at the metacarpal level"
-      },
-      "orient": {
-        "top": {
-          "uk": "Долонна поверхня",
-          "en": "Palmar"
-        },
-        "bottom": {
-          "uk": "Тильна поверхня",
-          "en": "Dorsal"
-        },
-        "left": {
-          "uk": "Променевий бік",
-          "en": "Radial"
-        },
-        "right": {
-          "uk": "Ліктьовий бік",
-          "en": "Ulnar"
-        }
-      },
-      "intro": {
-        "uk": "Залежно від рівня ампутації та збережених структур сигнали знімають із власних м'язів кисті (тенар, гіпотенар, перший тильний міжкістковий) або з м'язів передпліччя. Черевця м'язів передпліччя лежать у його проксимальній і середній третинах; дистальніше переважають сухожилки, тож сигнал там слабший (див. трансрадіальний рівень).",
-        "en": "Depending on the amputation level and preserved structures, signals are recorded from the intrinsic hand muscles (thenar, hypothenar, first dorsal interosseous) or from the forearm muscles. Forearm muscle bellies lie in the proximal and middle thirds; distally, tendons predominate and the signal is weaker (see the transradial level)."
-      },
-      "modeNotes": {
-        "direct": {
-          "uk": "Якщо власні м'язи кисті не дають придатного сигналу, використовують м'язи передпліччя (Adewuyi et al., 2017). Кріплення електродів на передпліччі може обмежити рухи збереженого зап'ястка; цей компроміс варто обговорити з пацієнтом.",
-          "en": "If the intrinsic hand muscles do not provide a usable signal, the forearm muscles are used (Adewuyi et al., 2017). Mounting electrodes on the forearm may restrict a preserved wrist; discuss this trade-off with the patient."
-        },
-        "pr": {
-          "uk": "Поєднання сигналів власних м'язів кисті та м'язів передпліччя з тренуванням у різних положеннях зап'ястка підвищило частоту виконання завдань у людей із частковою ампутацією кисті з 73% до 96% (Adewuyi et al., 2016).",
-          "en": "Combining intrinsic and extrinsic muscle EMG, with training across wrist positions, increased task completion rates in partial-hand amputees from 73% to 96% (Adewuyi et al., 2016)."
-        },
-        "tmr": {
-          "uk": "Для цього рівня карту TMR не наведено.",
-          "en": "No TMR map is given for this level."
-        }
-      },
-      "pitfalls": [
-        {
-          "uk": "Рухи зап'ястка змінюють сигнал м'язів передпліччя; тренування в різних положеннях зап'ястка покращує керування (Adewuyi et al., 2017).",
-          "en": "Wrist motion alters forearm muscle EMG; training across wrist positions improves control (Adewuyi et al., 2017)."
-        },
-        {
-          "uk": "Електроди на долоні зазнають тиску під час хвату: перевіряйте сигнал і під навантаженням.",
-          "en": "Palmar electrodes are compressed during grasping: check the signal under load as well."
-        }
-      ],
-      "muscles": [
-        {
-          "id": "thenar",
-          "abbr": {
-            "uk": "Тенар",
-            "en": "Thenar"
-          },
-          "name": {
-            "uk": "М'язи підвищення великого пальця (тенар)",
-            "en": "Thenar muscles"
-          },
-          "latin": "mm. abductor pollicis brevis, flexor pollicis brevis, opponens pollicis",
-          "role": "conditional",
-          "why": {
-            "uk": "Лежать поверхнево на долонно-променевому боці. Якщо м'язи та їхня іннервація збережені, фантомне протиставлення великого пальця може дати ізольований сигнал.",
-            "en": "Superficial on the palmar-radial side. If the muscles and their innervation are preserved, phantom thumb opposition may produce an isolated signal."
-          },
-          "commands": {
-            "uk": "Протиставити або відвести великий палець (фантомно чи реально).",
-            "en": "Oppose or abduct the thumb (phantom or real movement)."
-          },
-          "crosstalk": {
-            "uk": "Привідний м'яз великого пальця (глибше); під час стискання кисті — міжкісткові м'язи.",
-            "en": "Adductor pollicis (deeper); the interossei during grasping."
-          }
-        },
-        {
-          "id": "fdi",
-          "abbr": {
-            "uk": "1ТМ",
-            "en": "FDI"
-          },
-          "name": {
-            "uk": "Перший тильний міжкістковий м'яз",
-            "en": "First dorsal interosseous"
-          },
-          "latin": "m. interosseus dorsalis I",
-          "role": "conditional",
-          "why": {
-            "uk": "Лежить поверхнево між I та II п'ястковими кістками з тильного боку й добре пальпується. Потребує збереженої II п'ясткової кістки.",
-            "en": "Superficial between the first and second metacarpals on the dorsal side and easy to palpate. Requires a preserved second metacarpal."
-          },
-          "commands": {
-            "uk": "Відвести вказівний палець убік великого (фантомно чи реально).",
-            "en": "Abduct the index finger towards the thumb (phantom or real movement)."
-          },
-          "crosstalk": {
-            "uk": "Привідний м'яз великого пальця (глибше, з долонного боку).",
-            "en": "Adductor pollicis (deeper, on the palmar side)."
-          }
-        },
-        {
-          "id": "hypothenar",
-          "abbr": {
-            "uk": "Гіпотенар",
-            "en": "Hypoth."
-          },
-          "name": {
-            "uk": "М'язи підвищення мізинця (гіпотенар)",
-            "en": "Hypothenar muscles"
-          },
-          "latin": "mm. abductor digiti minimi, flexor digiti minimi brevis, opponens digiti minimi",
-          "role": "conditional",
-          "why": {
-            "uk": "Лежать поверхнево на долонно-ліктьовому краї кисті; можуть зберігатися, якщо ампутація зачепила лише променеві пальці.",
-            "en": "Superficial along the palmar-ulnar border; may be preserved when only the radial digits were amputated."
-          },
-          "commands": {
-            "uk": "Відвести мізинець (фантомно чи реально).",
-            "en": "Abduct the little finger (phantom or real movement)."
-          },
-          "crosstalk": {
-            "uk": "Згиначі пальців і міжкісткові м'язи під час силового хвату.",
-            "en": "Finger flexors and interossei during power grip."
-          }
-        },
-        {
-          "id": "dio",
-          "abbr": {
-            "uk": "ТМ",
-            "en": "DI"
-          },
-          "name": {
-            "uk": "Тильні міжкісткові м'язи II–IV",
-            "en": "Dorsal interossei II–IV"
-          },
-          "latin": "mm. interossei dorsales II–IV",
-          "role": "secondary",
-          "why": {
-            "uk": "Лежать між п'ястковими кістками під сухожилками розгиначів; сигнал слабший і менш ізольований, ніж у першого тильного міжкісткового м'яза.",
-            "en": "Lie between the metacarpals beneath the extensor tendons; the signal is weaker and less isolated than that of the first dorsal interosseous."
-          },
-          "commands": {
-            "uk": "Розвести пальці (фантомно чи реально).",
-            "en": "Spread the fingers (phantom or real movement)."
-          },
-          "crosstalk": {
-            "uk": "Сусідні міжкісткові м'язи; рухи сухожилків розгиначів над ними.",
-            "en": "Adjacent interossei; movement of the overlying extensor tendons."
-          }
-        },
-        {
-          "id": "addpol",
-          "abbr": {
-            "uk": "ПрВП",
-            "en": "AdP"
-          },
-          "name": {
-            "uk": "Привідний м'яз великого пальця",
-            "en": "Adductor pollicis"
-          },
-          "latin": "m. adductor pollicis",
-          "role": "deep",
-          "why": {
-            "uk": "Глибокий шар долоні. Для поверхневої ЕМГ малодоступний, але його активність потрапляє в сигнал тенара та першого тильного міжкісткового м'яза.",
-            "en": "Deep palmar layer. Hard to reach with surface EMG, but its activity contaminates the thenar and first dorsal interosseous signals."
-          },
-          "commands": {
-            "uk": "Привести великий палець до долоні.",
-            "en": "Adduct the thumb towards the palm."
-          }
-        },
-        {
-          "id": "pio",
-          "abbr": {
-            "uk": "ДМ",
-            "en": "PI"
-          },
-          "name": {
-            "uk": "Долонні міжкісткові м'язи",
-            "en": "Palmar interossei"
-          },
-          "latin": "mm. interossei palmares",
-          "role": "deep",
-          "why": {
-            "uk": "Лежать глибоко між п'ястковими кістками з долонного боку; ізольований поверхневий сигнал малоймовірний.",
-            "en": "Lie deep between the metacarpals on the palmar side; an isolated surface signal is unlikely."
-          }
-        },
-        {
-          "id": "flextend",
-          "abbr": {
-            "uk": "Сух.",
-            "en": "Tend."
-          },
-          "name": {
-            "uk": "Сухожилки згиначів пальців і червоподібні м'язи",
-            "en": "Flexor tendons and lumbricals"
-          },
-          "latin": "tendines mm. flexorum digitorum; mm. lumbricales",
-          "role": "landmark",
-          "why": {
-            "uk": "Сухожилки не генерують ЕМГ-сигналу. Червоподібні м'язи малі й лежать глибоко.",
-            "en": "Tendons do not generate EMG. The lumbricals are small and deep."
-          }
-        },
-        {
-          "id": "exttend",
-          "abbr": {
-            "uk": "Сух.",
-            "en": "Tend."
-          },
-          "name": {
-            "uk": "Сухожилки розгиначів пальців",
-            "en": "Extensor tendons"
-          },
-          "latin": "tendines m. extensoris digitorum",
-          "role": "landmark",
-          "why": {
-            "uk": "Не є джерелом ЕМГ; їхні рухи під шкірою можуть зміщувати електрод відносно м'язів.",
-            "en": "Not a source of EMG; their movement under the skin can shift an electrode relative to the muscles."
-          }
-        }
-      ]
-    },
-    "tr": {
-      "title": {
-        "uk": "Трансрадіальний рівень",
-        "en": "Transradial"
-      },
-      "section": {
-        "uk": "Поперечний зріз на межі проксимальної та середньої третин передпліччя",
-        "en": "Transverse section at the junction of the proximal and middle thirds of the forearm"
-      },
-      "orient": {
-        "top": {
-          "uk": "Долонна поверхня",
-          "en": "Volar"
-        },
-        "bottom": {
-          "uk": "Тильна поверхня",
-          "en": "Dorsal"
-        },
-        "left": {
-          "uk": "Променевий бік",
-          "en": "Radial"
-        },
-        "right": {
-          "uk": "Ліктьовий бік",
-          "en": "Ulnar"
-        }
-      },
-      "intro": {
-        "uk": "Класична пара орієнтирів — група розгиначів на тильно-променевій поверхні та група згиначів на долонній поверхні; фізіологічно вони відповідають розкриттю та закриттю кисті. Електроди розміщують над черевцями м'язів у проксимальній і середній третинах: дистальніше м'язи переходять у сухожилки, і сигнал слабшає (De Luca, 1997). Квадратний пронатор лежить глибоко в дистальній чверті передпліччя й для поверхневої ЕМГ зазвичай недоступний.",
-        "en": "The classic pair of landmarks is the extensor group on the dorsoradial surface and the flexor group on the volar surface, physiologically corresponding to opening and closing the hand. Electrodes go over the muscle bellies in the proximal and middle thirds: more distally the muscles become tendons and the signal weakens (De Luca, 1997). Pronator quadratus lies deep in the distal quarter of the forearm and is usually inaccessible to surface EMG."
-      },
-      "modeNotes": {
-        "direct": {
-          "uk": "Для двоканальної схеми зазвичай обирають по одній зоні в групі розгиначів і в групі згиначів, з максимальною відстанню між ними, щоб зменшити перехресні наводки.",
-          "en": "For a two-channel set-up, one site is usually chosen in the extensor group and one in the flexor group, as far apart as possible to reduce crosstalk."
-        },
-        "pr": {
-          "uk": "Масив електродів охоплює і згиначі, і розгиначі; для цього рівня доступні комерційні системи з розпізнаванням патернів.",
-          "en": "The electrode array covers both flexors and extensors; commercial pattern recognition systems are available for this level."
-        },
-        "tmr": {
-          "uk": "Для цього рівня карту TMR не наведено: дані обмежені.",
-          "en": "No TMR map is given for this level: evidence is limited."
-        }
-      },
-      "pitfalls": [
-        {
-          "uk": "Плечопроменевий м'яз і довгий променевий розгинач зап'ястка активні під час згинання ліктя: перевірте сигнал, коли пацієнт піднімає предмет.",
-          "en": "Brachioradialis and extensor carpi radialis longus are active during elbow flexion: check the signal while the patient lifts an object."
-        }
-      ],
-      "muscles": [
-        {
-          "id": "fcu",
-          "abbr": {
-            "uk": "ЛЗЗ",
-            "en": "FCU"
-          },
-          "name": {
-            "uk": "Ліктьовий згинач зап'ястка",
-            "en": "Flexor carpi ulnaris"
-          },
-          "latin": "m. flexor carpi ulnaris",
-          "role": "primary",
-          "why": {
-            "uk": "Поверхневий м'яз уздовж долонно-ліктьового краю з великим черевцем у проксимальній половині передпліччя.",
-            "en": "Superficial along the volar-ulnar border, with a large belly in the proximal half of the forearm."
-          },
-          "commands": {
-            "uk": "Зігнути кисть у зап'ясті з відведенням у ліктьовий бік (фантомно).",
-            "en": "Flex the wrist with ulnar deviation (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Поверхневий і глибокий згиначі пальців; ліктьовий розгинач зап'ястка біля підшкірного краю ліктьової кістки.",
-            "en": "Superficial and deep finger flexors; extensor carpi ulnaris near the subcutaneous border of the ulna."
-          }
-        },
-        {
-          "id": "fds",
-          "abbr": {
-            "uk": "ПЗП",
-            "en": "FDS"
-          },
-          "name": {
-            "uk": "Поверхневий згинач пальців",
-            "en": "Flexor digitorum superficialis"
-          },
-          "latin": "m. flexor digitorum superficialis",
-          "role": "primary",
-          "why": {
-            "uk": "Займає центральну частину долонної поверхні й у середній третині частково виходить на поверхню між сусідніми згиначами. Фантомне стискання пальців — інтуїтивна команда «закрити».",
-            "en": "Occupies the centre of the volar surface and in the middle third partly surfaces between neighbouring flexors. Phantom finger flexion is an intuitive 'close' command."
-          },
-          "commands": {
-            "uk": "Стиснути пальці в кулак (фантомно).",
-            "en": "Make a fist (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Глибокий згинач пальців під ним; сусідні згиначі зап'ястка.",
-            "en": "Flexor digitorum profundus beneath it; adjacent wrist flexors."
-          }
-        },
-        {
-          "id": "pl",
-          "abbr": {
-            "uk": "ДДМ",
-            "en": "PL"
-          },
-          "name": {
-            "uk": "Довгий долонний м'яз",
-            "en": "Palmaris longus"
-          },
-          "latin": "m. palmaris longus",
-          "role": "secondary",
-          "why": {
-            "uk": "Тонкий поверхневий м'яз, у частини людей відсутній. Як самостійний орієнтир використовується рідко — радше як частина групи згиначів.",
-            "en": "A thin superficial muscle that is absent in some people. Rarely used as a stand-alone landmark; rather as part of the flexor group."
-          },
-          "commands": {
-            "uk": "Зігнути кисть у зап'ясті, напружуючи долоню (фантомно).",
-            "en": "Flex the wrist while tensing the palm (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Променевий згинач зап'ястка та поверхневий згинач пальців.",
-            "en": "Flexor carpi radialis and flexor digitorum superficialis."
-          }
-        },
-        {
-          "id": "fcr",
-          "abbr": {
-            "uk": "ПЗЗ",
-            "en": "FCR"
-          },
-          "name": {
-            "uk": "Променевий згинач зап'ястка",
-            "en": "Flexor carpi radialis"
-          },
-          "latin": "m. flexor carpi radialis",
-          "role": "primary",
-          "why": {
-            "uk": "Поверхневий згинач у долонно-променевій зоні; добре пальпується в проксимальній третині.",
-            "en": "A superficial flexor in the volar-radial zone; easy to palpate in the proximal third."
-          },
-          "commands": {
-            "uk": "Зігнути кисть у зап'ясті з відведенням у променевий бік (фантомно).",
-            "en": "Flex the wrist with radial deviation (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Круглий пронатор (проксимально), поверхневий згинач пальців.",
-            "en": "Pronator teres (proximally), flexor digitorum superficialis."
-          }
-        },
-        {
-          "id": "pt",
-          "abbr": {
-            "uk": "КП",
-            "en": "PT"
-          },
-          "name": {
-            "uk": "Круглий пронатор",
-            "en": "Pronator teres"
-          },
-          "latin": "m. pronator teres",
-          "role": "secondary",
-          "why": {
-            "uk": "Розташований лише в проксимальній третині передпліччя, косо до променевої кістки. Може дати сигнал «пронація» для ротатора кисті чи розпізнавання патернів; у короткій залишковій кінцівці опиняється біля проксимального краю куксоприймача.",
-            "en": "Present only in the proximal third, running obliquely to the radius. May provide a 'pronation' signal for a wrist rotator or pattern recognition; in a short residual limb it lies near the proximal socket trim line."
-          },
-          "commands": {
-            "uk": "Повернути долоню донизу (фантомна пронація).",
-            "en": "Turn the palm down (phantom pronation)."
-          },
-          "crosstalk": {
-            "uk": "Променевий згинач зап'ястка; плечопроменевий м'яз.",
-            "en": "Flexor carpi radialis; brachioradialis."
-          }
-        },
-        {
-          "id": "br",
-          "abbr": {
-            "uk": "ППМ",
-            "en": "BR"
-          },
-          "name": {
-            "uk": "Плечопроменевий м'яз",
-            "en": "Brachioradialis"
-          },
-          "latin": "m. brachioradialis",
-          "role": "caution",
-          "why": {
-            "uk": "Лежить поверхнево на променевому краї, але передусім згинає лікоть. Його сигнал з'являється під час піднімання предметів, тож для керування кистю цей орієнтир потребує обережності.",
-            "en": "Superficial on the radial border but primarily an elbow flexor. Its signal appears when lifting objects, so it needs caution as a hand-control landmark."
-          },
-          "commands": {
-            "uk": "Зігнути лікоть у середньому положенні між пронацією та супінацією.",
-            "en": "Flex the elbow with the forearm midway between pronation and supination."
-          },
-          "crosstalk": {
-            "uk": "Довгий променевий розгинач зап'ястка; будь-яке згинання ліктя.",
-            "en": "Extensor carpi radialis longus; any elbow flexion."
-          }
-        },
-        {
-          "id": "ecrl",
-          "abbr": {
-            "uk": "ДПРЗ",
-            "en": "ECRL"
-          },
-          "name": {
-            "uk": "Довгий променевий розгинач зап'ястка",
-            "en": "Extensor carpi radialis longus"
-          },
-          "latin": "m. extensor carpi radialis longus",
-          "role": "primary",
-          "why": {
-            "uk": "Разом із коротким променевим розгиначем формує тильно-променеву групу. Фантомне розгинання зап'ястка — інтуїтивна команда «розкрити».",
-            "en": "Forms the dorsoradial group with ECRB. Phantom wrist extension is an intuitive 'open' command."
-          },
-          "commands": {
-            "uk": "Розігнути кисть у зап'ясті з відведенням у променевий бік (фантомно).",
-            "en": "Extend the wrist with radial deviation (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Плечопроменевий м'яз. Сам бере участь у згинанні ліктя, тож можливі сигнали під час піднімання предметів.",
-            "en": "Brachioradialis. It also assists elbow flexion, so signals may appear when lifting objects."
-          }
-        },
-        {
-          "id": "ecrb",
-          "abbr": {
-            "uk": "КПРЗ",
-            "en": "ECRB"
-          },
-          "name": {
-            "uk": "Короткий променевий розгинач зап'ястка",
-            "en": "Extensor carpi radialis brevis"
-          },
-          "latin": "m. extensor carpi radialis brevis",
-          "role": "primary",
-          "why": {
-            "uk": "Лежить поруч із довгим променевим розгиначем і глибше від нього; разом вони утворюють надійну зону сигналу розгинання.",
-            "en": "Lies beside and deep to ECRL; together they form a reliable extension signal zone."
-          },
-          "commands": {
-            "uk": "Розігнути кисть у зап'ясті (фантомно).",
-            "en": "Extend the wrist (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Довгий променевий розгинач і розгинач пальців.",
-            "en": "ECRL and extensor digitorum."
-          }
-        },
-        {
-          "id": "ed",
-          "abbr": {
-            "uk": "РП",
-            "en": "ED"
-          },
-          "name": {
-            "uk": "Розгинач пальців",
-            "en": "Extensor digitorum"
-          },
-          "latin": "m. extensor digitorum",
-          "role": "primary",
-          "why": {
-            "uk": "Центр тильної поверхні. Фантомне розкриття кисті дає виразний сигнал; це класичний орієнтир для команди «розкрити».",
-            "en": "Centre of the dorsal surface. Phantom hand opening produces a distinct signal; a classic landmark for the 'open' command."
-          },
-          "commands": {
-            "uk": "Розкрити кисть і випрямити пальці (фантомно).",
-            "en": "Open the hand and straighten the fingers (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Променеві розгиначі зап'ястка, розгинач мізинця; глибокі розгиначі великого та вказівного пальців.",
-            "en": "Radial wrist extensors, extensor digiti minimi; deep extensors of the thumb and index finger."
-          }
-        },
-        {
-          "id": "edm",
-          "abbr": {
-            "uk": "РМ",
-            "en": "EDM"
-          },
-          "name": {
-            "uk": "Розгинач мізинця",
-            "en": "Extensor digiti minimi"
-          },
-          "latin": "m. extensor digiti minimi",
-          "role": "secondary",
-          "why": {
-            "uk": "Вузький м'яз між розгиначем пальців і ліктьовим розгиначем зап'ястка; ізольований сигнал отримати складно.",
-            "en": "A narrow muscle between extensor digitorum and ECU; an isolated signal is hard to obtain."
-          },
-          "commands": {
-            "uk": "Розігнути мізинець (фантомно).",
-            "en": "Extend the little finger (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Розгинач пальців, ліктьовий розгинач зап'ястка.",
-            "en": "Extensor digitorum, ECU."
-          }
-        },
-        {
-          "id": "ecu",
-          "abbr": {
-            "uk": "ЛРЗ",
-            "en": "ECU"
-          },
-          "name": {
-            "uk": "Ліктьовий розгинач зап'ястка",
-            "en": "Extensor carpi ulnaris"
-          },
-          "latin": "m. extensor carpi ulnaris",
-          "role": "secondary",
-          "why": {
-            "uk": "Тильно-ліктьова поверхня поруч із підшкірним краєм ліктьової кістки; альтернативна зона сигналу розгинання, якщо променева група ушкоджена.",
-            "en": "Dorsal-ulnar surface next to the subcutaneous border of the ulna; an alternative extension site if the radial group is damaged."
-          },
-          "commands": {
-            "uk": "Розігнути кисть у зап'ясті з відведенням у ліктьовий бік (фантомно).",
-            "en": "Extend the wrist with ulnar deviation (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Розгинач мізинця; ліктьовий згинач зап'ястка.",
-            "en": "Extensor digiti minimi; FCU."
-          }
-        },
-        {
-          "id": "ulna",
-          "abbr": {
-            "uk": "Край ЛК",
-            "en": "Ulna border"
-          },
-          "name": {
-            "uk": "Підшкірний край ліктьової кістки",
-            "en": "Subcutaneous border of the ulna"
-          },
-          "latin": "margo posterior ulnae",
-          "role": "landmark",
-          "why": {
-            "uk": "Кістковий орієнтир із мінімальною м'язовою активністю, зручний для пальпації. Над такими ділянками розміщують референтний електрод, якщо його не вбудовано в електрод.",
-            "en": "A bony landmark with minimal muscle activity, useful for palpation. A separate reference electrode, if the system uses one, is placed over such areas."
-          }
-        },
-        {
-          "id": "fdp",
-          "abbr": {
-            "uk": "ГЗП",
-            "en": "FDP"
-          },
-          "name": {
-            "uk": "Глибокий згинач пальців",
-            "en": "Flexor digitorum profundus"
-          },
-          "latin": "m. flexor digitorum profundus",
-          "role": "deep",
-          "why": {
-            "uk": "Глибокий шар долонної поверхні над ліктьовою кісткою; під час стискання його активність потрапляє в сигнал поверхневих згиначів.",
-            "en": "Deep volar layer over the ulna; during grasping its activity contaminates the superficial flexor signals."
-          }
-        },
-        {
-          "id": "fpl",
-          "abbr": {
-            "uk": "ДЗВП",
-            "en": "FPL"
-          },
-          "name": {
-            "uk": "Довгий згинач великого пальця",
-            "en": "Flexor pollicis longus"
-          },
-          "latin": "m. flexor pollicis longus",
-          "role": "deep",
-          "why": {
-            "uk": "Глибоко на долонній поверхні променевої кістки; ізольований поверхневий сигнал малоймовірний.",
-            "en": "Deep on the volar surface of the radius; an isolated surface signal is unlikely."
-          }
-        },
-        {
-          "id": "sup",
-          "abbr": {
-            "uk": "Суп",
-            "en": "Sup"
-          },
-          "name": {
-            "uk": "Супінатор",
-            "en": "Supinator"
-          },
-          "latin": "m. supinator",
-          "role": "deep",
-          "why": {
-            "uk": "Лежить лише в проксимальній третині, глибоко навколо променевої кістки; ізольований поверхневий сигнал малоймовірний.",
-            "en": "Present only in the proximal third, deep around the radius; an isolated surface signal is unlikely."
-          }
-        },
-        {
-          "id": "deepext",
-          "abbr": {
-            "uk": "Гл. розг.",
-            "en": "Deep ext."
-          },
-          "name": {
-            "uk": "Глибокі розгиначі: довгий відвідний м'яз і розгиначі великого пальця, розгинач вказівного пальця",
-            "en": "Deep extensors: abductor pollicis longus, thumb extensors, extensor indicis"
-          },
-          "latin": "mm. abductor pollicis longus, extensor pollicis brevis et longus, extensor indicis",
-          "role": "deep",
-          "why": {
-            "uk": "Глибокий шар тильної поверхні; під час розкриття кисті їхня активність додається до сигналу розгинача пальців.",
-            "en": "Deep dorsal layer; during hand opening their activity adds to the extensor digitorum signal."
-          }
-        }
-      ]
-    },
-    "th": {
-      "title": {
-        "uk": "Трансгумеральний рівень",
-        "en": "Transhumeral"
-      },
-      "section": {
-        "uk": "Поперечний зріз плеча на межі проксимальної та середньої третин",
-        "en": "Transverse section of the arm at the junction of the proximal and middle thirds"
-      },
-      "orient": {
-        "top": {
-          "uk": "Передня поверхня",
-          "en": "Anterior"
-        },
-        "bottom": {
-          "uk": "Задня поверхня",
-          "en": "Posterior"
-        },
-        "left": {
-          "uk": "Латеральний бік",
-          "en": "Lateral"
-        },
-        "right": {
-          "uk": "Медіальний бік",
-          "en": "Medial"
-        }
-      },
-      "intro": {
-        "uk": "Класичні орієнтири — двоголовий м'яз на передній поверхні та триголовий м'яз на задній; фізіологічно вони відповідають згинанню й розгинанню ліктя. Що коротша залишкова кінцівка, то більшу роль відіграють м'язи плечового суглоба й тим вищий ризик артефактів від рухів плеча.",
-        "en": "The classic landmarks are biceps on the anterior surface and triceps on the posterior surface, physiologically corresponding to elbow flexion and extension. The shorter the residual limb, the greater the role of the shoulder muscles and the higher the risk of artefacts from shoulder movement."
-      },
-      "modeNotes": {
-        "direct": {
-          "uk": "Для двоканальної схеми зазвичай використовують двоголовий і триголовий м'язи; перемикання між кистю та ліктем потребує додаткової стратегії (наприклад, коскорочення).",
-          "en": "A two-channel set-up usually uses biceps and triceps; switching between hand and elbow requires an additional strategy (for example, co-contraction)."
-        },
-        "pr": {
-          "uk": "Без TMR кількість незалежних сигналів обмежена. TMR створює додаткові джерела сигналу, придатні для розпізнавання патернів (Kuiken et al., 2009).",
-          "en": "Without TMR the number of independent signals is limited. TMR creates additional signal sources suitable for pattern recognition (Kuiken et al., 2009)."
-        },
-        "tmr": {
-          "uk": "М'язами-мішенями слугують м'язи плеча (Kuiken et al., 2009); конкретні сегменти визначає операційний протокол. Пунктиром позначено зони, які потребують окремого картування.",
-          "en": "The target muscles are those of the upper arm (Kuiken et al., 2009); the specific segments are defined by the operative protocol. Dashed outlines mark zones that need separate mapping."
-        }
-      },
-      "pitfalls": [
-        {
-          "uk": "Рухи плечового суглоба змінюють сигнал дельтоподібного м'яза й довгої голівки триголового; ротація плеча зміщує м'язи під шкірою.",
-          "en": "Shoulder movement alters the deltoid and triceps long head signals; humeral rotation shifts the muscles beneath the skin."
-        }
-      ],
-      "muscles": [
-        {
-          "id": "biceps",
-          "abbr": {
-            "uk": "ДГМ",
-            "en": "BB"
-          },
-          "name": {
-            "uk": "Двоголовий м'яз плеча",
-            "en": "Biceps brachii"
-          },
-          "latin": "m. biceps brachii",
-          "role": "primary",
-          "tmr": true,
-          "why": {
-            "uk": "Лежить поверхнево на всій передній поверхні; добре контрольоване фантомне згинання ліктя дає сильний сигнал.",
-            "en": "Superficial across the whole anterior surface; a well-controlled phantom elbow flexion produces a strong signal."
-          },
-          "commands": {
-            "uk": "Зігнути лікоть (фантомно); за потреби — повернути долоню догори (фантомна супінація).",
-            "en": "Flex the elbow (phantom movement); if needed, turn the palm up (phantom supination)."
-          },
-          "crosstalk": {
-            "uk": "Плечовий м'яз під ним; передня частина дельтоподібного м'яза в проксимальній третині.",
-            "en": "Brachialis beneath it; anterior deltoid in the proximal third."
-          }
-        },
-        {
-          "id": "brachialis",
-          "abbr": {
-            "uk": "ПлМ",
-            "en": "Br"
-          },
-          "name": {
-            "uk": "Плечовий м'яз",
-            "en": "Brachialis"
-          },
-          "latin": "m. brachialis",
-          "role": "secondary",
-          "why": {
-            "uk": "Переважно лежить глибоко під двоголовим м'язом, але в дистальній половині плеча латерально підходить ближче до поверхні.",
-            "en": "Mostly deep to biceps, but approaches the surface laterally in the distal half of the arm."
-          },
-          "commands": {
-            "uk": "Зігнути лікоть у положенні пронації (фантомно).",
-            "en": "Flex the elbow in pronation (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Двоголовий м'яз; плечопроменевий м'яз (дистально).",
-            "en": "Biceps; brachioradialis (distally)."
-          }
-        },
-        {
-          "id": "deltoid",
-          "abbr": {
-            "uk": "ДМ",
-            "en": "Delt"
-          },
-          "name": {
-            "uk": "Дельтоподібний м'яз (ділянка прикріплення)",
-            "en": "Deltoid (insertion region)"
-          },
-          "latin": "m. deltoideus",
-          "role": "caution",
-          "why": {
-            "uk": "Присутній лише в проксимальній третині плеча на латеральній поверхні. Може бути орієнтиром для короткої залишкової кінцівки, але будь-який рух плечового суглоба змінює його сигнал.",
-            "en": "Present only in the proximal third of the arm on the lateral surface. May serve as a landmark for a short residual limb, but any shoulder movement alters its signal."
-          },
-          "commands": {
-            "uk": "Відвести плече (фантомно або реально — залежно від мети міотесту).",
-            "en": "Abduct the shoulder (phantom or real, depending on the aim of the myotest)."
-          },
-          "crosstalk": {
-            "uk": "Голівки двоголового та триголового м'язів; рухи плечового суглоба.",
-            "en": "Heads of biceps and triceps; shoulder movement."
-          }
-        },
-        {
-          "id": "tri_lat",
-          "abbr": {
-            "uk": "ЛГТ",
-            "en": "TB-lat"
-          },
-          "name": {
-            "uk": "Латеральна голівка триголового м'яза",
-            "en": "Triceps brachii, lateral head"
-          },
-          "latin": "m. triceps brachii, caput laterale",
-          "role": "primary",
-          "tmr": true,
-          "why": {
-            "uk": "Лежить поверхнево на задньо-латеральній поверхні; дає стабільний сигнал фантомного розгинання ліктя.",
-            "en": "Superficial on the posterolateral surface; gives a stable phantom elbow extension signal."
-          },
-          "commands": {
-            "uk": "Розігнути лікоть (фантомно).",
-            "en": "Extend the elbow (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Задня частина дельтоподібного м'яза (проксимально); довга голівка.",
-            "en": "Posterior deltoid (proximally); long head."
-          }
-        },
-        {
-          "id": "tri_long",
-          "abbr": {
-            "uk": "ДГТ",
-            "en": "TB-long"
-          },
-          "name": {
-            "uk": "Довга голівка триголового м'яза",
-            "en": "Triceps brachii, long head"
-          },
-          "latin": "m. triceps brachii, caput longum",
-          "role": "primary",
-          "tmr": true,
-          "why": {
-            "uk": "Лежить поверхнево на задньо-медіальній поверхні. Вона також розгинає й приводить плече, тож рухи плечового суглоба можуть давати небажаний сигнал.",
-            "en": "Superficial on the posteromedial surface. It also extends and adducts the shoulder, so shoulder movements may produce unwanted signals."
-          },
-          "commands": {
-            "uk": "Розігнути лікоть (фантомно), не рухаючи плечем.",
-            "en": "Extend the elbow (phantom movement) without moving the shoulder."
-          },
-          "crosstalk": {
-            "uk": "Великий круглий і найширший м'язи (проксимально); рухи плеча.",
-            "en": "Teres major and latissimus dorsi (proximally); shoulder movement."
-          }
-        },
-        {
-          "id": "nv",
-          "abbr": {
-            "uk": "СНП",
-            "en": "NV"
-          },
-          "name": {
-            "uk": "Судинно-нервовий пучок у медіальній борозні",
-            "en": "Neurovascular bundle in the medial groove"
-          },
-          "latin": "a. brachialis, n. medianus, n. ulnaris",
-          "role": "landmark",
-          "why": {
-            "uk": "Плечова артерія, серединний і ліктьовий нерви. Тиск у цій зоні погано переноситься; електрод тут не розміщують.",
-            "en": "Brachial artery, median and ulnar nerves. Pressure here is poorly tolerated; electrodes are not placed here."
-          }
-        },
-        {
-          "id": "tri_med",
-          "abbr": {
-            "uk": "МГТ",
-            "en": "TB-med"
-          },
-          "name": {
-            "uk": "Медіальна голівка триголового м'яза",
-            "en": "Triceps brachii, medial head"
-          },
-          "latin": "m. triceps brachii, caput mediale",
-          "role": "deep",
-          "why": {
-            "uk": "Лежить глибоко під довгою та латеральною голівками, ближче до дистальної третини; робить внесок у загальний сигнал розгинання.",
-            "en": "Deep to the long and lateral heads, more distally; contributes to the overall extension signal."
-          }
-        },
-        {
-          "id": "coraco",
-          "abbr": {
-            "uk": "ДПМ",
-            "en": "CB"
-          },
-          "name": {
-            "uk": "Дзьобо-плечовий м'яз",
-            "en": "Coracobrachialis"
-          },
-          "latin": "m. coracobrachialis",
-          "role": "deep",
-          "why": {
-            "uk": "Лежить проксимально на медіальній поверхні поруч із судинно-нервовим пучком; як орієнтир зазвичай не використовується.",
-            "en": "Proximal on the medial surface next to the neurovascular bundle; not usually used as a landmark."
-          }
-        }
-      ]
-    },
-    "sd": {
-      "title": {
-        "uk": "Плечова дезартикуляція",
-        "en": "Shoulder disarticulation"
-      },
-      "section": {
-        "uk": "Контурні проєкції правого боку: спереду та ззаду",
-        "en": "Outline projections of the right side: anterior and posterior"
-      },
-      "orient": {
-        "top": {
-          "uk": "Спереду",
-          "en": "Anterior"
-        },
-        "bottom": {
-          "uk": "Ззаду",
-          "en": "Posterior"
-        },
-        "left": {
-          "uk": "",
-          "en": ""
-        },
-        "right": {
-          "uk": "",
-          "en": ""
-        }
-      },
-      "intro": {
-        "uk": "Після дезартикуляції м'язи, що кріпилися до плечової кістки (великий грудний, найширший м'яз спини, великий круглий, підостьовий, дельтоподібний), втрачають точку прикріплення. ЕМГ можна отримати за фантомних команд, але амплітуда залежить від міопластики чи міодезу та від атрофії. Саме тому, що ці м'язи більше не виконують біомеханічної функції, їх використовують як мішені для TMR (Kuiken et al., 2009).",
-        "en": "After disarticulation, muscles that inserted on the humerus (pectoralis major, latissimus dorsi, teres major, infraspinatus, deltoid) lose their insertion. EMG can be obtained with phantom commands, but amplitude depends on myoplasty or myodesis and on atrophy. Precisely because these muscles are no longer biomechanically functional, they are used as TMR targets (Kuiken et al., 2009)."
-      },
-      "modeNotes": {
-        "direct": {
-          "uk": "Найчастіше розглядають дві частини великого грудного м'яза спереду та м'язи лопаткової ділянки ззаду; кожну зону перевіряйте міотестом окремо.",
-          "en": "The two heads of pectoralis major anteriorly and the scapular muscles posteriorly are most often considered; test each zone separately."
-        },
-        "pr": {
-          "uk": "Без TMR кількість незалежних сигналів обмежена. TMR створює додаткові джерела сигналу, придатні для розпізнавання патернів (Kuiken et al., 2009).",
-          "en": "Without TMR the number of independent signals is limited. TMR creates additional signal sources suitable for pattern recognition (Kuiken et al., 2009)."
-        },
-        "tmr": {
-          "uk": "М'язами-мішенями слугують м'язи грудної стінки (Kuiken et al., 2009); конкретні сегменти визначає операційний протокол. Пунктиром позначено зони, які потребують окремого картування.",
-          "en": "The target muscles are those of the chest wall (Kuiken et al., 2009); the specific segments are defined by the operative protocol. Dashed outlines mark zones that need separate mapping."
-        }
-      },
-      "pitfalls": [
-        {
-          "uk": "Рухи лопатки та тулуба, тиск обв'язки й ременів; на лівому боці грудні м'язи можуть уловлювати наводки ЕКГ.",
-          "en": "Scapular and trunk movement, pressure from harnesses and straps; on the left side the pectoral sites may pick up ECG interference."
-        }
-      ],
-      "muscles": [
-        {
-          "id": "pm_clav",
-          "abbr": {
-            "uk": "ВГМ-к",
-            "en": "PM-c"
-          },
-          "name": {
-            "uk": "Великий грудний м'яз, ключична частина",
-            "en": "Pectoralis major, clavicular head"
-          },
-          "latin": "m. pectoralis major, pars clavicularis",
-          "role": "primary",
-          "tmr": true,
-          "why": {
-            "uk": "Лежить поверхнево під ключицею й утворює окрему від груднинно-реберної частини зону сигналу.",
-            "en": "Superficial below the clavicle, forming a signal zone separate from the sternocostal head."
-          },
-          "commands": {
-            "uk": "Підняти руку вперед (фантомне згинання плеча).",
-            "en": "Raise the arm forwards (phantom shoulder flexion)."
-          },
-          "crosstalk": {
-            "uk": "Передня частина дельтоподібного м'яза (якщо збережена); груднинно-реберна частина.",
-            "en": "Anterior deltoid (if preserved); sternocostal head."
-          }
-        },
-        {
-          "id": "pm_stern",
-          "abbr": {
-            "uk": "ВГМ-г",
-            "en": "PM-s"
-          },
-          "name": {
-            "uk": "Великий грудний м'яз, груднинно-реберна частина",
-            "en": "Pectoralis major, sternocostal head"
-          },
-          "latin": "m. pectoralis major, pars sternocostalis",
-          "role": "primary",
-          "tmr": true,
-          "why": {
-            "uk": "Велика поверхнева площа на передній грудній стінці; добре розмежовується з ключичною частиною.",
-            "en": "A large superficial area on the anterior chest wall; well separated from the clavicular head."
-          },
-          "commands": {
-            "uk": "Притиснути руку до тулуба й звести перед грудьми (фантомне приведення).",
-            "en": "Press the arm against the trunk and across the chest (phantom adduction)."
-          },
-          "crosstalk": {
-            "uk": "Ключична частина; рухи грудної клітки під час дихання; зліва — наводки ЕКГ.",
-            "en": "Clavicular head; chest wall movement during breathing; ECG interference on the left."
-          }
-        },
-        {
-          "id": "delt_sd",
-          "abbr": {
-            "uk": "ДМ",
-            "en": "Delt"
-          },
-          "name": {
-            "uk": "Дельтоподібний м'яз",
-            "en": "Deltoid"
-          },
-          "latin": "m. deltoideus",
-          "role": "conditional",
-          "why": {
-            "uk": "Може бути збережений як клапоть над акроміоном, але бути атрофованим або денервованим (ушкодження пахвового нерва). Перевірте сигнал міотестом, перш ніж планувати розміщення.",
-            "en": "May be preserved as a flap over the acromion but atrophied or denervated (axillary nerve injury). Confirm the signal with a myotest before planning placement."
-          },
-          "commands": {
-            "uk": "Відвести руку (фантомно).",
-            "en": "Abduct the arm (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Ключична частина великого грудного м'яза; верхня частина трапецієподібного.",
-            "en": "Clavicular head of pectoralis major; upper trapezius."
-          }
-        },
-        {
-          "id": "trap",
-          "abbr": {
-            "uk": "ТрМ",
-            "en": "UT"
-          },
-          "name": {
-            "uk": "Трапецієподібний м'яз, верхня частина",
-            "en": "Trapezius, upper part"
-          },
-          "latin": "m. trapezius, pars descendens",
-          "role": "caution",
-          "why": {
-            "uk": "Зберігається незалежно від рівня ампутації, а підйом надпліччя легко виконати свідомо. Але цей самий рух потрібен у повсякденній діяльності, а ремені чи обв'язка тиснуть саме на цю зону.",
-            "en": "Preserved regardless of amputation level, and shoulder elevation is easy to perform voluntarily. However, the same movement is needed in daily activities, and straps or harnesses press on this very area."
-          },
-          "commands": {
-            "uk": "Підняти надпліччя до вуха (реальний рух лопатки).",
-            "en": "Shrug the shoulder towards the ear (real scapular movement)."
-          },
-          "crosstalk": {
-            "uk": "Рухи шиї та голови; тиск ременів обв'язки.",
-            "en": "Neck and head movement; harness strap pressure."
-          }
-        },
-        {
-          "id": "infra",
-          "abbr": {
-            "uk": "ПСМ",
-            "en": "IS"
-          },
-          "name": {
-            "uk": "Підостьовий м'яз",
-            "en": "Infraspinatus"
-          },
-          "latin": "m. infraspinatus",
-          "role": "secondary",
-          "why": {
-            "uk": "Лежить поверхнево в підостьовій ямці лопатки, частково під трапецієподібним і дельтоподібним м'язами. Прикріплювався до плечової кістки, тож після дезартикуляції працює лише за фантомних команд.",
-            "en": "Superficial in the infraspinous fossa, partly beneath trapezius and deltoid. It inserted on the humerus, so after disarticulation it responds only to phantom commands."
-          },
-          "commands": {
-            "uk": "Повернути руку назовні (фантомна зовнішня ротація).",
-            "en": "Rotate the arm outwards (phantom external rotation)."
-          },
-          "crosstalk": {
-            "uk": "Малий і великий круглі м'язи; рухи лопатки.",
-            "en": "Teres minor and major; scapular movement."
-          }
-        },
-        {
-          "id": "teres",
-          "abbr": {
-            "uk": "ВКМ",
-            "en": "TM"
-          },
-          "name": {
-            "uk": "Великий круглий м'яз",
-            "en": "Teres major"
-          },
-          "latin": "m. teres major",
-          "role": "secondary",
-          "why": {
-            "uk": "Розташований біля нижнього кута лопатки; разом із найширшим м'язом формує задню пахвову складку.",
-            "en": "Near the inferior angle of the scapula; with latissimus dorsi it forms the posterior axillary fold."
-          },
-          "commands": {
-            "uk": "Відвести руку назад і всередину (фантомно).",
-            "en": "Move the arm backwards and inwards (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Найширший м'яз спини; рухи лопатки.",
-            "en": "Latissimus dorsi; scapular movement."
-          }
-        },
-        {
-          "id": "lat",
-          "abbr": {
-            "uk": "НМС",
-            "en": "LD"
-          },
-          "name": {
-            "uk": "Найширший м'яз спини",
-            "en": "Latissimus dorsi"
-          },
-          "latin": "m. latissimus dorsi",
-          "role": "secondary",
-          "why": {
-            "uk": "Велика поверхнева площа на бічній і задній стінці тулуба; дає сигнал фантомного розгинання та приведення плеча.",
-            "en": "A large superficial area on the lateral and posterior trunk wall; gives a phantom shoulder extension and adduction signal."
-          },
-          "commands": {
-            "uk": "Відвести руку назад і донизу (фантомно).",
-            "en": "Move the arm backwards and downwards (phantom movement)."
-          },
-          "crosstalk": {
-            "uk": "Великий круглий м'яз; рухи тулуба.",
-            "en": "Teres major; trunk movement."
-          }
-        },
-        {
-          "id": "clav",
-          "abbr": {
-            "uk": "Ключиця",
-            "en": "Clavicle"
-          },
-          "name": {
-            "uk": "Ключиця",
-            "en": "Clavicle"
-          },
-          "latin": "clavicula",
-          "role": "landmark",
-          "why": {
-            "uk": "Кістковий орієнтир для ключичної частини великого грудного м'яза.",
-            "en": "A bony landmark for the clavicular head of pectoralis major."
-          }
-        },
-        {
-          "id": "scap",
-          "abbr": {
-            "uk": "Ость",
-            "en": "Spine"
-          },
-          "name": {
-            "uk": "Ость лопатки",
-            "en": "Spine of the scapula"
-          },
-          "latin": "spina scapulae",
-          "role": "landmark",
-          "why": {
-            "uk": "Кістковий орієнтир, що ділить задню поверхню лопатки на надостьову та підостьову зони.",
-            "en": "A bony landmark dividing the posterior scapula into supraspinous and infraspinous zones."
-          }
-        }
-      ]
-    }
+   "low": {
+    "uk": "Низьке зусилля",
+    "en": "Low effort"
+   },
+   "moderate": {
+    "uk": "Помірне зусилля",
+    "en": "Moderate effort"
+   },
+   "high": {
+    "uk": "Високе зусилля, швидка втома",
+    "en": "High effort, early fatigue"
+   }
   },
-  "references": [
-    {
-      "id": "deluca1997",
-      "text": "De Luca CJ. The use of surface electromyography in biomechanics. J Appl Biomech. 1997;13(2):135–163.",
-      "doi": "10.1123/jab.13.2.135"
-    },
-    {
-      "id": "hermens2000",
-      "text": "Hermens HJ, Freriks B, Disselhorst-Klug C, Rau G. Development of recommendations for SEMG sensors and sensor placement procedures. J Electromyogr Kinesiol. 2000;10(5):361–374.",
-      "doi": "10.1016/S1050-6411(00)00027-4"
-    },
-    {
-      "id": "kuiken2009",
-      "text": "Kuiken TA, Li G, Lock BA, et al. Targeted muscle reinnervation for real-time myoelectric control of multifunction artificial arms. JAMA. 2009;301(6):619–628.",
-      "doi": "10.1001/jama.2009.116"
-    },
-    {
-      "id": "scheme2011",
-      "text": "Scheme E, Englehart K. Electromyogram pattern recognition for control of powered upper-limb prostheses: state of the art and challenges for clinical use. J Rehabil Res Dev. 2011;48(6):643–659.",
-      "doi": "10.1682/JRRD.2010.09.0177"
-    },
-    {
-      "id": "young2011",
-      "text": "Young AJ, Hargrove LJ, Kuiken TA. The effects of electrode size and orientation on the sensitivity of myoelectric pattern recognition systems to electrode shift. IEEE Trans Biomed Eng. 2011;58(9):2537–2544.",
-      "doi": "10.1109/TBME.2011.2159216"
-    },
-    {
-      "id": "fougner2011",
-      "text": "Fougner A, Scheme E, Chan ADC, Englehart K, Stavdahl Ø. Resolving the limb position effect in myoelectric pattern recognition. IEEE Trans Neural Syst Rehabil Eng. 2011;19(6):644–651.",
-      "doi": "10.1109/TNSRE.2011.2163529"
-    },
-    {
-      "id": "adewuyi2016",
-      "text": "Adewuyi AA, Hargrove LJ, Kuiken TA. An analysis of intrinsic and extrinsic hand muscle EMG for improved pattern recognition control. IEEE Trans Neural Syst Rehabil Eng. 2016;24(4):485–494.",
-      "doi": "10.1109/TNSRE.2015.2424371"
-    },
-    {
-      "id": "adewuyi2017",
-      "text": "Adewuyi AA, Hargrove LJ, Kuiken TA. Resolving the effect of wrist position on myoelectric pattern recognition control. J Neuroeng Rehabil. 2017;14:39.",
-      "doi": "10.1186/s12984-017-0246-x"
-    }
-  ]
+  "note": {
+   "uk": "Оцінка зусилля — механістичне міркування (розмір і поверхневість м'яза, функціональне навантаження) та клінічний досвід, а не результат досліджень. Площу перерізу виміряно в одній референтній 3D-моделі тіла.",
+   "en": "The effort rating is mechanistic reasoning (muscle size and depth, functional load) and clinical experience, not a research result. Cross-sectional area was measured in a single reference 3D body model."
+  }
+ },
+ "how": [
+  {
+   "t": {
+    "uk": "Команда",
+    "en": "Command"
+   },
+   "x": {
+    "uk": "Пацієнт уявляє рух відсутньої кисті (фантомний рух). Мозок надсилає імпульси до рухових одиниць м'язів, що лишилися в залишковій кінцівці.",
+    "en": "The patient imagines moving the missing hand (phantom movement). The brain sends impulses to the motor units of the muscles left in the residual limb."
+   }
+  },
+  {
+   "t": {
+    "uk": "Потенціали дії",
+    "en": "Action potentials"
+   },
+   "x": {
+    "uk": "М'язові волокна генерують потенціали дії, що поширюються від зони іннервації до сухожилків. На шкірі вони додаються в поверхневу ЕМГ — сигнал мікро- й мілівольтного діапазону.",
+    "en": "Muscle fibres generate action potentials that propagate from the innervation zone towards the tendons. At the skin they sum into the surface EMG, a signal in the microvolt-to-millivolt range."
+   }
+  },
+  {
+   "t": {
+    "uk": "Диференційне підсилення",
+    "en": "Differential amplification"
+   },
+   "x": {
+    "uk": "Два контакти електрода над черевцем «бачать» сигнал м'яза по-різному, а завади (мережа 50 Гц, ЕКГ, рух) — однаково. Підсилювач віднімає одне від іншого: спільні завади гасяться, сигнал м'яза лишається.",
+    "en": "The electrode's two contacts over the belly 'see' the muscle signal differently but interference (50 Hz mains, ECG, motion) equally. The amplifier subtracts one from the other: common interference cancels and the muscle signal remains."
+   }
+  },
+  {
+   "t": {
+    "uk": "Фільтрація",
+    "en": "Filtering"
+   },
+   "x": {
+    "uk": "Фільтр пропускає лише частоти м'язового сигналу; наприклад, у електрода MyoBock 13E200 смуга пропускання — 90–450 Гц (дані виробника). Низькочастотні артефакти руху та високочастотний шум відсікаються.",
+    "en": "The filter passes only muscle-signal frequencies; for example, the MyoBock 13E200 has a 90–450 Hz bandwidth (manufacturer data). Low-frequency motion artefacts and high-frequency noise are rejected."
+   }
+  },
+  {
+   "t": {
+    "uk": "Огинаюча",
+    "en": "Envelope"
+   },
+   "x": {
+    "uk": "Сигнал випрямляють і згладжують: отримують огинаючу, яка зростає разом зі зусиллям.",
+    "en": "The signal is rectified and smoothed into an envelope that rises with effort."
+   }
+  },
+  {
+   "t": {
+    "uk": "Керування",
+    "en": "Control"
+   },
+   "x": {
+    "uk": "Коли огинаюча перетинає поріг, мотор вмикається; у пропорційному керуванні швидкість чи сила залежать від амплітуди. У двоканальній схемі один канал розкриває кисть, інший — закриває; у розпізнаванні патернів алгоритм класифікує картину активності багатьох каналів (Scheme & Englehart, 2011).",
+    "en": "When the envelope crosses the threshold, the motor starts; with proportional control, speed or force follows the amplitude. In a two-channel set-up one channel opens the hand and the other closes it; in pattern recognition an algorithm classifies the activity pattern of many channels (Scheme & Englehart, 2011)."
+   }
+  }
+ ],
+ "pitfalls": [
+  {
+   "title": {
+    "uk": "Перехресні наводки (crosstalk)",
+    "en": "Crosstalk"
+   },
+   "text": {
+    "uk": "Тканини проводять сигнал сусідніх м'язів-синергістів та антагоністів. Розміщуйте електрод над черевцем м'яза, подалі від його країв і сухожилків, і перевіряйте ізольованість сигналу під час міотесту (De Luca, 1997; Hermens et al., 2000).",
+    "en": "Tissue conducts signals from neighbouring synergists and antagonists. Place the electrode over the muscle belly, away from its edges and tendons, and check signal isolation during myotesting (De Luca, 1997; Hermens et al., 2000)."
+   },
+   "basis": "evidence"
+  },
+  {
+   "title": {
+    "uk": "Рубці, спайки та шкірні трансплантати",
+    "en": "Scars, adhesions and skin grafts"
+   },
+   "text": {
+    "uk": "Погіршують контакт і стабільність сигналу; рухливі рубці зміщують електрод відносно м'яза під ним.",
+    "en": "They impair contact and signal stability; mobile scars shift the electrode relative to the underlying muscle."
+   },
+   "basis": "mechanistic"
+  },
+  {
+   "title": {
+    "uk": "Піт і вологість у лайнері чи куксоприймачі",
+    "en": "Sweat and moisture in the liner or socket"
+   },
+   "text": {
+    "uk": "Змінюють імпеданс контакту шкіра–електрод: можливі артефакти, втрата контакту й замикання між полюсами.",
+    "en": "They change skin–electrode contact impedance, causing artefacts, loss of contact or bridging between poles."
+   },
+   "basis": "mechanistic"
+  },
+  {
+   "title": {
+    "uk": "Зміщення куксоприймача (socket shift)",
+    "en": "Socket shift"
+   },
+   "text": {
+    "uk": "Під час надягання та зняття протеза зміщення електродів неминуче й знижує точність розпізнавання патернів (Young et al., 2011).",
+    "en": "Electrode shift is inevitable during donning and doffing and reduces pattern recognition accuracy (Young et al., 2011)."
+   },
+   "basis": "evidence"
+  },
+  {
+   "title": {
+    "uk": "Ефект положення кінцівки",
+    "en": "Limb position effect"
+   },
+   "text": {
+    "uk": "Зміна положення кінцівки під час щоденного використання збільшила середню похибку класифікації з 3,8% до 18% (10 учасників без ампутації). Тренування алгоритму в кількох положеннях зменшує цей ефект (Fougner et al., 2011).",
+    "en": "Changes in limb position during everyday use increased the mean classification error from 3.8% to 18% (ten participants without amputation). Training the classifier in several positions reduces this effect (Fougner et al., 2011)."
+   },
+   "basis": "evidence"
+  }
+ ],
+ "references": [
+  {
+   "id": "deluca1997",
+   "text": "De Luca CJ. The use of surface electromyography in biomechanics. J Appl Biomech. 1997;13(2):135–163.",
+   "doi": "10.1123/jab.13.2.135"
+  },
+  {
+   "id": "hermens2000",
+   "text": "Hermens HJ, Freriks B, Disselhorst-Klug C, Rau G. Development of recommendations for SEMG sensors and sensor placement procedures. J Electromyogr Kinesiol. 2000;10(5):361–374.",
+   "doi": "10.1016/S1050-6411(00)00027-4"
+  },
+  {
+   "id": "merlo2021",
+   "text": "Merlo A, Bò MC, Campanini I. Electrode size and placement for surface EMG bipolar detection from the brachioradialis muscle: a scoping review. Sensors (Basel). 2021;21(21):7322.",
+   "doi": "10.3390/s21217322"
+  },
+  {
+   "id": "freylaw2010",
+   "text": "Frey-Law LA, Avin KG. Endurance time is joint-specific: a modelling and meta-analysis investigation. Ergonomics. 2010;53(1):109–129.",
+   "doi": "10.1080/00140130903389068"
+  },
+  {
+   "id": "kuiken2009",
+   "text": "Kuiken TA, Li G, Lock BA, et al. Targeted muscle reinnervation for real-time myoelectric control of multifunction artificial arms. JAMA. 2009;301(6):619–628.",
+   "doi": "10.1001/jama.2009.116"
+  },
+  {
+   "id": "scheme2011",
+   "text": "Scheme E, Englehart K. Electromyogram pattern recognition for control of powered upper-limb prostheses: state of the art and challenges for clinical use. J Rehabil Res Dev. 2011;48(6):643–659.",
+   "doi": "10.1682/JRRD.2010.09.0177"
+  },
+  {
+   "id": "young2011",
+   "text": "Young AJ, Hargrove LJ, Kuiken TA. The effects of electrode size and orientation on the sensitivity of myoelectric pattern recognition systems to electrode shift. IEEE Trans Biomed Eng. 2011;58(9):2537–2544.",
+   "doi": "10.1109/TBME.2011.2159216"
+  },
+  {
+   "id": "fougner2011",
+   "text": "Fougner A, Scheme E, Chan ADC, Englehart K, Stavdahl Ø. Resolving the limb position effect in myoelectric pattern recognition. IEEE Trans Neural Syst Rehabil Eng. 2011;19(6):644–651.",
+   "doi": "10.1109/TNSRE.2011.2163529"
+  },
+  {
+   "id": "adewuyi2016",
+   "text": "Adewuyi AA, Hargrove LJ, Kuiken TA. An analysis of intrinsic and extrinsic hand muscle EMG for improved pattern recognition control. IEEE Trans Neural Syst Rehabil Eng. 2016;24(4):485–494.",
+   "doi": "10.1109/TNSRE.2015.2424371"
+  },
+  {
+   "id": "adewuyi2017",
+   "text": "Adewuyi AA, Hargrove LJ, Kuiken TA. Resolving the effect of wrist position on myoelectric pattern recognition control. J Neuroeng Rehabil. 2017;14:39.",
+   "doi": "10.1186/s12984-017-0246-x"
+  },
+  {
+   "id": "mitsuhashi2009",
+   "text": "Mitsuhashi N, Fujieda K, Tamura T, Kawamoto S, Takagi T, Okubo K. BodyParts3D: 3D structure database for anatomical concepts. Nucleic Acids Res. 2009;37(Database issue):D782–D785.",
+   "doi": "10.1093/nar/gkn613"
+  }
+ ]
 }
