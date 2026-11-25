@@ -1,12 +1,12 @@
 ---
-// «Симулятор тягової системи протеза верхньої кінцівки» — сторінка інструмента (технічний модуль BP-SIM).
-// Оформлення: темний технічний HUD (чорний / золотий / блакитний Praxis), креслення з позиційними позначками,
-// «цеглинкова» графіка. Фізика — src/lib/bodypowered/physics.ts (тести: scripts/tests/bodypowered.test.mjs);
+// «Симулятор тягової системи протеза верхньої кінцівки» — сторінка інструмента (Praxis · Інструмент 02).
+// Оформлення: чорно-синя гама Praxis, лінійна наукова графіка, модульні розділи.
+// Фізика — src/lib/bodypowered/physics.ts (тести: scripts/tests/bodypowered.test.mjs);
 // тексти — content.ts; поведінка й малювання — src/scripts/bodypowered-client.ts.
 import Base from '../layouts/Base.astro';
 import { SITE, type Lang } from '../config';
 import { localePath } from '../utils';
-import { META, CHANGELOG, PARAMS, REFS, REF_ORDER, NOTATION, EQUATIONS, CHECKS, getUi, sym } from '../lib/bodypowered/content';
+import { META, CHANGELOG, PARAM_GROUPS, REFS, REF_ORDER, NOTATION, EQUATIONS, CHECKS, getUi, sym } from '../lib/bodypowered/content';
 
 interface Props {
   lang: Lang;
@@ -21,36 +21,65 @@ const refNo = Object.fromEntries(REF_ORDER.map((k, i) => [k, i + 1]));
 const author = SITE.author[lang];
 const S = (h: string) => sym(lang, h);
 const SECS: [string, string][] = [['01', ui.secScope], ['02', ui.secNotation], ['03', ui.secModel], ['04', ui.secParams], ['05', ui.secVV], ['06', ui.secLimits], ['07', ui.secPassport], ['08', ui.secRefs]];
-const KEY_P: [string, string, string?][] = [['A', ui.cross], ['B', ui.control], ['C', ui.housing], ['D', ui.td], ['E', ui.axilla], ['F', ui.suspensor, 'k-f']];
-const KEY_R: [string, string][] = [['1', ui.proxRet], ['2', ui.distRet], ['3', ui.housing], ['4', ui.lever], ['5', ui.fromHarness]];
+const KEY_TRP: [string, string, string?][] = [['A', ui.cross], ['B', ui.control], ['C', ui.housing], ['D', ui.td], ['E', ui.axilla], ['F', ui.suspensor, 'k-f']];
+const KEY_TRR: [string, string][] = [['1', ui.proxRet], ['2', ui.distRet], ['3', ui.housing], ['4', ui.lever], ['5', ui.fromHarness]];
+const KEY_TH: [string, string, string][] = [['1', ui.thSocket, ''], ['2', ui.thElbow, ''], ['3', ui.thLift, 'c-lift'], ['4', ui.thLock, 'c-lock'], ['5', ui.thTd, 'c-td'], ['6', ui.thTdDev, '']];
 const TEL: { k: string; label: string; s?: string; cls?: string }[] = [
   { k: 'open', label: ui.opening, s: 'x' },
-  { k: 'exc', label: ui.excursion, s: S('ΔL<sub>гак</sub>') },
+  { k: 'exc', label: ui.excursion, s: S('ΔL<sub>ТП</sub>') },
   { k: 'fout', label: ui.forceHook, s: S('F<sub>вих</sub>') },
   { k: 'fin', label: ui.forceBody, s: S('F<sub>вх</sub>') },
+  { k: 'alpha', label: ui.alpha, s: 'α', cls: 'only-th' },
+  { k: 'flift', label: ui.fLift, s: S('F<sub>зг</sub>'), cls: 'only-th' },
   { k: 'theta', label: ui.theta, s: 'θ', cls: 'only-pro' },
   { k: 'eta', label: ui.eta, s: 'η', cls: 'only-pro' },
   { k: 'finfull', label: S(ui.finFull), cls: 'only-pro' },
   { k: 'flim', label: S(ui.fatigueLimit), cls: 'only-pro' },
+  { k: 'mel', label: ui.moment, s: 'M', cls: 'only-pro only-th' },
+  { k: 'lockexc', label: ui.lockExc, s: S('ΔL<sub>бл</sub>'), cls: 'only-pro only-th' },
   { k: 'kcap', label: ui.capture, s: 'k', cls: 'only-pro' },
-  { k: 'bodyneed', label: S(ui.bodyNeed), cls: 'only-pro' },
+  { k: 'bodyneed', label: S(ui.bodyNeed), cls: 'only-pro only-tr' },
 ];
+const TDS: [string, string, string][] = [['spring', ui.tdSpring, ui.tdSpringDesc], ['split', ui.tdSplit, ui.tdSplitDesc], ['hand', ui.tdHand, ui.tdHandDesc]];
 ---
 
 <Base lang={lang} title={ui.title} description={ui.lead} altLangHref={localePath(other, 'tools/body-powered-simulator/')}>
   <div class="bp" data-lang={lang}>
     <!-- ============================================================ HERO -->
     <section class="hero">
-      <div class="lattice" aria-hidden="true"></div>
-      <div class="container hero-in">
-        <nav class="crumbs"><a href={localePath(lang, 'tools/')}>← {lang === 'uk' ? 'Інструменти' : 'Tools'}</a></nav>
-        <p class="code"><span>{ui.code}</span><span class="code-v">v{META.version}</span><span class="code-k">{ui.kicker}</span></p>
-        <h1 class="hero-h">{ui.title}</h1>
-        <p class="hero-lead">{ui.lead}</p>
+      <div class="dots" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-txt">
+          <nav class="crumbs"><a href={localePath(lang, 'tools/')}>← {lang === 'uk' ? 'Інструменти' : 'Tools'}</a></nav>
+          <p class="eyebrow"><span>{ui.code}</span><span class="ver-pill">v{META.version}</span></p>
+          <h1 class="hero-h">{ui.title}</h1>
+          <p class="hero-lead">{ui.lead}</p>
+        </div>
+        <figure class="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 360 300">
+            <defs>
+              <radialGradient id="ha-glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#5b8cff" stop-opacity=".35" /><stop offset="1" stop-color="#5b8cff" stop-opacity="0" /></radialGradient>
+              <linearGradient id="ha-cyl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8db0ff" stop-opacity=".22" /><stop offset="1" stop-color="#2756b8" stop-opacity=".05" /></linearGradient>
+              <marker id="ha-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#dfe7ff" /></marker>
+            </defs>
+            <circle cx="180" cy="150" r="140" fill="url(#ha-glow)" />
+            {[0, 1, 2, 3, 4, 5].map((i) => <circle cx="180" cy="150" r={78 + i * 16} fill="none" stroke="#8db0ff" stroke-opacity={0.16 - i * 0.022} stroke-dasharray={i % 2 ? '2 6' : 'none'} />)}
+            <circle cx="180" cy="150" r="58" fill="url(#ha-cyl)" stroke="#8db0ff" stroke-width="1.2" />
+            <circle cx="180" cy="150" r="3" fill="#8db0ff" />
+            <path d="M122 150 A58 58 0 0 1 238 150" fill="none" stroke="#dfe7ff" stroke-width="2.4" />
+            <path d="M122 150 L122 262" stroke="#dfe7ff" stroke-width="2.4" marker-end="url(#ha-ar)" />
+            <path d="M238 150 L238 248" stroke="#8db0ff" stroke-width="1.6" marker-end="url(#ha-ar)" />
+            <path d="M144 150 A36 36 0 0 1 216 150" fill="none" stroke="#5b8cff" stroke-width="1" stroke-dasharray="3 3" />
+            <text x="180" y="104" class="ha-t" text-anchor="middle">θ</text>
+            <text x="110" y="278" class="ha-t" text-anchor="end">F<tspan dy="4" font-size="9" font-style="normal">{lang === 'uk' ? 'вх' : 'in'}</tspan></text>
+            <text x="250" y="262" class="ha-t">F<tspan dy="4" font-size="9" font-style="normal">{lang === 'uk' ? 'вих' : 'out'}</tspan></text>
+            <text x="180" y="30" class="ha-m" text-anchor="middle">η = e<tspan dy="-5" font-size="8">−μθ</tspan></text>
+          </svg>
+        </figure>
         <dl class="spec">
           {ui.spec.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
         </dl>
-        <div class="warn hud" role="note"><p class="warn-h"><span aria-hidden="true">▲</span> {ui.disclaimerTitle}</p><p>{ui.disclaimer}</p></div>
+        <div class="note" role="note"><p class="note-h">{ui.disclaimerTitle}</p><p>{ui.disclaimer}</p></div>
       </div>
     </section>
 
@@ -58,9 +87,13 @@ const TEL: { k: string; label: string; s?: string; cls?: string }[] = [
     <section class="lab" id="simulator" aria-label={ui.short}>
       <div class="container">
         <div class="lab-bar">
-          <div class="seg" role="tablist" aria-label={lang === 'uk' ? 'Режим' : 'Mode'}>
-            <button type="button" role="tab" class="seg-b" data-mode="patient" aria-selected="true"><span>{ui.modePatient}</span><small>{ui.modePatientHint}</small></button>
-            <button type="button" role="tab" class="seg-b" data-mode="pro" aria-selected="false"><span>{ui.modePro}</span><small>{ui.modeProHint}</small></button>
+          <div class="seg seg-lv" role="tablist" aria-label={lang === 'uk' ? 'Рівень' : 'Level'}>
+            <button type="button" role="tab" class="sb lv-b" data-level="tr" aria-selected="true"><span>{ui.levelTR}</span><small>{ui.levelTRHint}</small></button>
+            <button type="button" role="tab" class="sb lv-b" data-level="th" aria-selected="false"><span>{ui.levelTH}</span><small>{ui.levelTHHint}</small></button>
+          </div>
+          <div class="seg seg-md" role="tablist" aria-label={lang === 'uk' ? 'Режим' : 'Mode'}>
+            <button type="button" role="tab" class="sb seg-b" data-mode="patient" aria-selected="true"><span>{ui.modePatient}</span><small>{ui.modePatientHint}</small></button>
+            <button type="button" role="tab" class="sb seg-b" data-mode="pro" aria-selected="false"><span>{ui.modePro}</span><small>{ui.modeProHint}</small></button>
           </div>
           <div class="lab-actions">
             <button type="button" class="lb" data-act="reset">{ui.reset}</button>
@@ -71,79 +104,109 @@ const TEL: { k: string; label: string; s?: string; cls?: string }[] = [
 
         <div class="lab-grid">
           <div class="scene">
-            <div class="scene-main hud">
-              <p class="scene-cap only-patient"><b>FIG. 1</b> · {ui.backView}</p>
-              <p class="scene-cap only-pro"><b>FIG. 1</b> · {ui.sideScheme}</p>
-              <svg class="sv sv-back only-patient" viewBox="0 0 640 600" role="img" aria-label={ui.backView}></svg>
-              <svg class="sv sv-side only-pro" role="img" aria-label={ui.sideScheme}></svg>
-              <ul class="key only-patient">{KEY_P.map(([t, l, c]) => <li class={c}><b>{t}</b>{l}</li>)}</ul>
-              <ul class="key only-pro">
-                {KEY_R.map(([t, l]) => <li><b>{t}</b>{l}</li>)}
-                <li class="key-r">{lang === 'uk' ? 'R вигину оболонки:' : 'Housing bend radius:'} <i style="--c: #46c98b"></i>&gt; 60 <i style="--c: #e9b44c"></i>30–60 <i style="--c: #ff5d5d"></i>&lt; 30 {ui.mm}</li>
+            <div class="scene-main card">
+              <p class="cap"><b>Fig. 1</b><span class="only-tr only-patient">{ui.backView}</span><span class="only-tr only-pro">{ui.sideScheme}</span><span class="only-th">{ui.thScheme}</span></p>
+              <svg class="sv sv-back only-tr only-patient" viewBox="0 0 640 600" role="img" aria-label={ui.backView}></svg>
+              <svg class="sv sv-side only-tr only-pro" role="img" aria-label={ui.sideScheme}></svg>
+              <svg class="sv sv-th only-th" role="img" aria-label={ui.thScheme}></svg>
+              <ul class="key only-tr only-patient">{KEY_TRP.map(([t, l, c]) => <li class={c}><b>{t}</b>{l}</li>)}</ul>
+              <ul class="key only-tr only-pro">
+                {KEY_TRR.map(([t, l]) => <li><b>{t}</b>{l}</li>)}
+                <li class="key-r">{lang === 'uk' ? 'R вигину оболонки:' : 'Housing bend radius:'} <i style="--c: #45c08a"></i>&gt; 60 <i style="--c: #e0b25a"></i>30–60 <i style="--c: #ff6b6b"></i>&lt; 30 {ui.mm}</li>
               </ul>
+              <ul class="key only-th">{KEY_TH.map(([t, l, c]) => <li class={c}><b>{t}</b>{l}</li>)}</ul>
             </div>
             <div class="scene-sub">
-              <figure class="mini hud">
-                <figcaption><b>FIG. 2</b> · {ui.hookView}</figcaption>
+              <figure class="mini card">
+                <figcaption><b>Fig. 2</b>{ui.hookView}</figcaption>
                 <svg class="sv sv-hook" viewBox="0 -34 300 204" role="img" aria-label={ui.hookView}></svg>
               </figure>
-              <figure class="mini hud only-pro">
-                <figcaption><b>FIG. 3</b> · {ui.backView} · [A] {ui.cross}</figcaption>
+              <figure class="mini card only-pro">
+                <figcaption><b>Fig. 3</b>{ui.backView} · [A] {ui.cross}</figcaption>
                 <svg class="sv sv-cross" viewBox="0 0 300 204" role="img" aria-label={ui.cross}></svg>
               </figure>
-              <figure class="mini mini-chart hud only-pro">
-                <figcaption><b>FIG. 4</b> · <span set:html={S(ui.chartTitle)} /></figcaption>
-                <svg class="sv sv-chart" viewBox="0 0 720 220" role="img" aria-label="η(θ)"></svg>
+              <figure class="mini mini-chart card only-pro">
+                <figcaption><b>Fig. 4</b><span class="only-tr" set:html={S(ui.chartTitle)} /><span class="only-th" set:html={S(ui.chartTitleTH)} /></figcaption>
+                <svg class="sv sv-chart" viewBox="0 0 720 220" role="img" aria-label="chart"></svg>
               </figure>
             </div>
-            <p class="drag-hint only-pro">{ui.dragHint}</p>
+            <p class="drag-hint only-pro only-tr">{ui.dragHint}</p>
           </div>
 
-          <div class="panel hud">
-            <div class="only-patient grp">
-              <p class="hh"><span>00</span>{ui.gHarness}</p>
-              <div class="harness" role="radiogroup" aria-label={ui.harness}>
+          <div class="panel card">
+            <div class="grp">
+              <p class="hh"><span>00</span>{ui.gTD}</p>
+              <div class="tds" role="radiogroup" aria-label={ui.gTD}>
+                {TDS.map(([k, t, d]) => (
+                  <button type="button" class="tdb" data-td={k} role="radio" aria-checked="false">
+                    <svg viewBox="0 0 60 36" aria-hidden="true" class={`ico ico-${k}`}></svg>
+                    <strong>{t}</strong><small>{d}</small>
+                  </button>
+                ))}
+              </div>
+              <label class="rng rng-set"><span data-o="setlabel"></span><output data-v="tdSet"></output><input type="range" min="1" max="3" step="1" data-k="tdSet" /></label>
+              <div class="chips"><span><i>{ui.tdMass}</i><b data-o="tdmass"></b></span><span><i>{ui.tdPinch}</i><b data-o="tdpinch"></b></span><span><i>{ui.tdOpen}</i><b data-o="tdopen"></b></span><span><i set:html={S(ui.tdFullF)} /><b data-o="tdffull"></b></span></div>
+              <p class="hint">{ui.tdNote}</p>
+            </div>
+
+            <div class="grp">
+              <p class="hh"><span>01</span>{ui.gHarness}</p>
+              <div class="harness only-tr" role="radiogroup" aria-label={ui.harness}>
                 <button type="button" class="hb" data-h="8" role="radio" aria-checked="true"><strong>{ui.fig8}</strong><small>{ui.fig8Desc}</small></button>
                 <button type="button" class="hb" data-h="9" role="radio" aria-checked="false"><strong>{ui.fig9}</strong><small>{ui.fig9Desc}</small></button>
               </div>
+              <p class="hint only-th">{ui.harnessTH}</p>
             </div>
 
             <div class="grp">
-              <p class="hh"><span>01</span>{ui.gKin}</p>
+              <p class="hh"><span>02</span>{ui.gKin}</p>
               <label class="rng"><span>{ui.scap} <i>s</i></span><output data-v="scap"></output><input type="range" min="0" max="100" step="1" data-k="scap" /></label>
               <label class="rng"><span>{ui.gh} <i>φ</i></span><output data-v="gh"></output><input type="range" min="0" max="90" step="1" data-k="gh" /></label>
-            </div>
-
-            <div class="grp">
-              <p class="hh"><span>02</span>{ui.gCfg}</p>
-              <label class="rng"><span>{ui.bands}</span><output data-v="bands"></output><input type="range" min="1" max="4" step="1" data-k="bands" /></label>
-              <p class="hint only-patient">{ui.bandsHint}</p>
-              <div class="only-pro">
-                <label class="rng"><span set:html={S(ui.approach)} /><output data-v="approach"></output><input type="range" min="0" max="80" step="1" data-k="approach" /></label>
-                <p class="hint">{ui.approachHint}</p>
-                <label class="rng"><span>{ui.slack}</span><output data-v="slack"></output><input type="range" min="0" max="45" step="1" data-k="slack" /></label>
-                <label class="sel"><span>{ui.pair}</span>
-                  <select data-k="pair">
-                    <option value="ptfe">{ui.pairPtfe}</option>
-                    <option value="unlined">{ui.pairUnlined}</option>
-                    <option value="custom">{ui.pairCustom}</option>
-                  </select>
-                </label>
-                <label class="rng rng-mu"><span>μ</span><output data-v="mu"></output><input type="range" min="0.05" max="0.4" step="0.005" data-k="mu" /></label>
-                <label class="rng"><span set:html={S(ui.lreq)} /><output data-v="lReq"></output><input type="range" min="30" max="70" step="1" data-k="lReq" /></label>
-                <p class="hint">{ui.lreqHint}</p>
+              <div class="only-th">
+                <label class="rng"><span>{ui.lockMove} <i>d</i></span><output data-v="lockMove"></output><input type="range" min="0" max="100" step="1" data-k="lockMove" /></label>
+                <div class="lockrow">
+                  <button type="button" class="lb lb-lock" data-act="lock">{ui.lockPulse}</button>
+                  <span class="lockstate" data-o="lockstate"></span>
+                </div>
+                <p class="hint">{ui.thKinHint} {ui.lockHint}</p>
               </div>
             </div>
 
             <div class="grp only-pro">
-              <p class="hh"><span>03</span>{ui.gUser}</p>
+              <p class="hh"><span>03</span>{ui.gCfg}</p>
+              <div class="only-tr">
+                <label class="rng"><span set:html={S(ui.approach)} /><output data-v="approach"></output><input type="range" min="0" max="80" step="1" data-k="approach" /></label>
+                <p class="hint">{ui.approachHint}</p>
+                <label class="rng"><span>{ui.slack}</span><output data-v="slack"></output><input type="range" min="0" max="45" step="1" data-k="slack" /></label>
+              </div>
+              <label class="sel"><span>{ui.pair}</span>
+                <select data-k="pair">
+                  <option value="ptfe">{ui.pairPtfe}</option>
+                  <option value="unlined">{ui.pairUnlined}</option>
+                  <option value="custom">{ui.pairCustom}</option>
+                </select>
+              </label>
+              <label class="rng rng-mu"><span>μ</span><output data-v="mu"></output><input type="range" min="0.05" max="0.4" step="0.005" data-k="mu" /></label>
+              <div class="only-th">
+                <label class="rng"><span set:html={S(ui.rLift)} /><output data-v="rLift"></output><input type="range" min="15" max="40" step="1" data-k="rLift" /></label>
+                <p class="hint">{ui.rLiftHint}</p>
+                <label class="rng"><span set:html={S(ui.thetaBack)} /><output data-v="thetaBack"></output><input type="range" min="0" max="120" step="1" data-k="thetaBack" /></label>
+                <label class="rng"><span set:html={S(ui.mForearm)} /><output data-v="mForearm"></output><input type="range" min="0.2" max="0.7" step="0.01" data-k="mForearm" /></label>
+                <label class="rng"><span>{ui.comp}</span><output data-v="comp"></output><input type="range" min="0" max="100" step="5" data-k="comp" /></label>
+                <p class="hint">{ui.compHint}</p>
+              </div>
+            </div>
+
+            <div class="grp only-pro">
+              <p class="hh"><span>04</span>{ui.gUser}</p>
               <label class="rng"><span set:html={S(ui.fmax)} /><output data-v="fMax"></output><input type="range" min="87" max="538" step="1" data-k="fMax" /></label>
               <p class="hint">{ui.fmaxHint}</p>
             </div>
 
-            <div class="hud-out" aria-live="polite">
-              <p class="hh"><span>04</span>{ui.gTel}</p>
+            <div class="tele" aria-live="polite">
+              <p class="hh"><span>05</span>{ui.gTel}</p>
               <div class="status" data-o="status"></div>
+              <div class="status status-el only-th" data-o="elstatus"></div>
               <div class="bar" aria-hidden="true"><i data-o="excbar"></i></div>
               <div class="tel">
                 {TEL.map((t) => (
@@ -161,7 +224,7 @@ const TEL: { k: string; label: string; s?: string; cls?: string }[] = [
               </div>
               <div class="cmp only-pro" data-o="cmp" hidden></div>
               <div class="flags only-pro">
-                <p class="hh"><span>05</span>{ui.gDiag}</p>
+                <p class="hh"><span>06</span>{ui.gDiag}</p>
                 <ul data-o="flags"></ul>
               </div>
             </div>
@@ -173,20 +236,20 @@ const TEL: { k: string; label: string; s?: string; cls?: string }[] = [
 
     <!-- ============================================================ TECHNICAL SECTIONS -->
     <nav class="toc container" aria-label={lang === 'uk' ? 'Розділи' : 'Sections'}>
-      {SECS.map(([n, t]) => <a href={`#s${n}`}><span>§ {n}</span>{t}</a>)}
+      {SECS.map(([n, t]) => <a href={`#s${n}`}><span>{n}</span>{t}</a>)}
     </nav>
 
     <section class="doc" id="s01">
-      <div class="container narrow">
-        <h2 class="dh"><span>§ 01</span>{ui.secScope}</h2>
-        {ui.how.map((p) => <p class="body">{p}</p>)}
+      <div class="container doc-grid">
+        <h2 class="dh"><span>01</span>{ui.secScope}</h2>
+        <div>{ui.how.map((p) => <p class="body">{p}</p>)}</div>
       </div>
     </section>
 
     <section class="doc" id="s02">
-      <div class="container narrow">
-        <h2 class="dh"><span>§ 02</span>{ui.secNotation}</h2>
-        <div class="tbl-wrap hud">
+      <div class="container doc-grid">
+        <h2 class="dh"><span>02</span>{ui.secNotation}</h2>
+        <div class="tbl-wrap card">
           <table class="tbl notation">
             <thead><tr>{ui.notationHead.map((h) => <th>{h}</th>)}</tr></thead>
             <tbody>{NOTATION.map((r) => <tr><td class="symc" set:html={S(r.sym)} /><td set:html={S(r.q[lang])} /><td class="mono nw">{r.u[lang]}</td></tr>)}</tbody>
@@ -196,66 +259,75 @@ const TEL: { k: string; label: string; s?: string; cls?: string }[] = [
     </section>
 
     <section class="doc" id="s03">
-      <div class="container narrow">
-        <h2 class="dh"><span>§ 03</span>{ui.secModel}</h2>
-        <p class="body">{ui.modelLead}</p>
-        <ol class="eqs">
-          {EQUATIONS.map((e) => (
-            <li class="eq hud">
-              <div class="eq-f" set:html={S(e.html)} />
-              <span class="eq-n">({e.n})</span>
-              <p class="eq-note" set:html={S(e.note[lang])} />
-            </li>
-          ))}
-        </ol>
+      <div class="container doc-grid">
+        <h2 class="dh"><span>03</span>{ui.secModel}</h2>
+        <div>
+          <p class="body">{ui.modelLead}</p>
+          <ol class="eqs">
+            {EQUATIONS.map((e) => (
+              <li class="eq card">
+                <div class="eq-f" set:html={S(typeof e.html === 'string' ? e.html : e.html[lang])} />
+                <span class="eq-n">({e.n})</span>
+                <p class="eq-note" set:html={S(e.note[lang])} />
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
 
     <section class="doc" id="s04">
       <div class="container">
-        <h2 class="dh"><span>§ 04</span>{ui.secParams}</h2>
-        <div class="tbl-wrap hud">
+        <h2 class="dh dh-wide"><span>04</span>{ui.secParams}</h2>
+        <div class="tbl-wrap card">
           <table class="tbl params">
             <thead><tr>{ui.paramsHead.map((h) => <th>{h}</th>)}</tr></thead>
-            <tbody>
-              {PARAMS.map((r) => (
-                <tr>
-                  <td>{r.p[lang]}{r.note && <small>{r.note[lang]}</small>}</td>
-                  <td class="mono nw">{r.v[lang]}</td>
-                  <td><span class={`st st-${r.s}`}>{ui.statusLabel[r.s]}</span></td>
-                  <td class="mono">{r.refs.length ? r.refs.map((k) => <a href={`#ref-${k}`}>[{refNo[k]}]</a>) : '—'}</td>
-                </tr>
-              ))}
-            </tbody>
+            {PARAM_GROUPS.map((grp) => (
+              <tbody>
+                <tr class="grp-row"><th colspan="4" scope="colgroup">{grp.g[lang]}</th></tr>
+                {grp.rows.map((r) => (
+                  <tr>
+                    <td><span set:html={S(r.p[lang])} />{r.note && <small set:html={S(r.note[lang])} />}</td>
+                    <td class="mono nw">{r.v[lang]}</td>
+                    <td><span class={`st st-${r.s}`}>{ui.statusLabel[r.s]}</span></td>
+                    <td class="mono">{r.refs.length ? r.refs.map((k) => <a href={`#ref-${k}`}>[{refNo[k]}]</a>) : '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            ))}
           </table>
         </div>
       </div>
     </section>
 
     <section class="doc" id="s05">
-      <div class="container narrow">
-        <h2 class="dh"><span>§ 05</span>{ui.secVV}</h2>
-        <p class="body">{ui.vvVerif}</p>
-        <ol class="checks">{CHECKS.map((c, i) => <li><span class="ck">T{i + 1}</span><span class="ok">PASS</span><span set:html={S(c[lang])} /></li>)}</ol>
-        <p class="body vv-valid hud" set:html={S(ui.vvValid)} />
+      <div class="container doc-grid">
+        <h2 class="dh"><span>05</span>{ui.secVV}</h2>
+        <div>
+          <p class="body">{ui.vvVerif}</p>
+          <ol class="checks">{CHECKS.map((c, i) => <li><span class="ck">T{i + 1}</span><span class="ok">PASS</span><span set:html={S(c[lang])} /></li>)}</ol>
+          <p class="body vv-valid card" set:html={S(ui.vvValid)} />
+        </div>
       </div>
     </section>
 
     <section class="doc" id="s06">
-      <div class="container narrow">
-        <h2 class="dh"><span>§ 06</span>{ui.secLimits}</h2>
-        <dl class="asm">{ui.assumptions.map(([k, t]) => <div><dt>{k}</dt><dd set:html={S(t)} /></div>)}</dl>
-        <ul class="lim">{ui.limits.map((l) => <li>{l}</li>)}</ul>
+      <div class="container doc-grid">
+        <h2 class="dh"><span>06</span>{ui.secLimits}</h2>
+        <div>
+          <dl class="asm">{ui.assumptions.map(([k, t]) => <div><dt>{k}</dt><dd set:html={S(t)} /></div>)}</dl>
+          <ul class="lim">{ui.limits.map((l) => <li>{l}</li>)}</ul>
+        </div>
       </div>
     </section>
 
     <section class="doc" id="s07">
       <div class="container">
-        <h2 class="dh"><span>§ 07</span>{ui.secPassport}</h2>
+        <h2 class="dh dh-wide"><span>07</span>{ui.secPassport}</h2>
         <div class="pass-grid">
-          <dl class="pass hud">
+          <dl class="pass card">
             <div><dt>{ui.pass.name}</dt><dd>{ui.title} <span class="dim">({otherTitle})</span></dd></div>
-            <div><dt>{ui.pass.version}</dt><dd><span class="ver">v{META.version}</span> · {fmtDay(META.updated)}</dd></div>
+            <div><dt>{ui.pass.version}</dt><dd><span class="ver-pill">v{META.version}</span> · {fmtDay(META.updated)}</dd></div>
             <div><dt>{ui.pass.status}</dt><dd>{ui.passStatus}</dd></div>
             <div><dt>{ui.pass.evidence}</dt><dd>{ui.passEvidence}</dd></div>
             <div><dt>{ui.pass.author}</dt><dd>{author.name} · <a href={SITE.orcidUrl} rel="noopener">ORCID {SITE.orcid}</a></dd></div>
@@ -263,7 +335,7 @@ const TEL: { k: string; label: string; s?: string; cls?: string }[] = [
             <div><dt>{ui.pass.cite}</dt><dd class="cite">{ui.cite(META.version, author.short)} {ui.avail} {pageUrl}</dd></div>
           </dl>
           <div>
-            <p class="hh"><span>LOG</span>{ui.changelog}</p>
+            <p class="hh"><span>log</span>{ui.changelog}</p>
             <ol class="clog">{CHANGELOG.map((c) => <li><span class="cl-v">v{c.v}</span><span class="cl-d">{fmtDay(c.date)}</span><p>{c.text[lang]}</p></li>)}</ol>
             <p class="fine">{ui.versioning}</p>
             <p class="fine">{ui.coi}</p>
@@ -274,8 +346,8 @@ const TEL: { k: string; label: string; s?: string; cls?: string }[] = [
     </section>
 
     <section class="doc doc-last" id="s08">
-      <div class="container narrow">
-        <h2 class="dh"><span>§ 08</span>{ui.secRefs}</h2>
+      <div class="container doc-grid">
+        <h2 class="dh"><span>08</span>{ui.secRefs}</h2>
         <ol class="refs">
           {REF_ORDER.map((k) => {
             const r = REFS[k];
@@ -294,224 +366,255 @@ const TEL: { k: string; label: string; s?: string; cls?: string }[] = [
 
 <style>
   .bp {
-    --void: #07090c; --pn: #0c1118; --pn2: #10161f; --ln: #222c39; --ln2: #33404f;
-    --gold: #e9b44c; --gold2: #ffd27a; --cy: #8db0ff; --tx: #e6eaf0; --tx2: #bcc4d0; --mu: #8a93a3;
-    --ok: #46c98b; --warn: #e9b44c; --bad: #ff5d5d;
-    background: var(--void); color: var(--tx);
+    --ink: #05070b; --ln: rgba(141, 176, 255, 0.13); --ln2: rgba(141, 176, 255, 0.26);
+    --blue: #2756b8; --azure: #5b8cff; --sky: #8db0ff; --ice: #dfe7ff;
+    --tx: #e6eaf0; --tx2: #aeb8ca; --mu: #7a869c;
+    --ok: #45c08a; --warn: #e0b25a; --bad: #ff6b6b;
+    background: var(--ink); color: var(--tx);
   }
   .mono { font-family: var(--font-mono); }
   .nw { white-space: nowrap; }
-  /* HUD-рамка: тонка лінія + золоті кутові скоби */
-  .hud { position: relative; border: 1px solid var(--ln); background: var(--pn); }
-  .hud::before, .hud::after { content: ''; position: absolute; width: 14px; height: 14px; pointer-events: none; z-index: 2; }
-  .hud::before { left: -1px; top: -1px; border-left: 2px solid var(--gold); border-top: 2px solid var(--gold); }
-  .hud::after { right: -1px; bottom: -1px; border-right: 2px solid var(--gold); border-bottom: 2px solid var(--gold); }
-  .hh { display: flex; align-items: center; gap: 10px; margin: 2px 0 10px; font: 500 11px var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
-  .hh span { padding: 1px 8px 1px 6px; background: var(--gold); color: #0b0d10; font-weight: 600; clip-path: polygon(0 0, 100% 0, calc(100% - 5px) 100%, 0 100%); }
-  .hh::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(233, 180, 76, 0.5), transparent); }
+  .card { position: relative; border: 1px solid var(--ln); border-radius: 16px; background: linear-gradient(180deg, rgba(20, 30, 52, 0.55), rgba(10, 15, 27, 0.75)); box-shadow: inset 0 1px 0 rgba(223, 231, 255, 0.04); }
+  .hh { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font: 500 11px var(--font-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--sky); }
+  .hh span { color: var(--mu); letter-spacing: 0.06em; }
+  .hh::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--ln2), transparent); }
 
   /* ---------- hero ---------- */
-  .hero { position: relative; overflow: hidden; background: radial-gradient(900px 420px at 85% 0%, rgba(233, 180, 76, 0.14), transparent 60%), radial-gradient(700px 400px at 10% 100%, rgba(39, 86, 184, 0.22), transparent 65%), var(--void); border-bottom: 1px solid var(--ln); }
-  .lattice, .lab::before { position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(60deg, rgba(233, 180, 76, 0.05) 0 1px, transparent 1px 38px), repeating-linear-gradient(-60deg, rgba(233, 180, 76, 0.05) 0 1px, transparent 1px 38px), repeating-linear-gradient(0deg, rgba(141, 176, 255, 0.035) 0 1px, transparent 1px 33px); -webkit-mask-image: radial-gradient(ellipse 85% 85% at 70% 30%, #000 30%, transparent 85%); mask-image: radial-gradient(ellipse 85% 85% at 70% 30%, #000 30%, transparent 85%); }
-  .hero-in { position: relative; padding-block: 22px 34px; }
+  .hero { position: relative; overflow: hidden; background: radial-gradient(800px 480px at 78% 10%, rgba(39, 86, 184, 0.32), transparent 62%), radial-gradient(600px 400px at 0% 100%, rgba(91, 140, 255, 0.12), transparent 70%), var(--ink); border-bottom: 1px solid var(--ln); }
+  .dots, .lab::before { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(141, 176, 255, 0.16) 1px, transparent 1.2px); background-size: 22px 22px; -webkit-mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, #000 20%, transparent 80%); mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, #000 20%, transparent 80%); }
+  .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr); gap: 8px 40px; padding-block: 18px 40px; align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1fr); } .hero-art { display: none; } }
   .crumbs a { display: inline-flex; align-items: center; min-height: 40px; font-size: 14px; color: var(--tx2); }
   .crumbs a:hover { color: #fff; }
-  .code { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 6px 0 0; font: 500 12px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
-  .code span:first-child { color: var(--gold); }
-  .code-v { text-transform: none; padding: 1px 7px; border: 1px solid rgba(233, 180, 76, 0.5); color: var(--gold2); }
-  .code-k { color: var(--cy); }
-  .hero-h { font-family: var(--font-sans); margin: 14px 0 0; max-width: 940px; font-size: clamp(30px, 4vw, 52px); line-height: 1.06; letter-spacing: -0.02em; font-weight: 600; color: #fff; }
-  .hero-lead { margin: 16px 0 0; max-width: 820px; font-size: 17px; line-height: 1.62; color: var(--tx2); }
-  .spec { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 22px 0 0; max-width: 940px; border: 1px solid var(--ln); border-width: 1px 0 0 1px; background: rgba(12, 17, 24, 0.7); }
+  .eyebrow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 8px 0 0; font: 500 12px var(--font-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--sky); }
+  .ver-pill { display: inline-block; padding: 2px 10px; border: 1px solid var(--ln2); border-radius: 999px; font: 500 12px var(--font-mono); letter-spacing: 0.02em; text-transform: none; color: var(--ice); background: rgba(39, 86, 184, 0.25); }
+  .hero-h { margin: 16px 0 0; font-family: var(--font-serif); font-weight: 500; font-size: clamp(32px, 4.4vw, 58px); line-height: 1.04; letter-spacing: -0.02em; color: #fff; }
+  .hero-lead { margin: 18px 0 0; max-width: 680px; font-size: 17px; line-height: 1.65; color: var(--tx2); }
+  .hero-art { margin: 0; }
+  .hero-art svg { width: 100%; height: auto; display: block; }
+  .ha-t { font: italic 600 15px var(--font-serif); fill: var(--ice); }
+  .ha-m { font: italic 500 14px var(--font-serif); fill: var(--sky); }
+  .spec { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 18px 0 0; border-top: 1px solid var(--ln); }
   @media (max-width: 760px) { .spec { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .spec > div { padding: 10px 14px; border-right: 1px solid var(--ln); border-bottom: 1px solid var(--ln); }
-  .spec dt { font: 500 10.5px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--mu); }
-  .spec dd { margin: 4px 0 0; font: 500 14px var(--font-mono); color: var(--tx); }
-  .warn { margin-top: 18px; max-width: 940px; padding: 12px 16px; background: rgba(233, 180, 76, 0.06); border-color: rgba(233, 180, 76, 0.35); }
-  .warn-h { margin: 0 0 4px; font: 600 11.5px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
-  .warn p:last-child { margin: 0; font-size: 14.5px; line-height: 1.55; color: #e9dcc0; }
+  .spec > div { padding: 14px 16px 0 0; }
+  .spec dt { font: 500 10.5px var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--mu); }
+  .spec dd { margin: 6px 0 0; font-size: 14.5px; line-height: 1.4; color: var(--tx); }
+  .note { grid-column: 1 / -1; margin-top: 22px; padding: 14px 18px; border: 1px solid rgba(224, 178, 90, 0.28); border-radius: 14px; background: rgba(224, 178, 90, 0.05); }
+  .note-h { margin: 0 0 4px; font: 500 11px var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--warn); }
+  .note p:last-child { margin: 0; font-size: 14.5px; line-height: 1.6; color: #e7dcc4; }
 
   /* ---------- lab ---------- */
-  .lab { position: relative; padding-block: 22px 34px; background: #090c11; border-bottom: 1px solid var(--ln); }
-  .lab::before { content: ''; opacity: 0.6; }
+  .lab { position: relative; padding-block: 26px 38px; background: radial-gradient(900px 500px at 30% 0%, rgba(39, 86, 184, 0.16), transparent 70%), #060910; border-bottom: 1px solid var(--ln); }
+  .lab::before { content: ''; opacity: 0.55; }
   .lab > .container { position: relative; }
-  .lab-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
-  .seg { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--ln); background: var(--pn); }
-  .seg-b { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 48px; padding: 7px 18px 7px 14px; border: 0; background: transparent; color: var(--tx2); cursor: pointer; text-align: left; font: 600 14.5px var(--font-sans); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%); }
-  .seg-b small { font: 400 11px var(--font-mono); letter-spacing: 0.04em; color: var(--mu); }
-  .seg-b[aria-selected='true'] { background: var(--gold); color: #0b0d10; }
-  .seg-b[aria-selected='true'] small { color: #3b2d10; }
-  .lab-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-  .lb { min-height: 40px; padding: 0 14px; border: 1px solid var(--ln2); background: var(--pn); color: var(--tx2); font: 500 12px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
-  .lb:hover { border-color: var(--gold); color: #fff; }
-  .lb[aria-pressed='true'] { border-color: var(--gold); color: var(--gold2); background: rgba(233, 180, 76, 0.08); }
+  .lab-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 16px; }
+  .lab-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+  .seg { display: inline-flex; gap: 2px; padding: 4px; border: 1px solid var(--ln); border-radius: 14px; background: rgba(10, 16, 32, 0.8); }
+  .sb { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 46px; padding: 6px 16px; border: 0; border-radius: 10px; background: transparent; color: var(--tx2); cursor: pointer; text-align: left; font: 600 14px var(--font-sans); transition: background 0.15s, color 0.15s; }
+  .sb small { font: 400 11px var(--font-mono); color: var(--mu); }
+  .sb[aria-selected='true'] { background: linear-gradient(180deg, #3a6be0, #2756b8); color: #fff; box-shadow: 0 6px 18px rgba(39, 86, 184, 0.35); }
+  .sb[aria-selected='true'] small { color: #d6e2ff; }
+  .lb { min-height: 40px; padding: 0 14px; border: 1px solid var(--ln2); border-radius: 999px; background: rgba(10, 16, 32, 0.8); color: var(--tx2); font: 500 12.5px var(--font-sans); cursor: pointer; }
+  .lb:hover { border-color: var(--sky); color: #fff; }
+  .lb[aria-pressed='true'] { border-color: var(--sky); color: var(--ice); background: rgba(39, 86, 184, 0.3); }
   .lab-grid { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 18px; align-items: start; }
-  @media (max-width: 980px) { .lab-grid { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 1020px) { .lab-grid { grid-template-columns: minmax(0, 1fr); } }
   .scene { min-width: 0; }
-  .scene-main { overflow: hidden; padding-top: 22px; background-color: #0a0e14; background-image: linear-gradient(rgba(141, 176, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(141, 176, 255, 0.05) 1px, transparent 1px); background-size: 20px 20px; }
-  .scene-cap { position: absolute; left: 16px; top: 7px; margin: 0; font: 500 11px var(--font-mono); letter-spacing: 0.04em; color: var(--mu); z-index: 1; }
-  .scene-cap b, .mini figcaption b { color: var(--gold); font-weight: 600; letter-spacing: 0.1em; margin-right: 2px; }
-  .sv { display: block; width: 100%; height: auto; }
+  .scene-main { overflow: hidden; padding-top: 30px; background: radial-gradient(600px 360px at 50% 40%, rgba(39, 86, 184, 0.18), transparent 70%), linear-gradient(180deg, #0d1424, #070a12); }
+  .scene-main::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: radial-gradient(rgba(141, 176, 255, 0.1) 1px, transparent 1.2px); background-size: 20px 20px; }
+  .cap { position: absolute; left: 18px; top: 10px; margin: 0; display: flex; gap: 10px; font: 500 11px var(--font-mono); letter-spacing: 0.04em; color: var(--mu); z-index: 1; }
+  .cap b, .mini figcaption b { color: var(--sky); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .sv { position: relative; display: block; width: 100%; height: auto; }
   .sv-back { max-height: 600px; margin: 0 auto; }
+  .sv-th { max-height: 640px; margin: 0 auto; }
   .scene-sub { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
   .mini-chart { grid-column: 1 / -1; }
-  .bp:not(.is-pro) .scene-sub { grid-template-columns: minmax(0, 380px); }
-  .mini { margin: 0; padding: 8px 10px; background: #0a0e14; }
-  .mini figcaption { margin-bottom: 4px; font: 500 11px var(--font-mono); letter-spacing: 0.02em; color: var(--mu); }
-  .key { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; padding: 8px 14px 10px; border-top: 1px solid var(--ln); background: rgba(7, 9, 12, 0.6); font: 400 11.5px var(--font-mono); color: var(--tx2); }
-  .key li { display: inline-flex; align-items: center; gap: 6px; }
-  .key b { display: inline-grid; place-items: center; min-width: 17px; height: 15px; padding: 0 3px; background: var(--gold); color: #0b0d10; font-size: 10.5px; font-weight: 700; }
+  .bp:not(.is-pro) .scene-sub { grid-template-columns: minmax(0, 420px); }
+  .mini { margin: 0; padding: 10px 12px; }
+  .mini figcaption { display: flex; gap: 10px; margin-bottom: 4px; font: 500 11px var(--font-mono); color: var(--mu); }
+  .key { position: relative; list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; padding: 10px 16px 12px; border-top: 1px solid var(--ln); font: 400 12px var(--font-sans); color: var(--tx2); }
+  .key li { display: inline-flex; align-items: center; gap: 7px; }
+  .key b { display: inline-grid; place-items: center; width: 18px; height: 18px; border: 1px solid var(--sky); border-radius: 50%; color: var(--ice); font: 600 10px var(--font-mono); }
+  .key .c-lift b { border-color: #8db0ff; background: rgba(141, 176, 255, 0.2); }
+  .key .c-lock b { border-color: #c79bff; background: rgba(199, 155, 255, 0.2); }
+  .key .c-td b { border-color: #5fd4c4; background: rgba(95, 212, 196, 0.2); }
   .bp[data-h='9'] .k-f { display: none; }
-  .key-r { flex-basis: 100%; gap: 6px; color: var(--mu); }
-  .key-r i { display: inline-block; width: 18px; height: 3px; margin-left: 6px; background: var(--c); }
-  .drag-hint { margin: 10px 2px 0; font: 400 12.5px/1.5 var(--font-mono); color: var(--tx2); }
+  .key-r { flex-basis: 100%; gap: 6px; color: var(--mu); font-family: var(--font-mono); font-size: 11px; }
+  .key-r i { display: inline-block; width: 18px; height: 3px; margin-left: 6px; border-radius: 2px; background: var(--c); }
+  .drag-hint { margin: 10px 2px 0; font: 400 12.5px/1.5 var(--font-sans); color: var(--mu); }
   .bp:not(.is-pro) .only-pro { display: none !important; }
   .bp.is-pro .only-patient { display: none !important; }
-  @media (max-width: 980px) {
+  .bp:not(.is-th) .only-th { display: none !important; }
+  .bp.is-th .only-tr { display: none !important; }
+  @media (max-width: 1020px) {
     .scene { display: contents; }
-    .scene-main { position: sticky; top: 0; z-index: 3; box-shadow: 0 14px 26px rgba(0, 0, 0, 0.55); }
-    .sv-back { max-height: 42vh; }
+    .scene-main { position: sticky; top: 0; z-index: 3; box-shadow: 0 16px 28px rgba(0, 0, 0, 0.6); }
+    .sv-back, .sv-th { max-height: 44vh; }
     .scene-sub { margin-top: 0; }
     .bp:not(.is-pro) .scene-sub { display: none; }
     .drag-hint { margin: 0 2px; }
   }
   @media (max-width: 640px) {
-    .bp.is-pro .scene-cap { display: none; }
-    .bp.is-pro .scene-main { padding-top: 4px; }
+    .lab-actions { margin-left: 0; }
+    .seg { width: 100%; }
+    .sb { flex: 1; padding: 6px 10px; }
+    .cap { display: none; }
+    .scene-main { padding-top: 4px; }
     .scene-sub { grid-template-columns: minmax(0, 1fr) !important; }
-    .key { padding: 6px 10px 8px; font-size: 11px; gap: 3px 10px; }
+    .key { padding: 6px 12px 8px; font-size: 11px; gap: 4px 12px; }
+    .key-r { display: none; }
   }
 
-  .panel { padding: 14px 16px 16px; }
-  .grp { padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px dashed var(--ln2); }
+  .panel { padding: 16px 18px 18px; }
+  .grp { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--ln); }
+  .tds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .tdb { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 9px 9px; border: 1px solid var(--ln2); border-radius: 12px; background: rgba(10, 16, 32, 0.7); color: var(--tx2); cursor: pointer; text-align: left; }
+  .tdb .ico { width: 100%; height: 34px; margin-bottom: 2px; }
+  .tdb strong { font: 600 12.5px/1.25 var(--font-sans); color: var(--tx); }
+  .tdb small { font-size: 11px; line-height: 1.3; color: var(--mu); }
+  .tdb[aria-checked='true'] { border-color: var(--sky); background: rgba(39, 86, 184, 0.28); box-shadow: 0 0 0 1px rgba(141, 176, 255, 0.25) inset; }
+  .chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+  .chips span { display: flex; flex-direction: column; gap: 2px; padding: 6px 8px; border-radius: 10px; background: rgba(141, 176, 255, 0.06); min-width: 0; }
+  .chips i { font: 400 10px var(--font-mono); font-style: normal; color: var(--mu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chips b { font: 500 13px var(--font-mono); color: var(--ice); white-space: nowrap; }
   .harness { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .hb { display: flex; flex-direction: column; gap: 3px; min-height: 44px; padding: 9px 10px; border: 1px solid var(--ln2); background: var(--pn2); color: var(--tx2); text-align: left; cursor: pointer; }
-  .hb strong { font: 600 13.5px var(--font-sans); color: var(--tx); }
-  .hb small { font-size: 12px; line-height: 1.35; }
-  .hb[aria-checked='true'] { border-color: var(--gold); background: rgba(233, 180, 76, 0.1); box-shadow: inset 3px 0 0 var(--gold); }
-  .hb[aria-checked='true'] strong { color: var(--gold2); }
+  .hb { display: flex; flex-direction: column; gap: 3px; min-height: 44px; padding: 9px 10px; border: 1px solid var(--ln2); border-radius: 12px; background: rgba(10, 16, 32, 0.7); color: var(--tx2); text-align: left; cursor: pointer; }
+  .hb strong { font: 600 13px var(--font-sans); color: var(--tx); }
+  .hb small { font-size: 11.5px; line-height: 1.35; }
+  .hb[aria-checked='true'] { border-color: var(--sky); background: rgba(39, 86, 184, 0.28); }
   .rng[hidden] { display: none; }
-  .rng { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: baseline; margin: 6px 0 2px; font-size: 13.5px; color: var(--tx); }
-  .rng i { font: italic 600 14px var(--font-serif); color: var(--gold); }
-  .rng output { font: 500 13px var(--font-mono); color: var(--gold2); }
-  .rng input { grid-column: 1 / -1; width: 100%; min-height: 28px; accent-color: var(--gold); }
-  .sel { display: grid; gap: 4px; margin: 8px 0; font-size: 13.5px; }
-  .sel select { min-height: 40px; padding: 0 10px; border: 1px solid var(--ln2); background: var(--pn2); color: var(--tx); font: 400 12.5px var(--font-mono); }
-  .hint { margin: 2px 0 6px; font-size: 12px; line-height: 1.45; color: var(--mu); }
-  .status { padding: 9px 12px; font: 600 13.5px/1.45 var(--font-sans); border: 1px solid; border-left-width: 4px; }
-  :global(.bp .status.s-full) { color: #c9f2dc; border-color: rgba(70, 201, 139, 0.55); background: rgba(70, 201, 139, 0.1); }
-  :global(.bp .status.s-part) { color: #f6e3b8; border-color: rgba(233, 180, 76, 0.55); background: rgba(233, 180, 76, 0.08); }
-  :global(.bp .status.s-none) { color: #ffd3d3; border-color: rgba(255, 93, 93, 0.55); background: rgba(255, 93, 93, 0.1); }
-  .bar { position: relative; height: 8px; margin-top: 8px; background: #06080b; border: 1px solid var(--ln2); }
-  .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: repeating-linear-gradient(90deg, var(--gold) 0 6px, transparent 6px 8px); transition: width 0.12s; }
-  .tel { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 10px; background: var(--ln); border: 1px solid var(--ln); }
-  .cell { padding: 7px 9px; background: var(--pn2); min-width: 0; }
-  .cell-l { display: flex; justify-content: space-between; gap: 6px; margin: 0; font: 500 11px/1.3 var(--font-mono); color: var(--mu); }
-  .cell-l b { font: italic 600 13px var(--font-serif); text-transform: none; letter-spacing: 0; color: var(--gold); }
-  .cell-v { margin: 3px 0 0; font: 500 17px var(--font-mono); color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rng { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: baseline; margin: 8px 0 2px; font-size: 13.5px; color: var(--tx); }
+  .rng i { font: italic 600 14px var(--font-serif); color: var(--sky); }
+  .rng output { font: 500 13px var(--font-mono); color: var(--ice); }
+  .rng input { grid-column: 1 / -1; width: 100%; min-height: 28px; accent-color: var(--azure); }
+  .sel { display: grid; gap: 4px; margin: 10px 0; font-size: 13.5px; }
+  .sel select { min-height: 40px; padding: 0 10px; border: 1px solid var(--ln2); border-radius: 10px; background: rgba(10, 16, 32, 0.9); color: var(--tx); font: 400 12.5px var(--font-sans); }
+  .hint { margin: 4px 0 6px; font-size: 12px; line-height: 1.5; color: var(--mu); }
+  .lockrow { display: flex; align-items: center; gap: 10px; margin: 6px 0 4px; }
+  .lockstate { font: 600 12px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+  :global(.bp .lockstate.is-locked) { color: #d9c8ff; background: rgba(199, 155, 255, 0.16); border: 1px solid rgba(199, 155, 255, 0.45); }
+  :global(.bp .lockstate.is-free) { color: #bfe9e2; background: rgba(95, 212, 196, 0.12); border: 1px solid rgba(95, 212, 196, 0.4); }
+  .status { padding: 9px 12px; border-radius: 10px; font: 600 13.5px/1.45 var(--font-sans); border: 1px solid; }
+  .status-el { margin-top: 6px; font-weight: 500; }
+  :global(.bp .status.s-full) { color: #c8f0dc; border-color: rgba(69, 192, 138, 0.45); background: rgba(69, 192, 138, 0.1); }
+  :global(.bp .status.s-part) { color: #f3e3bd; border-color: rgba(224, 178, 90, 0.45); background: rgba(224, 178, 90, 0.08); }
+  :global(.bp .status.s-none) { color: #ffd6d6; border-color: rgba(255, 107, 107, 0.45); background: rgba(255, 107, 107, 0.1); }
+  :global(.bp .status.s-info) { color: #d8e3ff; border-color: var(--ln2); background: rgba(39, 86, 184, 0.16); }
+  .bar { position: relative; height: 6px; margin-top: 10px; border-radius: 999px; background: rgba(141, 176, 255, 0.1); }
+  .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--blue), var(--sky)); transition: width 0.12s; }
+  .tel { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
+  .cell { padding: 8px 10px; border-radius: 10px; background: rgba(141, 176, 255, 0.05); border: 1px solid var(--ln); min-width: 0; }
+  .cell-l { display: flex; justify-content: space-between; gap: 6px; margin: 0; font: 400 11px/1.3 var(--font-sans); color: var(--mu); }
+  .cell-l b { font: italic 600 13px var(--font-serif); color: var(--sky); }
+  .cell-v { margin: 4px 0 0; font: 500 17px var(--font-mono); color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   :global(.bp .cell-v small) { font-size: 11px; color: var(--mu); }
   .cell-sub { margin: 6px 0 0; font: 400 11.5px var(--font-mono); color: var(--tx2); text-align: right; }
-  .load { margin-top: 12px; }
-  .load-h { display: flex; justify-content: space-between; gap: 8px; font: 500 11px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mu); }
-  .load-h b { color: var(--tx); font-weight: 500; letter-spacing: 0.02em; }
+  .load { margin-top: 14px; }
+  .load-h { display: flex; justify-content: space-between; gap: 8px; font: 500 11px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--mu); }
+  .load-h b { color: var(--tx); font-weight: 500; letter-spacing: 0.02em; text-transform: none; }
   .bar-load i { background: var(--ok); }
   :global(.bp .bar-load i.l-tired) { background: var(--warn); }
   :global(.bp .bar-load i.l-max) { background: var(--bad); }
-  .bar .tick { position: absolute; top: -3px; bottom: -3px; left: 20%; width: 2px; background: #fff; }
-  .cmp { margin-top: 12px; padding: 8px 10px; border: 1px dashed rgba(233, 180, 76, 0.6); font: 400 12px/1.55 var(--font-mono); color: #f6e3b8; }
-  .flags { margin-top: 14px; }
+  .bar .tick { position: absolute; top: -4px; bottom: -4px; left: 20%; width: 2px; border-radius: 1px; background: #fff; }
+  .cmp { margin-top: 12px; padding: 9px 12px; border: 1px dashed var(--ln2); border-radius: 10px; font: 400 12px/1.55 var(--font-mono); color: var(--ice); }
+  .flags { margin-top: 16px; }
   .flags ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-  :global(.bp .flags li) { padding: 8px 10px; font-size: 12.8px; line-height: 1.45; background: var(--pn2); border: 1px solid var(--ln); border-left: 3px solid var(--warn); color: var(--tx); }
+  :global(.bp .flags li) { padding: 8px 11px; font-size: 12.8px; line-height: 1.45; border-radius: 10px; background: rgba(141, 176, 255, 0.05); border: 1px solid var(--ln); border-left: 3px solid var(--warn); color: var(--tx); }
   :global(.bp .flags li.f-bad) { border-left-color: var(--bad); }
-  :global(.bp .flags li.f-info) { border-left-color: var(--cy); }
+  :global(.bp .flags li.f-info) { border-left-color: var(--sky); }
   :global(.bp .flags li.f-ok) { border-left-color: var(--ok); color: var(--tx2); }
 
-  /* SVG-сцени */
-  :global(.bp .sv text) { font-family: var(--font-mono); paint-order: stroke; stroke: #0a0e14; stroke-width: 4px; stroke-linejoin: round; }
-  :global(.bp .sv .t) { font-size: 11px; fill: #bcc4d0; }
-  :global(.bp .sv .ta) { font-size: 11px; fill: #e9b44c; }
+  /* SVG */
+  :global(.bp .sv text) { font-family: var(--font-mono); paint-order: stroke; stroke: #070b14; stroke-width: 4px; stroke-linejoin: round; }
+  :global(.bp .sv .t) { font-size: 11px; fill: #aeb8ca; }
   :global(.bp .sv .tc) { font-size: 11px; fill: #8db0ff; }
   :global(.bp .sv .tw) { font-size: 12px; fill: #fff; font-weight: 500; }
-  :global(.bp .sv .tb) { font-size: 10px; fill: #bcc4d0; stroke: none; }
-  :global(.bp .sv .tbg) { font-size: 10px; fill: #e9b44c; font-weight: 600; letter-spacing: 0.06em; stroke: none; }
-  :global(.bp .sv .tag) { font-size: 10.5px; font-weight: 600; fill: #0b0d10; stroke: none; }
+  :global(.bp .sv .tm) { font-size: 10.5px; fill: #7a869c; }
+  :global(.bp .sv .tb) { font-size: 10px; fill: #aeb8ca; stroke: none; }
+  :global(.bp .sv .tbh) { font-size: 10px; fill: #8db0ff; font-weight: 600; letter-spacing: 0.06em; stroke: none; }
+  :global(.bp .sv .tag) { font-size: 10px; font-weight: 600; fill: #dfe7ff; stroke: none; }
+  :global(.bp .sv .badge) { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; stroke: none; }
   :global(.bp .sv .drag) { cursor: grab; outline: none; }
-  :global(.bp .sv .drag:hover .ring), :global(.bp .sv .drag:focus-visible .ring) { stroke: #fff; stroke-width: 2.5; }
+  :global(.bp .sv .drag:hover .ring), :global(.bp .sv .drag:focus-visible .ring) { stroke: #fff; stroke-width: 2.4; }
   :global(.bp .sv.dragging), :global(.bp .sv.dragging .drag) { cursor: grabbing; }
   :global(.bp .sv-side), :global(.bp .sv-cross) { touch-action: none; }
   @media (max-width: 640px) {
-    :global(.bp .sv-side .t), :global(.bp .sv-side .ta), :global(.bp .sv-side .tc) { font-size: 16px; }
+    :global(.bp .sv-side .t), :global(.bp .sv-side .tc), :global(.bp .sv-side .tm) { font-size: 16px; }
     :global(.bp .sv-side .tw) { font-size: 17px; }
     :global(.bp .sv-side .tbk) { display: none; }
-    :global(.bp .sv-back .t), :global(.bp .sv-back .ta), :global(.bp .sv-back .tc), :global(.bp .sv-back .tw) { font-size: 17px; }
-    :global(.bp .sv-chart .t), :global(.bp .sv-chart .ta), :global(.bp .sv-chart .tc), :global(.bp .sv-chart .tw) { font-size: 19px; }
-    :global(.bp .sv .tg) { transform: scale(1.45); transform-box: fill-box; transform-origin: center; }
+    :global(.bp .sv-back .t), :global(.bp .sv-back .tc), :global(.bp .sv-back .tw), :global(.bp .sv-back .tm) { font-size: 17px; }
+    :global(.bp .sv-th .t), :global(.bp .sv-th .tc), :global(.bp .sv-th .tw), :global(.bp .sv-th .tm) { font-size: 19px; }
+    :global(.bp .sv-th .tbk), :global(.bp .sv-th .tx) { display: none; }
+    :global(.bp .sv-chart .t), :global(.bp .sv-chart .tc), :global(.bp .sv-chart .tw), :global(.bp .sv-chart .tm) { font-size: 19px; }
+    :global(.bp .sv .tg) { transform: scale(1.5); transform-box: fill-box; transform-origin: center; }
   }
 
   /* ---------- технічні розділи ---------- */
-  .toc { display: flex; flex-wrap: wrap; gap: 6px; padding-block: 18px; }
-  .toc a { display: inline-flex; gap: 8px; align-items: center; min-height: 36px; padding: 0 12px; border: 1px solid var(--ln); background: var(--pn); color: var(--tx2); font: 500 12px var(--font-mono); text-decoration: none; }
-  .toc a span { color: var(--gold); }
-  .toc a:hover { border-color: var(--gold); color: #fff; }
-  .doc { padding-block: 30px; border-top: 1px solid var(--ln); }
-  .doc-last { padding-bottom: 56px; }
-  .narrow { max-width: 900px; }
-  .dh { display: flex; align-items: baseline; gap: 14px; margin: 0 0 16px; font: 600 22px var(--font-sans); letter-spacing: -0.01em; color: #fff; }
-  .dh span { font: 600 13px var(--font-mono); letter-spacing: 0.1em; color: var(--gold); }
-  .body { margin: 0 0 12px; font-size: 16px; line-height: 1.7; color: var(--tx2); }
+  .toc { display: flex; flex-wrap: wrap; gap: 6px; padding-block: 22px; }
+  .toc a { display: inline-flex; gap: 8px; align-items: center; min-height: 36px; padding: 0 14px; border: 1px solid var(--ln); border-radius: 999px; color: var(--tx2); font: 500 12.5px var(--font-sans); text-decoration: none; }
+  .toc a span { font-family: var(--font-mono); color: var(--sky); }
+  .toc a:hover { border-color: var(--sky); color: #fff; }
+  .doc { padding-block: 40px; border-top: 1px solid var(--ln); }
+  .doc-last { padding-bottom: 64px; }
+  .doc-grid { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 16px 40px; align-items: start; }
+  @media (max-width: 900px) { .doc-grid { grid-template-columns: minmax(0, 1fr); } }
+  .dh { display: flex; flex-direction: column; gap: 6px; margin: 0; font: 500 26px/1.15 var(--font-serif); letter-spacing: -0.01em; color: #fff; }
+  .dh span { font: 500 12px var(--font-mono); letter-spacing: 0.16em; color: var(--sky); }
+  .dh-wide { margin-bottom: 18px; flex-direction: row; align-items: baseline; gap: 14px; }
+  .body { margin: 0 0 12px; font-size: 16px; line-height: 1.72; color: var(--tx2); }
   .tbl-wrap { overflow-x: auto; }
   .tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .tbl th { text-align: left; padding: 10px 12px; font: 500 10.5px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); background: var(--pn2); border-bottom: 1px solid var(--ln2); }
-  .tbl td { padding: 9px 12px; border-bottom: 1px solid var(--ln); vertical-align: top; color: var(--tx2); }
-  .tbl td small { display: block; margin-top: 3px; font-size: 12.5px; color: var(--mu); }
-  .tbl a { margin-right: 4px; color: var(--cy); }
-  .symc { font: italic 600 16px var(--font-serif); color: var(--gold2); white-space: nowrap; }
-  .st { display: inline-block; padding: 2px 8px; font: 500 11px var(--font-mono); letter-spacing: 0.04em; white-space: nowrap; border: 1px solid; }
-  .st-measured { color: #9fe3bf; border-color: rgba(70, 201, 139, 0.5); background: rgba(70, 201, 139, 0.08); }
-  .st-guide { color: #c3d5ff; border-color: rgba(141, 176, 255, 0.5); background: rgba(141, 176, 255, 0.08); }
-  .st-conditional { color: #f6d79a; border-color: rgba(233, 180, 76, 0.5); background: rgba(233, 180, 76, 0.08); }
+  .tbl thead th { text-align: left; padding: 12px 14px; font: 500 10.5px var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--sky); border-bottom: 1px solid var(--ln2); }
+  .tbl td { padding: 10px 14px; border-bottom: 1px solid var(--ln); vertical-align: top; color: var(--tx2); }
+  .tbl td small { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.45; color: var(--mu); }
+  .tbl a { margin-right: 4px; color: var(--sky); }
+  .grp-row th { text-align: left; padding: 16px 14px 8px; font: 600 12px var(--font-mono); letter-spacing: 0.08em; color: var(--ice); background: rgba(39, 86, 184, 0.12); border-bottom: 1px solid var(--ln2); }
+  .symc { font: italic 600 16px var(--font-serif); color: var(--ice); white-space: nowrap; }
+  .st { display: inline-block; padding: 2px 9px; border-radius: 999px; font: 500 11px var(--font-mono); white-space: nowrap; border: 1px solid; }
+  .st-measured { color: #a6e8c6; border-color: rgba(69, 192, 138, 0.45); background: rgba(69, 192, 138, 0.08); }
+  .st-guide { color: #c8d8ff; border-color: rgba(141, 176, 255, 0.45); background: rgba(141, 176, 255, 0.08); }
+  .st-conditional { color: #f1d9a6; border-color: rgba(224, 178, 90, 0.45); background: rgba(224, 178, 90, 0.08); }
   .eqs { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
-  .eq { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 14px 18px; }
+  .eq { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 16px 20px; }
   .eq-f { font: italic 400 20px var(--font-serif); color: #fff; overflow-x: auto; white-space: nowrap; }
-  .eq-n { font: 500 14px var(--font-mono); color: var(--gold); }
+  .eq-n { font: 500 14px var(--font-mono); color: var(--sky); }
+  @media (max-width: 640px) { .eq { padding: 12px 14px; } .eq-f { white-space: normal; font-size: 18px; line-height: 1.45; } }
   /* ISO 80000-2: описові індекси й число e — прямим шрифтом; змінні — курсивом */
   :global(.bp :is(.symc, .eq-f, .cell-l b) sub) { font-style: normal; font-family: var(--font-sans); font-size: 0.68em; }
   :global(.bp :is(.symc, .eq-f, .cell-l b) sub i) { font-style: italic; font-family: var(--font-serif); }
   :global(.bp .eq-f .up) { font-style: normal; }
-  @media (max-width: 640px) { .eq { padding: 12px 14px; } .eq-f { white-space: normal; font-size: 18px; line-height: 1.45; } }
   .eq-note { grid-column: 1 / -1; margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--mu); }
   .checks { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 6px; }
-  .checks li { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 8px 12px; border: 1px solid var(--ln); background: var(--pn); font-size: 14px; line-height: 1.5; color: var(--tx2); }
-  .ck { font: 600 12px var(--font-mono); color: var(--gold); }
+  .checks li { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 9px 14px; border: 1px solid var(--ln); border-radius: 12px; background: rgba(141, 176, 255, 0.04); font-size: 14px; line-height: 1.5; color: var(--tx2); }
+  .ck { font: 600 12px var(--font-mono); color: var(--sky); }
   .ok { font: 600 11px var(--font-mono); letter-spacing: 0.08em; color: var(--ok); }
-  .vv-valid { padding: 12px 16px; border-color: rgba(233, 180, 76, 0.35); background: rgba(233, 180, 76, 0.05); color: #e9dcc0; }
+  .vv-valid { padding: 14px 18px; border-color: rgba(224, 178, 90, 0.3); background: rgba(224, 178, 90, 0.05); color: #e7dcc4; }
   .asm { margin: 0 0 14px; display: grid; gap: 6px; }
-  .asm > div { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; padding: 9px 12px; border: 1px solid var(--ln); background: var(--pn); }
-  .asm dt { font: 600 13px var(--font-mono); color: var(--gold); }
+  .asm > div { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 10px; padding: 10px 14px; border: 1px solid var(--ln); border-radius: 12px; background: rgba(141, 176, 255, 0.04); }
+  .asm dt { font: 600 13px var(--font-mono); color: var(--sky); }
   .asm dd { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--tx2); }
   .lim { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.6; color: var(--tx2); }
   .lim li { margin-bottom: 6px; }
   .pass-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; }
   @media (max-width: 900px) { .pass-grid { grid-template-columns: minmax(0, 1fr); } }
-  .pass { margin: 0; padding: 4px 16px; }
-  .pass > div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-top: 1px solid var(--ln); font-size: 14px; }
+  .pass { margin: 0; padding: 6px 18px; }
+  .pass > div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 12px; padding: 11px 0; border-top: 1px solid var(--ln); font-size: 14px; }
   .pass > div:first-child { border-top: 0; }
   @media (max-width: 560px) { .pass > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
-  .pass dt { font: 500 10.5px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); padding-top: 2px; }
+  .pass dt { font: 500 10.5px var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--sky); padding-top: 2px; }
   .pass dd { margin: 0; color: var(--tx2); overflow-wrap: anywhere; }
-  .pass a { color: var(--cy); }
+  .pass a { color: var(--sky); }
   .dim { color: var(--mu); }
-  .ver { display: inline-block; padding: 1px 8px; border: 1px solid rgba(233, 180, 76, 0.5); color: var(--gold2); font: 600 13px var(--font-mono); }
   .cite { font: 400 12.5px/1.6 var(--font-mono); }
   .clog { list-style: none; margin: 0; padding: 0; }
   .clog li { padding: 10px 0; border-top: 1px solid var(--ln); }
-  .cl-v { font: 600 13px var(--font-mono); color: var(--gold); margin-right: 10px; }
+  .cl-v { font: 600 13px var(--font-mono); color: var(--sky); margin-right: 10px; }
   .cl-d { font: 400 12px var(--font-mono); color: var(--mu); }
   .clog p { margin: 4px 0 0; font-size: 14px; line-height: 1.55; color: var(--tx2); }
   .fine { margin: 10px 0 0; font-size: 13px; line-height: 1.55; color: var(--mu); }
   .refs { margin: 0; padding-left: 22px; font-size: 14px; line-height: 1.6; color: var(--tx2); }
   .refs li { margin-bottom: 8px; overflow-wrap: anywhere; }
-  .refs li::marker { color: var(--gold); font-family: var(--font-mono); }
-  .refs a { color: var(--cy); }
-  .refs li:target { outline: 1px solid var(--gold); outline-offset: 4px; }
+  .refs li::marker { color: var(--sky); font-family: var(--font-mono); }
+  .refs a { color: var(--sky); }
+  .refs li:target { outline: 1px solid var(--sky); outline-offset: 4px; border-radius: 4px; }
 </style>
