@@ -1,0 +1,407 @@
+---
+// «Симулятор тягової системи протеза верхньої кінцівки» — сторінка інструмента:
+// симулятор (режими пацієнта й протезиста) + модель, параметри з джерелами, обмеження, паспорт, джерела.
+// Фізика — src/lib/bodypowered/physics.ts (тести: scripts/tests/bodypowered.test.mjs); тексти — content.ts;
+// поведінка — src/scripts/bodypowered-client.ts.
+import Base from '../layouts/Base.astro';
+import { SITE, type Lang } from '../config';
+import { localePath } from '../utils';
+import { META, CHANGELOG, PARAMS, REFS, REF_ORDER, getUi } from '../lib/bodypowered/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other = lang === 'uk' ? 'en' : 'uk';
+const ui = getUi(lang);
+const otherTitle = getUi(other).title;
+const pageUrl = new URL(localePath(lang, 'tools/body-powered-simulator/'), Astro.site).href;
+const fmtDay = (d: string) => new Intl.DateTimeFormat(lang === 'uk' ? 'uk-UA' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(d));
+const refNo = Object.fromEntries(REF_ORDER.map((k, i) => [k, i + 1]));
+const author = SITE.author[lang];
+---
+
+<Base lang={lang} title={ui.title} description={ui.lead} altLangHref={localePath(other, 'tools/body-powered-simulator/')}>
+  <div class="bp" data-lang={lang}>
+    <!-- ============================================================ HERO -->
+    <section class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="container hero-in">
+        <nav class="crumbs"><a href={localePath(lang, 'tools/')}>← {lang === 'uk' ? 'Інструменти' : 'Tools'}</a></nav>
+        <p class="kicker">{ui.kicker}</p>
+        <h1 class="hero-h">{ui.title}</h1>
+        <p class="hero-lead">{ui.lead}</p>
+        <div class="hero-meta">
+          <span class="pill pill-ev"><span class="dot" aria-hidden="true"></span>{lang === 'uk' ? 'Механістична модель · параметри з літератури' : 'Mechanistic model · parameters from the literature'}</span>
+          <span class="pill">{lang === 'uk' ? 'Версія' : 'Version'} {META.version} · {fmtDay(META.updated)}</span>
+        </div>
+        <div class="disc" role="note"><strong>{ui.disclaimerTitle}.</strong> {ui.disclaimer}</div>
+      </div>
+    </section>
+
+    <!-- ============================================================ SIMULATOR -->
+    <section class="lab" id="simulator" aria-label={ui.short}>
+      <div class="container">
+        <div class="lab-bar">
+          <div class="seg" role="tablist" aria-label={lang === 'uk' ? 'Режим' : 'Mode'}>
+            <button type="button" role="tab" class="seg-b" data-mode="patient" aria-selected="true"><span>{ui.modePatient}</span><small>{ui.modePatientHint}</small></button>
+            <button type="button" role="tab" class="seg-b" data-mode="pro" aria-selected="false"><span>{ui.modePro}</span><small>{ui.modeProHint}</small></button>
+          </div>
+          <div class="lab-actions">
+            <button type="button" class="lb" data-act="reset">{ui.reset}</button>
+            <button type="button" class="lb only-pro" data-act="snap">{ui.snap}</button>
+            <button type="button" class="lb" data-act="copy">{ui.copy}</button>
+          </div>
+        </div>
+
+        <div class="lab-grid">
+          <!-- сцена -->
+          <div class="scene">
+            <div class="scene-main">
+              <svg class="sv sv-back only-patient" viewBox="0 0 600 560" role="img" aria-label={ui.backView}></svg>
+              <svg class="sv sv-side only-pro" role="img" aria-label={ui.sideScheme}></svg>
+              <p class="scene-cap mono only-patient">{ui.backView}</p>
+              <p class="scene-cap mono only-pro">{ui.sideScheme}</p>
+            </div>
+            <div class="scene-sub">
+              <figure class="mini">
+                <svg class="sv sv-hook" viewBox="0 0 240 150" role="img" aria-label={ui.hookView}></svg>
+                <figcaption class="mono">{ui.hookView}</figcaption>
+              </figure>
+              <figure class="mini only-pro">
+                <svg class="sv sv-cross" viewBox="0 0 240 150" role="img" aria-label={ui.backView}></svg>
+                <figcaption class="mono">{ui.backView} · <span data-o="kcap"></span></figcaption>
+              </figure>
+              <figure class="mini mini-chart only-pro">
+                <svg class="sv sv-chart" viewBox="0 0 720 206" role="img" aria-label={ui.chartTitle}></svg>
+                <figcaption class="mono">{ui.chartTitle}</figcaption>
+              </figure>
+            </div>
+            <p class="drag-hint only-pro">{ui.dragHint}</p>
+          </div>
+
+          <!-- панель -->
+          <div class="panel">
+            <div class="only-patient grp">
+              <p class="grp-h">{ui.harness}</p>
+              <div class="harness" role="radiogroup" aria-label={ui.harness}>
+                <button type="button" class="hb" data-h="8" role="radio" aria-checked="true"><strong>{ui.fig8}</strong><small>{ui.fig8Desc}</small></button>
+                <button type="button" class="hb" data-h="9" role="radio" aria-checked="false"><strong>{ui.fig9}</strong><small>{ui.fig9Desc}</small></button>
+              </div>
+            </div>
+
+            <div class="grp">
+              <p class="grp-h">{ui.motions}</p>
+              <label class="rng"><span>{ui.scap}</span><output data-v="scap"></output><input type="range" min="0" max="100" step="1" data-k="scap" /></label>
+              <label class="rng"><span>{ui.gh}</span><output data-v="gh"></output><input type="range" min="0" max="90" step="1" data-k="gh" /></label>
+            </div>
+
+            <div class="grp">
+              <p class="grp-h only-pro">{ui.setup}</p>
+              <label class="rng"><span>{ui.bands}</span><output data-v="bands"></output><input type="range" min="1" max="4" step="1" data-k="bands" /></label>
+              <p class="hint only-patient">{ui.bandsHint}</p>
+              <div class="only-pro">
+                <label class="rng"><span>{ui.approach}</span><output data-v="approach"></output><input type="range" min="0" max="80" step="1" data-k="approach" /></label>
+                <p class="hint">{ui.approachHint}</p>
+                <label class="rng"><span>{ui.slack}</span><output data-v="slack"></output><input type="range" min="0" max="45" step="1" data-k="slack" /></label>
+                <label class="sel"><span>{ui.pair}</span>
+                  <select data-k="pair">
+                    <option value="ptfe">{ui.pairPtfe}</option>
+                    <option value="unlined">{ui.pairUnlined}</option>
+                    <option value="custom">{ui.pairCustom}</option>
+                  </select>
+                </label>
+                <label class="rng rng-mu"><span>μ</span><output data-v="mu"></output><input type="range" min="0.05" max="0.4" step="0.005" data-k="mu" /></label>
+                <label class="rng"><span>{ui.lreq}</span><output data-v="lReq"></output><input type="range" min="30" max="70" step="1" data-k="lReq" /></label>
+                <p class="hint">{ui.lreqHint}</p>
+              </div>
+            </div>
+
+            <div class="grp only-pro">
+              <p class="grp-h">{ui.user}</p>
+              <label class="rng"><span>{ui.fmax}</span><output data-v="fMax"></output><input type="range" min="87" max="538" step="1" data-k="fMax" /></label>
+              <p class="hint">{ui.fmaxHint}</p>
+            </div>
+
+            <!-- показники -->
+            <div class="hud" aria-live="polite">
+              <div class="status" data-o="status"></div>
+              <div class="meter">
+                <div class="meter-h"><span>{ui.excursion}</span><b data-o="exc"></b></div>
+                <div class="bar"><i data-o="excbar"></i></div>
+              </div>
+              <dl class="kv">
+                <div><dt>{ui.opening}</dt><dd data-o="open"></dd></div>
+                <div><dt>{ui.forceHook}</dt><dd data-o="fout"></dd></div>
+                <div><dt>{ui.forceBody}</dt><dd data-o="fin"></dd></div>
+                <div class="only-pro"><dt>{ui.theta}</dt><dd><span data-o="theta"></span><small data-o="thparts"></small></dd></div>
+                <div class="only-pro"><dt>{ui.eta}</dt><dd data-o="eta"></dd></div>
+                <div class="only-pro"><dt>{ui.finFull}</dt><dd data-o="finfull"></dd></div>
+                <div class="only-pro"><dt>{ui.fatigueLimit}</dt><dd data-o="flim"></dd></div>
+                <div class="only-pro"><dt>{ui.bodyNeed}</dt><dd data-o="bodyneed"></dd></div>
+              </dl>
+              <div class="load">
+                <div class="meter-h"><span>{ui.load}</span><b data-o="loadtxt"></b></div>
+                <div class="bar bar-load"><i data-o="loadbar"></i><span class="tick" aria-hidden="true"></span></div>
+                <p class="hint" data-o="loadnote"></p>
+              </div>
+              <div class="cmp only-pro" data-o="cmp" hidden></div>
+              <div class="flags only-pro">
+                <p class="grp-h">{ui.flagsTitle}</p>
+                <ul data-o="flags"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <noscript><p class="hint">{ui.noscript}</p></noscript>
+      </div>
+    </section>
+
+    <!-- ============================================================ METHOD -->
+    <section class="band" id="how">
+      <div class="container narrow">
+        <header class="sec-h"><span class="sec-n">01</span><span class="sec-k">{ui.secHow}</span></header>
+        {ui.how.map((p) => <p class="body">{p}</p>)}
+      </div>
+    </section>
+
+    <section class="band band-alt" id="model">
+      <div class="container narrow">
+        <header class="sec-h"><span class="sec-n">02</span><span class="sec-k">{ui.secModel}</span></header>
+        <dl class="model">
+          {ui.model.map(([h, p]) => <div><dt>{h}</dt><dd>{p}</dd></div>)}
+        </dl>
+      </div>
+    </section>
+
+    <section class="band" id="parameters">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">03</span><span class="sec-k">{ui.secParams}</span></header>
+        <div class="tbl-wrap">
+          <table class="params">
+            <thead><tr>{ui.paramsHead.map((h) => <th>{h}</th>)}</tr></thead>
+            <tbody>
+              {PARAMS.map((r) => (
+                <tr>
+                  <td>{r.p[lang]}{r.note && <small>{r.note[lang]}</small>}</td>
+                  <td class="mono nw">{r.v[lang]}</td>
+                  <td><span class={`st st-${r.s}`}>{ui.statusLabel[r.s]}</span></td>
+                  <td class="mono">{r.refs.length ? r.refs.map((k) => <a href={`#ref-${k}`}>[{refNo[k]}]</a>) : '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-alt" id="limitations">
+      <div class="container narrow">
+        <header class="sec-h"><span class="sec-n">04</span><span class="sec-k">{ui.secLimits}</span></header>
+        <ul class="lim">{ui.limits.map((l) => <li>{l}</li>)}</ul>
+      </div>
+    </section>
+
+    <section class="band" id="passport">
+      <div class="container">
+        <header class="sec-h"><span class="sec-n">05</span><span class="sec-k">{ui.secPassport}</span></header>
+        <div class="pass-grid">
+          <dl class="pass">
+            <div><dt>{ui.pass.name}</dt><dd>{ui.title} <span class="dim">({otherTitle})</span></dd></div>
+            <div><dt>{ui.pass.version}</dt><dd><span class="ver">v{META.version}</span> · {fmtDay(META.updated)}</dd></div>
+            <div><dt>{ui.pass.status}</dt><dd>{ui.passStatus}</dd></div>
+            <div><dt>{ui.pass.evidence}</dt><dd>{ui.passEvidence}</dd></div>
+            <div><dt>{ui.pass.author}</dt><dd>{author.name} · <a href={SITE.orcidUrl} rel="noopener">ORCID {SITE.orcid}</a></dd></div>
+            <div><dt>{ui.pass.rights}</dt><dd>{ui.passRights} <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license noopener">CC BY-NC-ND 4.0</a></dd></div>
+            <div><dt>{ui.pass.cite}</dt><dd class="cite">{ui.cite(META.version, author.short)} {ui.avail} {pageUrl}</dd></div>
+          </dl>
+          <div>
+            <h3 class="sub-k">{ui.changelog}</h3>
+            <ol class="clog">{CHANGELOG.map((c) => <li><span class="cl-v">v{c.v}</span><span class="cl-d">{fmtDay(c.date)}</span><p>{c.text[lang]}</p></li>)}</ol>
+            <p class="fine">{ui.versioning}</p>
+            <p class="fine">{ui.coi}</p>
+            <p class="fine">{ui.ai}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-alt" id="references">
+      <div class="container narrow">
+        <header class="sec-h"><span class="sec-n">06</span><span class="sec-k">{ui.secRefs}</span></header>
+        <ol class="refs">
+          {REF_ORDER.map((k) => {
+            const r = REFS[k];
+            return <li id={`ref-${k}`}>{r.text} {r.doi ? <a href={`https://doi.org/${r.doi}`} rel="noopener">doi:{r.doi}</a> : r.url ? <a href={r.url} rel="noopener">{r.url}</a> : null}</li>;
+          })}
+        </ol>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { initBodyPowered } from '../scripts/bodypowered-client';
+  initBodyPowered();
+</script>
+
+<style>
+  .bp { --amber: #e3b462; --good: #3fb37a; --warn: #e3b462; --bad: #e25d5d; }
+  .mono { font-family: var(--font-mono); }
+  /* ---------- hero ---------- */
+  .hero { position: relative; overflow: hidden; color: var(--on-dark); background: radial-gradient(900px 480px at 80% 30%, rgba(39, 86, 184, 0.34), transparent 65%), linear-gradient(180deg, #161b22 0%, #0e1218 100%); }
+  .hero-grid { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(141, 176, 255, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(141, 176, 255, 0.07) 1px, transparent 1px); background-size: 44px 44px; -webkit-mask-image: radial-gradient(ellipse 80% 80% at 60% 30%, #000 35%, transparent 85%); mask-image: radial-gradient(ellipse 80% 80% at 60% 30%, #000 35%, transparent 85%); }
+  .hero-in { position: relative; padding-block: 24px 36px; }
+  .crumbs a { display: inline-flex; align-items: center; min-height: 40px; font-size: 14px; color: var(--on-dark-2); }
+  .crumbs a:hover { color: #fff; }
+  .kicker { margin: 6px 0 0; font: 500 12px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-dark-accent); }
+  .hero-h { margin: 12px 0 0; max-width: 900px; font-size: clamp(30px, 4vw, 50px); line-height: 1.07; letter-spacing: -0.025em; font-weight: 600; color: #fff; }
+  .hero-lead { margin: 16px 0 0; max-width: 760px; font-size: 17.5px; line-height: 1.6; color: var(--on-dark-2); }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 11px; border: 1px solid var(--dark-line); border-radius: 999px; font: 500 12.5px var(--font-mono); color: var(--on-dark-2); background: rgba(14, 18, 24, 0.5); }
+  .pill-ev { color: #f0d39a; border-color: rgba(227, 180, 98, 0.35); }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+  .disc { margin-top: 20px; max-width: 900px; padding: 12px 16px; border: 1px solid rgba(227, 180, 98, 0.35); border-left: 3px solid var(--amber); border-radius: 10px; background: rgba(227, 180, 98, 0.07); font-size: 14.5px; line-height: 1.55; color: #e9dcc0; }
+  .disc strong { color: #f6e3b8; }
+
+  /* ---------- lab ---------- */
+  .lab { color: var(--on-dark); background: #0e1218; border-top: 1px solid var(--dark-line); padding-block: 22px 34px; }
+  .lab-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+  .seg { display: inline-flex; padding: 4px; gap: 4px; border: 1px solid var(--dark-line); border-radius: 12px; background: #131922; }
+  .seg-b { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 48px; padding: 7px 16px; border: 0; border-radius: 9px; background: transparent; color: var(--on-dark-2); cursor: pointer; text-align: left; font: 600 14.5px var(--font-sans); }
+  .seg-b small { font: 400 11.5px var(--font-mono); color: var(--faint); }
+  .seg-b[aria-selected='true'] { background: var(--accent); color: #fff; box-shadow: 0 6px 22px rgba(39, 86, 184, 0.45); }
+  .seg-b[aria-selected='true'] small { color: #dbe6ff; }
+  .lab-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .lb { min-height: 40px; padding: 0 14px; border: 1px solid var(--dark-line); border-radius: 9px; background: #131922; color: var(--on-dark-2); font: 500 13.5px var(--font-sans); cursor: pointer; }
+  .lb:hover { border-color: var(--on-dark-accent); color: #fff; }
+  .lb[aria-pressed='true'] { border-color: var(--amber); color: #f6e3b8; }
+  .lab-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 18px; align-items: start; }
+  @media (max-width: 980px) { .lab-grid { grid-template-columns: minmax(0, 1fr); } }
+  .scene { min-width: 0; }
+  .scene-main { position: relative; border: 1px solid var(--dark-line); border-radius: 14px; overflow: hidden; background-color: #111720; background-image: linear-gradient(rgba(141, 176, 255, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(141, 176, 255, 0.06) 1px, transparent 1px); background-size: 24px 24px; }
+  .sv { display: block; width: 100%; height: auto; }
+  .sv-back { max-height: 560px; margin: 0 auto; }
+  .scene-cap { position: absolute; left: 12px; top: 10px; margin: 0; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+  .scene-sub { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+  .mini-chart { grid-column: 1 / -1; }
+  .bp:not(.is-pro) .scene-sub { grid-template-columns: minmax(0, 300px); }
+  @media (max-width: 980px) {
+    .scene { display: contents; }
+    .scene-main { position: sticky; top: 0; z-index: 3; box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45); }
+    .scene-sub { margin-top: 0; }
+    .drag-hint { margin: 0 2px; }
+    .sv-back { max-height: 42vh; }
+    .bp:not(.is-pro) .scene-sub { display: none; }
+  }
+  @media (max-width: 640px) {
+    .bp.is-pro .scene-cap { display: none; }
+    :global(.bp .sv-side .lbl), :global(.bp .sv-side .lbl-a) { font-size: 16px; }
+    :global(.bp .sv-side .lbl-w) { font-size: 17px; }
+    :global(.bp .sv-back .lbl), :global(.bp .sv-back .lbl-a) { font-size: 15px; }
+  }
+  .mini { margin: 0; border: 1px solid var(--dark-line); border-radius: 12px; background: #111720; padding: 6px 8px 8px; }
+  .mini figcaption { margin-top: 4px; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
+  .drag-hint { margin: 10px 2px 0; font-size: 13px; color: var(--on-dark-2); }
+  .bp:not(.is-pro) .only-pro { display: none !important; }
+  .bp.is-pro .only-patient { display: none !important; }
+
+  .panel { border: 1px solid var(--dark-line); border-radius: 14px; background: #131922; padding: 14px 16px 16px; }
+  .grp { padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--dark-line); }
+  .grp-h { margin: 2px 0 8px; font: 500 11px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-dark-accent); }
+  .harness { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .hb { display: flex; flex-direction: column; gap: 3px; padding: 9px 10px; border: 1px solid var(--dark-line); border-radius: 10px; background: #0f141b; color: var(--on-dark-2); text-align: left; cursor: pointer; min-height: 44px; }
+  .hb strong { font: 600 14px var(--font-sans); color: var(--on-dark); }
+  .hb small { font-size: 12px; line-height: 1.35; }
+  .hb[aria-checked='true'] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: rgba(39, 86, 184, 0.16); }
+  .rng[hidden] { display: none; }
+  .rng { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: baseline; margin: 6px 0 2px; font-size: 13.5px; color: var(--on-dark); }
+  .rng output { font: 500 13px var(--font-mono); color: var(--on-dark-accent); }
+  .rng input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); min-height: 28px; }
+  .sel { display: grid; gap: 4px; margin: 8px 0; font-size: 13.5px; }
+  .sel select { min-height: 40px; padding: 0 10px; border-radius: 9px; border: 1px solid var(--dark-line); background: #0f141b; color: var(--on-dark); font: 400 13.5px var(--font-sans); }
+  .hint { margin: 2px 0 6px; font-size: 12px; line-height: 1.4; color: var(--faint); }
+  .hud { padding-top: 2px; }
+  .status { padding: 10px 12px; border-radius: 10px; font: 600 14px/1.4 var(--font-sans); border: 1px solid; }
+  :global(.bp .status.s-full) { color: #c9f2dc; border-color: rgba(63, 179, 122, 0.45); background: rgba(63, 179, 122, 0.12); }
+  :global(.bp .status.s-part) { color: #f6e3b8; border-color: rgba(227, 180, 98, 0.45); background: rgba(227, 180, 98, 0.1); }
+  :global(.bp .status.s-none) { color: #ffd3d3; border-color: rgba(226, 93, 93, 0.5); background: rgba(226, 93, 93, 0.12); }
+  .meter { margin-top: 12px; }
+  .meter-h { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--on-dark-2); }
+  .meter-h b { font: 500 13px var(--font-mono); color: var(--on-dark); }
+  .bar { position: relative; height: 9px; margin-top: 6px; border-radius: 6px; background: #0b1016; border: 1px solid var(--dark-line); overflow: hidden; }
+  .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 6px; background: linear-gradient(90deg, #2756b8, #8db0ff); transition: width 0.12s; }
+  .bar-load i { background: var(--good); }
+  :global(.bp .bar-load i.l-tired) { background: var(--warn); }
+  :global(.bp .bar-load i.l-max) { background: var(--bad); }
+  .bar .tick { position: absolute; top: -2px; bottom: -2px; left: 20%; width: 2px; background: #e6eaf0; opacity: 0.7; }
+  .kv { margin: 12px 0 0; display: grid; gap: 0; }
+  .kv > div { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-top: 1px solid var(--dark-line); font-size: 13px; }
+  .kv dt { color: var(--on-dark-2); }
+  .kv dd { margin: 0; text-align: right; font: 500 13px var(--font-mono); color: #fff; }
+  .kv dd small { display: block; font: 400 11px var(--font-mono); color: var(--faint); }
+  .load { margin-top: 10px; }
+  .cmp { margin-top: 10px; padding: 8px 10px; border: 1px dashed rgba(227, 180, 98, 0.5); border-radius: 10px; font: 400 12.5px/1.5 var(--font-mono); color: #f6e3b8; }
+  .flags { margin-top: 12px; }
+  .flags ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  :global(.bp .flags li) { padding: 8px 10px; border-radius: 9px; font-size: 12.8px; line-height: 1.45; background: #0f141b; border: 1px solid var(--dark-line); border-left: 3px solid var(--warn); color: var(--on-dark); }
+  :global(.bp .flags li.f-bad) { border-left-color: var(--bad); }
+  :global(.bp .flags li.f-info) { border-left-color: var(--on-dark-accent); }
+  :global(.bp .flags li.f-ok) { border-left-color: var(--good); color: var(--on-dark-2); }
+
+  /* SVG, що будує скрипт */
+  :global(.bp .sv text) { font-family: var(--font-mono); paint-order: stroke; stroke: #111720; stroke-width: 4px; stroke-linejoin: round; }
+  :global(.bp .sv .lbl) { font-size: 11px; fill: #bcc4d0; }
+  :global(.bp .sv .lbl-a) { font-size: 11px; fill: #8db0ff; }
+  :global(.bp .sv .lbl-w) { font-size: 12px; fill: #fff; font-weight: 500; }
+  :global(.bp .sv .drag) { cursor: grab; }
+  :global(.bp .sv .drag:focus) { outline: none; }
+  :global(.bp .sv .drag:focus-visible .ring), :global(.bp .sv .drag:hover .ring) { stroke: #fff; stroke-width: 2.5; }
+  :global(.bp .sv.dragging), :global(.bp .sv.dragging .drag) { cursor: grabbing; }
+  :global(.bp .sv-side), :global(.bp .sv-cross) { touch-action: none; }
+
+  /* ---------- текстові розділи ---------- */
+  .band { padding-block: 44px; background: var(--surface); }
+  .band-alt { background: var(--bg); }
+  .narrow { max-width: 860px; }
+  .sec-h { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .sec-n { font: 500 13px var(--font-mono); color: var(--accent); }
+  .sec-k { font: 600 22px var(--font-sans); letter-spacing: -0.01em; color: var(--ink); }
+  .body { font: 400 17px/1.65 var(--font-serif); color: var(--ink-2); margin: 0 0 12px; }
+  .model { margin: 0; display: grid; gap: 12px; }
+  .model > div { padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .model dt { font: 600 15px var(--font-sans); color: var(--ink); }
+  .model dd { margin: 4px 0 0; font: 400 16px/1.6 var(--font-serif); color: var(--ink-2); }
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .params { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .params th { text-align: left; padding: 10px 12px; font: 500 11.5px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-bottom: 1px solid var(--line); }
+  .params td { padding: 10px 12px; border-bottom: 1px solid var(--line-2); vertical-align: top; color: var(--ink-2); }
+  .params td small { display: block; margin-top: 3px; font-size: 12.5px; color: var(--muted); }
+  .params .nw { white-space: nowrap; }
+  .params a { margin-right: 4px; }
+  .st { display: inline-block; padding: 2px 8px; border-radius: 6px; font: 500 11.5px var(--font-mono); white-space: nowrap; }
+  .st-measured { background: #e3efe6; color: #2f6a41; }
+  .st-guide { background: var(--accent-soft); color: var(--accent-hover); }
+  .st-conditional { background: #f6ecd8; color: #8a5a12; }
+  .lim { margin: 0; padding-left: 20px; font: 400 16.5px/1.6 var(--font-serif); color: var(--ink-2); }
+  .lim li { margin-bottom: 8px; }
+  .pass-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 32px; }
+  @media (max-width: 900px) { .pass-grid { grid-template-columns: minmax(0, 1fr); } }
+  .pass { margin: 0; }
+  .pass > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 14.5px; }
+  @media (max-width: 560px) { .pass > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+  .pass dt { font: 500 11.5px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+  .pass dd { margin: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+  .pass .dim { color: var(--muted); }
+  .ver { display: inline-block; padding: 1px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font: 600 13px var(--font-mono); }
+  .cite { font: 400 13px/1.6 var(--font-mono); }
+  .sub-k { margin: 0 0 8px; font: 500 12px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .clog { list-style: none; margin: 0; padding: 0; }
+  .clog li { padding: 10px 0; border-top: 1px solid var(--line); }
+  .cl-v { font: 600 13px var(--font-mono); color: var(--accent); margin-right: 10px; }
+  .cl-d { font: 400 12.5px var(--font-mono); color: var(--muted); }
+  .clog p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .fine { margin: 10px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+  .refs { margin: 0; padding-left: 22px; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .refs li { margin-bottom: 8px; overflow-wrap: anywhere; }
+</style>

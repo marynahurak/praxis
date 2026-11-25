@@ -11,7 +11,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "test": "node --experimental-strip-types --test scripts/tests/bodypowered.test.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

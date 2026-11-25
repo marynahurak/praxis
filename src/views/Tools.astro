@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import { type Lang } from '../config';
 import { localePath } from '../utils';
 import myomap from '../data/myomap.json';
+import { META as bpMeta } from '../lib/bodypowered/content';
 
 interface Props {
   lang: Lang;
@@ -23,6 +24,15 @@ const c = {
         title: 'Атлас локалізації міоточок та конфігурації sEMG-електродів',
         desc: 'Клініко-інженерний довідник для топографічної локалізації цільових м\'язових черевців, вибору фізіологічно конгруентних патернів м\'язової активації та розміщення поверхневих електроміографічних (sEMG) електродів у міоелектричному протезуванні верхньої кінцівки.',
         ev: 'Низька–помірна впевненість',
+        version: myomap.meta.version,
+      },
+      {
+        href: 'tools/body-powered-simulator/',
+        tag: 'Протезування верхньої кінцівки · Інженерія',
+        title: 'Симулятор тягової системи протеза верхньої кінцівки',
+        desc: 'Інтерактивна модель тягового протеза: хід троса від рухів плечового поясу, тертя в оболонці Боудена за рівнянням Ейлера — Ейтельвейна, зусилля на відкриття гака й ризик утоми. Режими для пацієнта й протезиста.',
+        ev: 'Механістична модель · параметри з літератури',
+        version: bpMeta.version,
       },
     ],
   },
@@ -38,6 +48,15 @@ const c = {
         title: 'Myosite localisation and sEMG electrode configuration atlas',
         desc: 'A clinical-engineering reference for the topographic localisation of target muscle bellies, the selection of physiologically congruent muscle activation patterns, and the placement of surface electromyographic (sEMG) electrodes in upper-limb myoelectric prosthetics.',
         ev: 'Low to moderate confidence',
+        version: myomap.meta.version,
+      },
+      {
+        href: 'tools/body-powered-simulator/',
+        tag: 'Upper limb prosthetics · Engineering',
+        title: 'Body-powered upper-limb prosthesis control simulator',
+        desc: 'An interactive model of a body-powered prosthesis: cable excursion from shoulder-girdle movement, friction in the Bowden housing by the Euler–Eytelwein equation, the force to open the hook and the risk of fatigue. Modes for patients and prosthetists.',
+        ev: 'Mechanistic model · parameters from the literature',
+        version: bpMeta.version,
       },
     ],
   },
@@ -57,7 +76,7 @@ const c = {
               <h2>{tool.title}</h2>
               <p class="desc">{tool.desc}</p>
               <p class="meta mono">
-                {tool.ev} · {c.version} {myomap.meta.version}
+                {tool.ev} · {c.version} {tool.version}
               </p>
               <span class="go">{c.open}</span>
             </a>

@@ -2,15 +2,16 @@
 
 Copyright © 2026 Maryna Hurak (ORCID [0009-0008-7275-8079](https://orcid.org/0009-0008-7275-8079)). All rights reserved except as stated below.
 
-This file applies to the Praxis tools, currently the **Myosite localisation and sEMG electrode configuration atlas** («Атлас локалізації міоточок та конфігурації sEMG-електродів»).
+This file applies to the Praxis tools, currently the **Myosite localisation and sEMG electrode configuration atlas** («Атлас локалізації міоточок та конфігурації sEMG-електродів») and the **Body-powered upper-limb prosthesis control simulator** («Симулятор тягової системи протеза верхньої кінцівки»).
 
 ## 1. Content — CC BY-NC-ND 4.0
 
-The texts, figures, illustrations, design and data of the atlas, as published on the Praxis website and stored in
+The texts, figures, illustrations, design, models and data of the tools, as published on the Praxis website and stored in
 
 - `src/data/myomap.json`, `src/data/myomap-geo/`
 - `public/myomap/` (except `ATTRIBUTION-BodyParts3D.md`)
 - `src/lib/myomap.ts` (interface texts)
+- `src/lib/bodypowered/content.ts` (simulator texts, parameters and references)
 
 are licensed under the **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International** licence (CC BY-NC-ND 4.0): https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 
@@ -20,9 +21,10 @@ You may share them unchanged, for non-commercial purposes, with attribution to t
 
 The source code of the tools
 
-- `src/views/MyoAtlas.astro`, `src/views/MyoMap.astro`
-- `src/scripts/myomap-client.ts`
-- `src/lib/myomap.ts`
+- `src/views/MyoAtlas.astro`, `src/views/MyoMap.astro`, `src/views/BodyPowered.astro`
+- `src/scripts/myomap-client.ts`, `src/scripts/bodypowered-client.ts`
+- `src/lib/myomap.ts`, `src/lib/bodypowered/`
+- `scripts/tests/bodypowered.test.mjs`
 - `scripts/myomap-pipeline/`
 - `scripts/myomap-snapshot/` (PDF snapshots for Zenodo)
 
@@ -35,7 +37,7 @@ is published for methodological transparency and reproducibility. It is **not** 
 
 ## 4. Earlier versions
 
-These terms apply from 22 November 2026 (atlas version 2.1.0). Versions published earlier remain available under the licences that applied when they were published.
+These terms apply from 22 November 2026 (atlas version 2.1.0) and, for the simulator, from its first version (1.0.0, 25 November 2026). Versions published earlier remain available under the licences that applied when they were published.
 
 ## Contact
 
@@ -47,7 +49,7 @@ Requests for permission: see the contact section of https://marynahurak.github.i
 
 © 2026 Марина Гурак. Усі права захищено, крім зазначеного нижче.
 
-1. **Зміст** атласу (тексти, схеми, ілюстрації, дизайн, дані) — CC BY-NC-ND 4.0: поширювати можна без змін, не з комерційною метою, із зазначенням авторки, назви, версії й посилання на джерело. Переклад, адаптація чи комерційне використання — лише з письмового дозволу авторки.
+1. **Зміст** інструментів — атласу міоточок і симулятора тягової системи (тексти, схеми, ілюстрації, дизайн, моделі, дані) — CC BY-NC-ND 4.0: поширювати можна без змін, не з комерційною метою, із зазначенням авторки, назви, версії й посилання на джерело. Переклад, адаптація чи комерційне використання — лише з письмового дозволу авторки.
 2. **Вихідний код** інструментів опубліковано для прозорості методу й відтворюваності; копіювання, зміна, поширення чи використання в інших продуктах — лише з письмового дозволу авторки.
 3. **Матеріали третіх сторін:** анатомічна модель BodyParts3D (© DBCLS) залишається під ліцензією CC BY 4.0; дані виробників наведено з посиланнями на джерела.
-4. Умови діють з 22 листопада 2026 року (версія атласу 2.1.0); раніше опубліковані версії залишаються доступними на умовах, що діяли на момент їх публікації.
+4. Умови діють з 22 листопада 2026 року (версія атласу 2.1.0), для симулятора — з першої версії (1.0.0, 25 листопада 2026 року); раніше опубліковані версії залишаються доступними на умовах, що діяли на момент їх публікації.

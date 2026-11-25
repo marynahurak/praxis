@@ -66,7 +66,7 @@ All versions (always resolves to the latest): doi:[10.5281/zenodo.24449468](http
 © 2026 Maryna Hurak.
 
 - Article texts (`src/content/`): [CC BY-NC 4.0](LICENSE-CONTENT.md)
-- Praxis tools (Myosite atlas): content [CC BY-NC-ND 4.0](LICENSE-TOOLS.md), source code all rights reserved
+- Praxis tools (myosite atlas, body-powered control simulator): content [CC BY-NC-ND 4.0](LICENSE-TOOLS.md), source code all rights reserved
 - Remaining site source code: [MIT](LICENSE)
 - Third-party material keeps the licences of its rights holders (BodyParts3D: CC BY 4.0).
 
