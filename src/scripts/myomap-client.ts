@@ -652,7 +652,7 @@ export function initMyoMap() {
 
 // ---------------------------------------------------------------- EMG simulator (guide page)
 // Навчальна модель: синтетична ЕМГ двох каналів, огинаюча, поріг, пропорційне розкриття/закриття
-// і перемикання хватів коскороченням. Кисть — схематична багатосуглобова «конструкторна» модель.
+// і перемикання хватів коскороченням. Кисть — схематична багатосуглобова модель (лінійна графіка в стилі Praxis).
 type Finger = { cx: number; w: number; L: number[] };
 const FINGERS: Record<string, Finger> = {
   little: { cx: 80, w: 19, L: [30, 20, 17] },
@@ -689,7 +689,6 @@ function digitSvg(cx: number, baseY: number, w: number, L: number[], ang: number
     const face = (thumb ? 't-' : '') + (c >= 0 ? 'seg-f' : 'seg-b');
     out += `<rect x="${cx - w / 2}" y="${top.toFixed(1)}" width="${w}" height="${h.toFixed(1)}" rx="5" class="seg ${face}"/>`;
     if (h > 10) out += `<rect x="${cx - w / 2 + 3}" y="${(top + 3).toFixed(1)}" width="4" height="${(h - 6).toFixed(1)}" rx="2" class="seg-hl"/>`;
-    if (c > 0.35 && h > 15) out += `<circle cx="${cx + 2}" cy="${(top + h / 2).toFixed(1)}" r="${(w * 0.24).toFixed(1)}" class="${thumb ? 't-stud' : 's-stud'}"/>`;
     if (k === 2) {
       const tipY = c >= 0 ? top : top + h - 5;
       out += `<rect x="${cx - w / 2 + 4}" y="${tipY.toFixed(1)}" width="${w - 8}" height="5" rx="2.5" class="tip"/>`;
@@ -814,17 +813,17 @@ export function initSim() {
     c.lineWidth = 1;
     for (let i = 1; i < 12; i++) { const x = Math.round((W * i) / 12) + 0.5; c.strokeStyle = 'rgba(141,176,255,0.06)'; c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); }
     for (let j = 1; j < 8; j++) { const y = Math.round((H * j) / 8) + 0.5; c.strokeStyle = j === 4 ? 'rgba(141,176,255,0.16)' : 'rgba(141,176,255,0.06)'; c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
-    c.font = '500 11px "IBM Plex Mono", ui-monospace, monospace'; c.fillStyle = '#8a93a3';
+    c.font = '500 11px "IBM Plex Mono", ui-monospace, monospace'; c.fillStyle = '#7a869c';
     c.fillText(W < 480 ? `${U.ch} 1` : `${U.ch} 1 · ${U.raw}`, 12, 16);
     c.fillText(`${U.ch} 2`, 12, H * 0.27 + 4);
     c.fillText(U.env, 12, H * 0.5 + 16);
     trace(raw1, H * 0.15, H * 0.085, '#8db0ff');
-    trace(raw2, H * 0.36, H * 0.085, '#e3b462');
+    trace(raw2, H * 0.36, H * 0.085, '#5fd4c4');
     const y0 = H * 0.94, h = H * 0.36;
-    c.setLineDash([6, 5]); c.strokeStyle = '#f07178'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(12, y0 - thr * h); c.lineTo(W - 12, y0 - thr * h); c.stroke(); c.setLineDash([]);
-    c.fillStyle = '#f07178'; c.fillText(U.thr, W - 12 - c.measureText(U.thr).width, y0 - thr * h - 6);
+    c.setLineDash([6, 5]); c.strokeStyle = '#ff6b6b'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(12, y0 - thr * h); c.lineTo(W - 12, y0 - thr * h); c.stroke(); c.setLineDash([]);
+    c.fillStyle = '#ff6b6b'; c.fillText(U.thr, W - 12 - c.measureText(U.thr).width, y0 - thr * h - 6);
     trace(env1, y0, h, '#8db0ff', true);
-    trace(env2, y0, h, '#e3b462', true);
+    trace(env2, y0, h, '#5fd4c4', true);
   }
   const loop = () => { if (!running) return; step(); requestAnimationFrame(loop); };
   const io = new IntersectionObserver((es) => { const vis = es.some((e) => e.isIntersecting); if (vis && !running) { running = true; requestAnimationFrame(loop); } else if (!vis) running = false; });
